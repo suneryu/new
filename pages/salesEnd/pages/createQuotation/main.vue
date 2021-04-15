@@ -14,7 +14,7 @@
 							<div class="container" :style="{ color: current == titIndex ? baseColor : '' }">
 								{{ titles }}
 								<div v-show="titIndex == 2">
-									<div class="iconPosition">
+									<div class="iconPosition"> 
 										<i class="iconfont"
 											:style="{ color: iconColor && iconColor != null ? baseColor : '' }">&#xe78f;</i>
 										<i class="iconfont"

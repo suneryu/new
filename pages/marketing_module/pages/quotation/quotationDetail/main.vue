@@ -39,7 +39,7 @@
 											<div class="list-img">
 												<img :src="(domain +item.dataPic) || userImgurl" /> <!-- 商品图片-->
 								<!-- 				<span v-if="item.dataState == 2">已下架</span>
-												<span v-if="item.dataState == 3">已失效</span>
+												<span v-if="item.dataState == 3">已失效</span> 
 												<span v-if="item.dataState == 1">库存不足</span> -->
 											</div>
 											<div class="list-r" >

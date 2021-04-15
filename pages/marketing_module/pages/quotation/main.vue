@@ -13,7 +13,7 @@
 							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待确认</div> -->
 							<div v-else-if="order.dataState == 2">待确认</div>
 							<!-- <div v-else-if="order.dataState == 3">待收货</div> -->
-							<div v-else-if="order.dataState == 3">已完成</div>
+							<div v-else-if="order.dataState == 3">已完成</div> 
 							<button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button>
 						</div>
 						<div class="order-msg" v-for="(goods, goodsIndex) in order.goodsList" :key="goodsIndex">

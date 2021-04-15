@@ -31,7 +31,7 @@
 		 </view> -->
 		<!-- <div style='border:1px solid #4CD964;z-index: 1;'><image src="../../../static/img/icons/hdb/发票.png"></image></div> -->
 		<div>
-			<div v-for='(items,index) in contractData'>
+			<div v-for='(items,index) in contractData' :key="index">
 				<div style='height: 150rpx;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px;'>
 					<div style="display: flex;height: 40rpx">
 						<div class="entryName">{{items.scontractName}}</div>
@@ -58,7 +58,7 @@
 					</div>
 				</div>
 			</div>
-			<div class='chekboxType' v-if="selectValue">
+			<div class='chekboxType' v-if="selectValue" >
 				<!-- <checkbox-group bindchange="checkboxChange" class="checkDiv">
 			              <label class="weui-cell weui-check__label" wx:for="{{checkData}}" wx:key="{{checkData.value}}">
 			                <view class="weui-cell__hd">
@@ -67,7 +67,7 @@
 			                <view class="weui-cell__bd">{{checkData.name}}</view>
 			              </label>
 			     </checkbox-group> -->
-				<div class="checkDiv" v-for='item in checkData'>
+				<div class="checkDiv" v-for='(item,index) in checkData' :key="index">
 					<checkbox style="transform:scale(0.9)" :checked="item.checked" @click="clickData(item)"></checkbox>
 					<span> {{item.lable}} </span>
 				</div>

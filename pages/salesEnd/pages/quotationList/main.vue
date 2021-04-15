@@ -22,7 +22,7 @@
 							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '2' ">待审核</div> -->
 							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待支付</div> -->
 							<div v-else-if="order.dataState == 2">待确认</div>
-							<!-- <div v-else-if="order.dataState == 3">待收货</div> -->
+							<!-- <div v-else-if="order.dataState == 3">待收货</div> --> 
 							<div v-else-if="order.dataState == 3">已完成</div>
 							<!-- <button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button> -->
 						</div>
@@ -259,8 +259,14 @@ export default {
 				refundType: 'B01'  //退货类型
 			};
 			
-			http.post(refund.saveRefund, { params: JSON.stringify(fund) }).then(res => {						if (res.success) {							let refundCode = JSON.parse(res.dataObj).code;
-							$message.alert('退款申请成功');							$router.replace(this.menuJspath, { refundCode: refundCode });						} else {							$message.alert(res.msg);						}
+			http.post(refund.saveRefund, { params: JSON.stringify(fund) }).then(res => {
+						if (res.success) {
+							let refundCode = JSON.parse(res.dataObj).code;
+							$message.alert('退款申请成功');
+							$router.replace(this.menuJspath, { refundCode: refundCode });
+						} else {
+							$message.alert(res.msg);
+						}
 			})
 			
 			},

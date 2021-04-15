@@ -16,7 +16,7 @@
 		<div class="accounts-noAddress" @click="addClass" v-else>
 			<i class="iconfont">&#xe752;</i>
 			添加收货地址
-		</div>
+		</div> 
 
 		<div class="accounts-info" v-for="(shoppingItem, index) in shoppingItems" :key="index" v-if="shoppingItems && shoppingItems.length > 0">
 			<div class="accounts-info-tit">{{ shoppingItem.memberMname }}</div>

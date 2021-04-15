@@ -1,7 +1,7 @@
 <template>
 	<div class="accounts" ref="accounts">
 		<div class="accounts-info" v-if="contractData && contractData.length > 0">
-			<div v-for='(items,index) in contractData'>
+			<div v-for='(items,index) in contractData' :key="index">
 				<div style='border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 5px 10px 0 0;'>
 					<div style='border-bottom: 1px solid #E0E0E0;font-size: 15px;font-weight: bold;padding-bottom:20rpx ;'><span>{{items.memberGname}}</span></div>
 					<div style="display: flex;height: 40rpx;justify-content: space-between;margin-bottom: 30rpx;">
