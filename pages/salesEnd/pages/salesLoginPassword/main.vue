@@ -78,7 +78,8 @@
 				userAgreementSwitch: true,
 				code: '',
 				userOpenid: '',
-				indexGotoUrl:''
+				indexGotoUrl:'',
+				subscribeMes: true
 			};
 		},
 		onLoad(options) {
@@ -122,8 +123,8 @@
 			navigateBack() {
 				this.$qj.router.back();
 			},
-
 			login() {
+				
 				if (!this.$qj.phoneValidation(this.userPhone)) {
 					return;
 				}
@@ -144,8 +145,10 @@
 						userOpenid: this.$qj.storage.get('userOpenid') || this.userOpenid
 					})
 					.then(res => {
+						console.log('登录结果------',res)
 						let that = this
 						if (res.success) {
+							
 							if(res.dataObj.userInfo){
 							
 								let loginInfor = JSON.parse(res.dataObj.userInfo);
@@ -156,20 +159,81 @@
 								let cookie = loginInfor.ticketTokenid;
 								let miniCookie = miniToken + '=' + cookie + '; Domain=' + that.$qj.domain.substring(8) + '; Path=/';
 								that.$qj.storage.set('miniUserName', miniCookie);
-								that.setLoginAfterRouter();
+								// that.setLoginAfterRouter();
 								getApp().globalData.isShowingLoginModal = false
 								$storage.set('nologin', '')
                            }
 							// that.$qj.message.alert('账号和密码不匹配，请重新登录');
-							//跳转到销售员首页
-							that.$qj.router.push('')
+							
 						
 						}else{
 							this.$qj.message.alert('登录失败，请重新登录');
+							return;
 						}
 					});
+					this.messageSubscription()
+					//跳转到销售员首页
+					
 			},
-
+			
+			
+			messageSubscription(){
+				const that = this;
+				// if (compareVersion(global.globalData.SDKVersion, "2.8.2") >= 0) {
+				wx.requestSubscribeMessage({
+					tmplIds: ["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"], //需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
+					// 消息模板id在[微信公众平台(mp.weixin.qq.com)-功能-订阅消息]中配置
+					success(res) { // 接口调用成功的回调函数
+						if (
+							res["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"] == "accept"
+							// Object res   [TEMPLATE_ID]是动态的键，即模板id，值包括'accept'、'reject'、'ban'。
+							// 'accept'表示用户同意订阅该条id对应的模板消息，'reject'表示用户拒绝订阅该条id对应的模板消息，'ban'表示已被后台封禁。
+						) {
+							if (that.subscribeMes) {
+								console.log("订阅成功")
+								wx.showToast({
+									title: "订阅成功！",
+									duration: 1500,
+									icon: "success",
+									success(data) {
+										that.subscribeMes = false;
+									}
+								});
+								 let options = {
+								 	url: 'salesEnd/pages/salesFrontPage'
+								 };
+								 that.redirectTo(options);
+					
+							}
+							
+						} else {
+							console.log("失败")
+							 let options = {
+							 	url: 'salesEnd/pages/salesFrontPage'
+							 };
+							 that.redirectTo(options);
+						}
+					},
+					fail(res) { // 接口调用失败的回调函数
+					console.log('模板调用失败',res)
+						if (res.errCode === 20004) {
+							wx.showModal({
+								title: "温馨提示",
+								content: "您已拒绝授权，将无法在微信中收到回复通知！",
+								showCancel: false,
+								success: res => {
+									if (res.confirm) {
+										let options = {
+											url: 'salesEnd/pages/salesFrontPage'
+										};
+										that.redirectTo(options);
+									}
+								}
+							});
+						}
+					}
+				});
+			},
 			setLoginAfterRouter() {
 				this.$qj
 					.http(this.$qj.domain)

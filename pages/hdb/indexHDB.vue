@@ -94,7 +94,8 @@
 		queryScontractPageC,
 		getUpmupointsPageByPC,
 		queryCollectPage,
-		userapplyStateAndAuth
+		userapplyStateAndAuth,
+		queryBuyerScontractPage
 	} from '@/api/interfaceHDB.js';
 	export default {
 		props: ['baseColor', 'message', 'isShow', 'nav', 'webmail', 'userLevel'],
@@ -191,7 +192,7 @@
 			// },
 			//获取我的合同
 			getMycontract(data) {
-				http.get(queryScontractPageC, {
+				http.get(queryBuyerScontractPage, {
 					goodsSupplierName: data,
 					contractInvstate: "1"
 				}).then(res => {
@@ -199,10 +200,23 @@
 					this.contractTotal = res.total;
 
 				});
+				
+				//获取我的报价单
+			// getMycontract(data) {
+			// 	http.get(queryBuyerScontractPage, {
+			// 		childFlag: true,
+			// 		contractType: 39,
+			// 		memberBcode: 10000210376054,
+					
+			// 	}).then(res => {
+			// 		console.log("getmyContract...", res.total)
+			// 		this.contractTotal = res.total;
+
+			// 	});
 				//获取我的預約合同
 				http.get(queryScontractPageC, {
 					goodsSupplierName: data,
-					contractInvstate: "2"
+					contractInvstate: "1"
 				}).then(res => {
 					console.log("appointmentTotal...", res.total)
 					this.appointmentTotal = res.total;

@@ -287,7 +287,7 @@
 						if(res.userinfoQuality == 'sales'){
 							//销售员首页
 							let options2 = {
-								url: '',
+								url: 'salesEnd/pages/salesFrontPage',
 							};
 							this.redirectTo(options2);
 						}else{
