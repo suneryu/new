@@ -38,17 +38,17 @@
 											</div>
 											<div class="list-img">
 												<img :src="(domain +item.dataPic) || userImgurl" /> <!-- 商品图片-->
-												<span v-if="item.dataState == 2">已下架</span>
+								<!-- 				<span v-if="item.dataState == 2">已下架</span>
 												<span v-if="item.dataState == 3">已失效</span>
-												<span v-if="item.dataState == 1">库存不足</span>
+												<span v-if="item.dataState == 1">库存不足</span> -->
 											</div>
-											<div class="list-r" :style="{ color: item.dataState !== 0 ? '#ccc' : '' }">
+											<div class="list-r" >
 												<p>{{ item.goodsName }}</p>
-												<h3 :style="{ color: item.dataState !== 0 ? '#ccc' : '' }">
+												<h3 >
 													{{ item.skuName }}*{{ item.goodsCamount }}
 												</h3>
 												<div class="list-count">
-													<div :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }"
+													<div 
 														style='font-size: 12px;'>
 														<span
 															style='color: #000000;'>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
@@ -88,7 +88,7 @@
 							</div>
 							<div class='goodsPrice-item'>
 								<span>组合优惠：</span>
-								<span>{{ unitPrice.obpay }}0{{ unitPrice.mapay }}</span>
+								<span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span>
 							</div>
 						</div>
 					</li>
@@ -96,7 +96,7 @@
 			</div>
 			<div class='totalPrice'>
 				<div style='width: 70%;float: left;padding: 20rpx;box-sizing: border-box;'>应付金额：
-					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{totalPrice}}{{ unitPrice.mapay }}</span>
+					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice}}{{ unitPrice.mapay }}</span>
 				</div>
 				<div class='goPay' @click='toSettle'>去结算</div>
 			</div>
@@ -111,6 +111,9 @@
 		deleteOcContractGoods,
 		cancelContractForAt
 	} from '@/api/interface.js';
+	import {
+		queryNewUserinfoPageByDealerqt,
+	} from '@/api/interfaceHDB.js';
 	import {
 		$storage,
 		$message,
@@ -179,9 +182,25 @@
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			// this.commonMounted();
 			this.dataLength = this.sanci.length - 1
+			this.getQY()
 
 		},
 		methods: {
+			//查询权益
+			getQY() {
+				this.$qj
+					.http(this.$qj.domain)
+					.get(queryNewUserinfoPageByDealerqt, {
+						userinfoPhone: this.userPhone
+					})
+					.then(res => {
+						console.log('权益值', res.rows[0].userinfoOcode)
+						this.userinfoOcode = res.rows[0].userinfoOcode
+						if (this.userinfoOcode == null || this.userinfoOcode == '') {
+							this.userinfoOcode = 1
+						}
+					})
+			},
 			// 查询 认证授权 状态
 			searchStatus() {
 				let that = this

@@ -101,7 +101,8 @@ export default {
 				rows: this.rows,
 				childFlag: true,
 				contractType: 39,
-				memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
+				// memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
+				// memberBcode:'10000210376054'
 			};
 		
 			this.$qj

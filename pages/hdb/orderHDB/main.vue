@@ -1,85 +1,34 @@
 <template>
 	<div class="accounts" ref="accounts">
-		<!-- <div class="accounts-haveAddress" v-if="isHaveAddress" @click="addClass">
-			<div class="accounts-haveAddress-l">
-				<h5>
-					收货人：{{ addressList.addressMember }}
-					<span>{{ addressList.addressPhone }}</span>
-				</h5>
-				<p>
-					<span v-if="addressList.addressDefault == 1" :style="{ background: baseColor }">默认</span>
-					{{ addressList.provinceName }} {{ addressList.cityName }} {{ addressList.areaName }} {{ addressList.addressDetail }}
-				</p>
-			</div>
-			<div class="accounts-haveAddress-r"><i class="iconfont">&#xe61d;</i></div>
-		</div>
-		<div class="accounts-noAddress" @click="addClass" v-else>
-			<i class="iconfont">&#xe752;</i>
-			添加收货地址
-		</div> -->
-	
-
-		<div class="accounts-info" v-for="(shoppingItem, index) in shoppingItems" :key="index" v-if="shoppingItems && shoppingItems.length > 0">
-			<div class="accounts-info-tit">{{ shoppingItem.memberName }}</div>
-			<div v-for="(list, listIndex) in shoppingItem.shoppingpackageList" :key="listIndex">
-				<div class="accounts-info-con" v-for="(goods, goodsIndex) in list.shoppingGoodsList" :key="goodsIndex">
-					<img :src="goods.dataPic" />
-					<div>
-						<h2>{{ goods.goodsName }}</h2>
-						<h3>{{ goods.skuName }}</h3>
-						<h4>
-							{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}
-							<span>×{{ goods.goodsCamount }}</span>
-						</h4>
+		<div class="accounts-info" v-if="contractData && contractData.length > 0">
+			<div v-for='(items,index) in contractData'>
+				<div style='border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 5px 10px 0 0;'>
+					<div style='border-bottom: 1px solid #E0E0E0;font-size: 15px;font-weight: bold;padding-bottom:20rpx ;'><span>{{items.memberGname}}</span></div>
+					<div style="display: flex;height: 40rpx;justify-content: space-between;margin-bottom: 30rpx;">
+						<div class="entryName">{{items.scontractName}}</div>
+						<div class="effctivTime">有效期：{{items.scontractNbcode}}</div>
 					</div>
-				</div>
-				<div class="accounts-info-con" v-for="(gift, giftIndex) in list.giftList" :key="giftIndex">
-					<img :src="gift.dataPic" />
-					<div>
-						<h2>
-							<span :style="{ color: baseColor, borderColor: baseColor }">赠品</span>
-							{{ gift.goodsName }}
-						</h2>
-						<h3>{{ gift.skuName }}</h3>
-						<h4>
-							{{ unitPrice.obpay }}0{{ unitPrice.mapay }}
-							<span>×1</span>
-						</h4>
+					<div class='miaoshu'>合同描述: <span>{{items.contractRemark}}</span></div>
+					<div style="display: flex;height: 50rpx;justify-content: space-between;margin-bottom: 30rpx;">
+						<div class='money' style='width: 60%;'><span>合同金额：</span><span style='color: #ff557f;'>￥{{items.goodsMoney.toFixed(2)}} 元</span></div>
+						<div class='lookconstr' style='width: 20%;'><u style='text-decoration:underline'
+								@click='preview(items)'>合同预览</u></div>
+						
 					</div>
-				</div>
-				<div class="accounts-con">
-					<div>
-						配送方式
-						<div>
-							<span>普通快递</span>
-							<i class="iconfont">&#xe61d;</i>
-						</div>
-					</div>
-				</div>
-				<div class="accounts-textarea">
-					<span>备注信息：</span>
-					<input placeholder="请填写" v-model="list.packageRemark" />
-				</div>
-				<div class="accounts-info-money">
-					共1件，小计：
-					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
+			<div class="accounts-textarea">
+				<span>备注信息：</span>
+				<input placeholder="请填写" v-model="contractData[0].packageRemark" />
+			</div>
+			<div class="accounts-info-money">
+				共1件，小计：
+				<span :style="{ color: '#ff557f' }"
+					v-if="contractData[0].goodsMoney">{{ unitPrice.obpay }}{{ contractData[0].goodsMoney.toFixed(2) }} {{ unitPrice.mapay }}</span>
+			</div>
 		</div>
-		<!-- 展示合同数据 -->
-		<div style='border-top: 20px solid #fafafa;background: #fff;padding: 0 0 0 12px;'>商品信息：</div>
-		<div style='height: 80px;padding: 0;border-bottom: 20rpx solid #fafafa;display: flex;'>
-				<div style='width: 50%;text-align: left;'>
-					<div style='height: 40px;line-height: 40px;padding: 0 0 0 12px;'>合同名称：{{options.scontractName}}</div>
-					<div style='height: 40px;line-height: 40px;padding: 0 0 0 12px;'>合同编号：{{options.scontractObillcode}}</div>
-				</div>
-				<div style='width: 50%;text-align: left;'>
-					<div style='height: 40px;line-height: 40px;'>有效期：{{options.scontractNbcode}}</div>
-					<div style='height: 40px;line-height: 40px;'>合同金额：￥{{options.goodsMoney}}</div>
-				</div>
-		</div>
-	
-		<div class="accounts-con" @click="choosePayMethods" v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
+		<div class="accounts-con" @click="choosePayMethods"
+			v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
 			<div>
 				支付方式
 				<div>
@@ -97,135 +46,40 @@
 				</div>
 			</div>
 		</div>
-	<!-- 	<div  class="accounts-update"  v-if="shoppingItems[0].shoppingpackageList[0].shoppingGoodsList[0].goodsType != '06'">
-			<div @click="chooseImage()" class="txt">
-				<span>上传附件</span><span class="iconfont icon-plus"></span>
-				<span>请上传附件,仅支持jpg.png.gif格式，最多上传5张</span>
-			</div>
-			<div class="upload">
-
-				<div class="icons" v-for="(item, index) in upImg" :key="index">
-					<i class="iconfont" @click="delImg(index)">&#xe600;</i>
-					<img :src="item.url" />
-				</div>
-			</div>
-		</div> -->
-	<!-- 	<div class="accounts-con" @click="isShowPreferential" v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
-			<div>
-				优惠券
-				<div>
-					<span>{{ selectPromotionName }}</span>
-					<i class="iconfont">&#xe61d;</i>
-				</div>
-			</div>
-		</div>
-		<div class="accounts-con" @click="getRedPacket" v-if="shoppingItems[0].shoppingType != '28' && shoppingItems[0].shoppingType != '06'">
-			<div>
-				红包
-				<div>
-					<span>{{ selectRedPacketName }}</span>
-					<i class="iconfont">&#xe61d;</i>
-				</div>
-			</div>
-		</div> -->
-		<div class="accounts-count">
-			<p>
-				商品金额
-				<span>{{options.goodsMoney}}{{ unitPrice.mapay }}</span>
-			</p>
-			<p>
-				运费
-				<span>{{ unitPrice.obpay }}{{ freight }}{{ unitPrice.mapay }}</span>
-			</p>
-			<p v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
-				优惠
-				<span>-{{ unitPrice.obpay }}{{ comDisMoney }}{{ unitPrice.mapay }}</span>
-			</p>
-			<p v-else>
-				积分抵扣
-				<span>-{{ sumPoints }}积分</span>
-			</p>
-			<p v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
-				会员权益
-				<span>{{ unitPrice.obpay }}{{ totalDiscountPrice }}{{ unitPrice.mapay }}</span>
-			</p>
-		</div>
 		<div class="accounts-sum">
 			<p>
-				应付金额:
-				<i>{{options.goodsMoney}}{{ unitPrice.mapay }}</i>
+				应付金额：
+				<i>{{contractData[0].goodsMoney.toFixed(2)}} {{ unitPrice.mapay }}</i>
 			</p>
-			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
+			<!-- <div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div> -->
 		</div>
-		<div class="accounts-preferential" v-show="isShow">
-			<div class="accounts-preferential-con">
-				<div @click="
-						() => {
-							isShow = false;
-						}
-					">
-					优惠劵
-					<i class="iconfont">&#xe609;</i>
-				</div>
-				<ul>
-					<li v-for="(coupon, couponIndex) in couponList" :key="couponIndex" v-if="coupon.dataState == 0">
-						<div class="pre-left">
-							<h1>
-								<i :style="{ color: baseColor }">{{ coupon.pbName }}</i>
-							</h1>
-							<h2 v-if="coupon.dataState == 0">{{ coupon.discName }}</h2>
-							<h2 v-else></h2>
-						</div>
-						<div class="pre-center">
-							<h3>{{ coupon.promotionName }}</h3>
-							<h4>{{ coupon.couponStart }}至{{ coupon.couponEnd }}</h4>
-						</div>
-						<div class="pre-right" @click="checkCoupon(coupon, couponIndex)">
-							<i class="iconfont" :style="{ color: couponIndex === currentIndex ? baseColor : '#000' }">&#xe671;</i>
-						</div>
-					</li>
-				</ul>
-				<div class="pre-btn" :style="{ background: baseColor }" @click="couponOK">确认</div>
-			</div>
-		</div>
-
 		<u-popup class="pay-methods-popup" v-model="payMethodsPopup" mode="bottom" height="427rpx">
 			<view class="pay-methods-title">
 				<text>支付方式</text>
 				<view class="iconfont icon-guanbi" @click="closePayMethodsPopup"></view>
 			</view>
 			<view class="pay-methods-list">
-				<view class="pay-methods-item" v-for="(item, index) in payMethodsList" :key="index" @click="clickPayMethodsItem(index)">
+				<view class="pay-methods-item" v-for="(item, index) in payMethodsList" :key="index"
+					@click="clickPayMethodsItem(index)">
 					<view class="name">{{ item.ptfpmodeName }}</view>
-					<view class="iconfont" :class="{ 'icon-xuanzhong-01': payMethodsTempIndex == index, 'icon-checkboxround0': payMethodsTempIndex != index }"
-					 v-bind:style="{ color: secondaryColor }"></view>
+					<view class="iconfont"
+						:class="{ 'icon-xuanzhong-01': payMethodsTempIndex == index, 'icon-checkboxround0': payMethodsTempIndex != index }"
+						v-bind:style="{ color: secondaryColor }"></view>
 				</view>
 			</view>
-			<view class="pay-methods-footer" v-bind:style="{ backgroundColor: baseColor }" @click="confirmPayMethods">确认</view>
-		</u-popup>
-		<u-popup class="red-packet-popup" v-model="redPacketPopup" mode="bottom" height="733rpx">
-			<view class="red-packet-title">
-				<text>红包</text>
-				<view class="iconfont icon-guanbi" @click="closeRedPacketPopup"></view>
+			<view class="pay-methods-footer" v-bind:style="{ backgroundColor: baseColor }" @click="confirmPayMethods">确认
 			</view>
-			<view class="red-packet-list">
-				<view class="red-packet-item" v-for="(item, index) in redPacketList" :key="index">
-					<div class="red-packet-left">
-						<span>￥</span>
-						<span style="font-size:128rpx;font-weight: bold;">{{ item.discAmount }}</span>
-					</div>
-					<div class="red-packet-right">
-						<span>{{ item.promotionName }}</span>
-						<span style="font-size: 24rpx;">{{ item.discName }}</span>
-						<span style="font-size: 20rpx;">{{ item.couponStart }}-{{ item.couponEnd }}</span>
-					</div>
-					<div class="pre-right" @click="checkRedPacket(item, index)">
-						<i class="iconfont" :style="{ color: index === currentRedPacketIndex ? baseColor : secondaryColor }">&#xe671;</i>
-					</div>
-				</view>
-			</view>
-			<view class="red-packet-footer" v-bind:style="{ backgroundColor: baseColor }" @click="confirmRedPacket">确认</view>
 		</u-popup>
+		<view class="popup" v-show="htImg">
+		
+			<view class="htImage">
+				<div style='text-align: right;font-size: 18px; color: azure;font-weight: 800;'>
+					<span @click='closeHtImg'>关闭</span>
+				</div>
+				<img class="htImg" mode='widthFix' :src="img + fileUrl" @click='savePhoto(img + fileUrl)' />
+				<div style='font-size: 16px;font-weight: 900;color: #fff;'>点击图片进行下载</div>
+			</view>
+		</view>
 	</div>
 </template>
 
@@ -246,7 +100,6 @@
 		getCurrPayMethods,
 		queryUseTemplate,
 		refund,
-		uploadGoodsFile
 
 	} from '@/api/shopHdb.js';
 	import {
@@ -261,12 +114,19 @@
 		$message
 	} from '@/utils/prototype/vue.js';
 	import http from '@/api/http.js';
+	import {
+		// getHomePage,
+		// queryScontractPageNew,
+		queryScontractFilePage
+	} from '@/api/interfaceHDB.js';
 	import Vue from 'vue';
 	export default {
 		data() {
 			return {
 				// // CONTRACT_EARNEST 返利金额  订单使用卷的时候把  卷的名称 存在 CONTRACT_SETTL_OPEMO
+				img: this.$imgDomain,
 				title: '确认订单',
+				htImg: false,
 				isHaveAddress: false, //判断是否存在地址
 				addressList: {},
 				shoppingItems: [],
@@ -318,188 +178,114 @@
 				couponDiscount: 0,
 				// 当前红包的面值金额
 				redPacketDiscount: 0,
-				isupload:false,
-				options:{}
+				isupload: false,
+				contractData: [],
+				fileUrl:''
 			};
 		},
 		mounted() {
-			this.options = this.$root.$mp.query
-			console.log("this.options,,,",this.options)
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			this.secondaryColor = `#${this.$qj.storage.get('secondaryColor')}` || this.baseColor;
 			this.initPayMethods();
-			this.query = this.$state.order;
-			
+			this.initOrderData(this.$root.$mp.query.scontractId)
+
 		},
 		computed: {
 			unitPrice() {
 				// mapay 主单位（后面）  mbpay 主单位（前面）  obpay 辅单位（前面）   oapay 辅单位（后面）
 				return this.$state.unitPrice || this.$qj.storage.get('unitPrice');
 			},
-
-			/**
-			 * 优惠金额（优惠券 + 红包 + 活动）
-			 */
-			comDisMoney() {
-				return Add(Add(this.copyComDisMoney, this.couponDiscount), this.redPacketDiscount);
-			},
-
-			/**
-			 * 最后应付金额
-			 */
-			accountsSumPrice() {
-				let price = (this.shoppingCountPrice + this.totalDiscountPrice - Add(Add(this.copyComDisMoney, this.couponDiscount),
-					this.redPacketDiscount) + this.freight).toFixed(2);
-				return price > 0 ? price : 0;
-			}
-		},
-
-		watch: {
-			currentCoupon(newValue, oldValue) {
-				let coupon = newValue;
-				if (Object.keys(coupon).length > 0) {
-					this.selectPromotionName = coupon.promotionName;
-					// 代金券 0003 满减券 0004 折扣券 0005
-					if (coupon.pbCode === '0003' || coupon.pbCode === '0004') {
-						this.couponDiscount = coupon.discAmount;
-					}
-					if (coupon.pbCode === '0005') {
-						this.couponDiscount = this.shoppingCountPrice * parseFloat(1 - coupon.discAmount / 100).toFixed(2);
-					}
-				}
-			},
-
-			currentRedPacket(newValue, oldValue) {
-				let redPacket = newValue;
-				if (Object.keys(redPacket).length > 0) {
-					this.selectRedPacketName = redPacket.promotionName;
-					this.redPacketDiscount = redPacket.discAmount;
-				}
-			}
 		},
 		methods: {
-		/* 	showUpload(){
-				if(contractType != '06'){
-					this.isupload=true
-				}
-			}, */
+			closeHtImg(){
+				this.htImg = false
+			},
+			//判断是否有图片
+			yulook() {
+				uni.showModal({
+					title: '提示',
+					content: '当前合同详情可咨询客户！',
+					confirmColor: '#' + $storage.get('baseColor'),
+					success(res) {
+					}
+				})
+			},
+			//保存图片
+			savePhoto(data) {
+				console.log('data', data)
+				const _this = this;
+				wx.getImageInfo({
+					src: data,
+					success: function(res) {
+						wx.saveImageToPhotosAlbum({
+							filePath: res.path,
+							success(result) {
+			
+								// _this.setData({ show: false });
+								wx.showToast({
+									title: '保存成功',
+									icon: 'success',
+									duration: 2000
+								})
+							},
+							fail(err) {
+								if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+									wx.openSetting({
+										success(settingdata) {
+											if (settingdata.authSetting[
+													'scope.writePhotosAlbum']) {
+												_this.savePhoto()
+											} else {
+												wx.showToast({
+													title: '获取权限失败,无法保存图片',
+													icon: 'success',
+													duration: 2000
+												})
+											}
+										}
+									})
+								}
+							}
+						})
+					}
+				})
+			},
+			//合同预览
+			preview(items) {
+				this.queryScontractFilePage(items);
+			},
+			//查询合同附件的接口
+			queryScontractFilePage(item) {
+				let data = item
+			
+				console.log("合同信息code", data.scontractCode)
+				http.get(queryScontractFilePage, {
+						scontractCode: data.scontractCode
+					})
+					.then(res => {
+						console.log("合同附件", res)
+						console.log("合同附件", this.userinfoType)
+						res.rows.forEach(element => {
+							if (element.memo == 1) {
+								console.log("scontractFileUrl...", element.scontractFileUrl)
+								this.fileUrl = element.scontractFileUrl
+							}
+							// this.contractData = res.rows;
+						});
+			
+						if (this.fileUrl == null || this.fileUrl == "") {
+							this.yulook();
+						} else {
+							this.htImg = true;
+						}
+					})
+			},
 			delImg(index) {
 				this.upImg.splice(index, 1)
 			},
-			chooseImage() {
-				let i = 0; // 多图上传时使用到的index
-				let that = this;
-				let max = 5; //最大选择数
-				let upLength; //图片数组长度
-				let imgFilePaths; //图片的本地临时文件路径列表
-
-				wx.chooseImage({
-					count: max, //一次最多可以选择的图片张数
-					sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-					sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-					success: function(res) {
-						imgFilePaths = res.tempFilePaths;
-						upLength = imgFilePaths.length;
-						/**
-						 * 上传完成后把文件上传到服务器
-						 */
-						wx.showLoading({
-							title: '上传中...'
-						});
-						that.upLoad(imgFilePaths, i, upLength); //上传操作
-					},
-					fail: function() {
-						console.log('fail');
-					},
-					complete: function() {
-						console.log('commplete');
-					}
-				});
-			},
-			upLoad(imgPath, i, upLength) {
-				console.log(imgPath[i]);
-				let that = this;
-				//上传文件
-				wx.uploadFile({
-					url: this.$domain + uploadGoodsFile, //上传图片的接口地址
-					filePath: imgPath[i], //本地上传图片地址
-					name: 'file',
-					formData: {
-						imgIndex: i
-					},
-					header: {
-						'Content-Type': 'multipart/form-data',
-						cookie: wx.getStorageSync('miniToken') + '=' + wx.getStorageSync('sessionid'),
-						'saas-Agent': getApp().globalData.saasAgent
-					},
-					success: function(res) {
-						// fileName
-						that.upImg.push({
-							name: that.$domain + JSON.parse(res.data).fileName,
-							url: that.$domain + JSON.parse(res.data).fileUrl
-						})
-					},
-					fail: function(res) {
-						wx.hideLoading();
-						wx.showModal({
-							//title: '提示',
-							content: '上传图片失败',
-							showCancel: false,
-							success: function(res) {}
-						});
-					},
-					complete: function() {
-						i++;
-						if (i == upLength) {
-							wx.hideLoading();
-						} else {
-							that.upLoad(imgPath, i, upLength);
-						}
-					}
-				});
-			},
-			/**
-			 * 初始化和钱有关的变量
-			 */
-			initPriceData() {
-				// 初始化涉及到钱的变量，防止页面从后台到前台的时候在原有基础上再次计算
-				this.totalDiscountPrice = 0;
-				this.shoppingCountPrice = 0;
-				this.freight = 0;
-				this.copyComDisMoney = 0;
-				this.couponDiscount = 0;
-				this.redPacketDiscount = 0;
-				this.sumPoints = 0;
-			},
-
-			/**
-			 * 初始化地址数据
-			 */
-			initAddressData() {
-				// 初始化地址信息
-				this.addressList = {};
-
-				if (this.$qj.storage.get('changeaddress') && this.$qj.storage.get('changeaddress') != '') {
-					this.addressList = this.$qj.storage.get('changeaddress');
-					this.isHaveAddress = true;
-				} else {
-					this.$qj
-						.http(this.$qj.domain)
-						.get(addressList)
-						.then(res => {
-							if (res && res.length > 0 && res[0].addressDefault == '1') {
-								this.isHaveAddress = true;
-								this.addressList = res[0];
-							} else {
-								this.isHaveAddress = false;
-							}
-						});
-				}
-			},
 
 			initPayMethods() {
-				console.log('1111++=')
 				this.$qj
 					.http(this.$qj.domain)
 					.get(getCurrPayMethods)
@@ -513,242 +299,16 @@
 			/**
 			 * 初始化订单数据
 			 */
-			initOrderData(options) {
-				// 购物车下单使用vuex通信
-				let shoppingGoodsIdStr = JSON.stringify(this.$state.shoppingGoodsIdStr);
-				let rsSkuListStr = JSON.stringify(this.$state.rsSkuListStr);
-
-				//判断是否是详情页跳转过来的
-				if (options && options.json) {
-					this.skuDataByDetail = JSON.parse(options.json);
-					this.orderWay = 0;
-				} else {
-					this.orderWay = 1;
-				}
-
-				let requestParams = this.orderWay === 0 ? this.skuDataByDetail : {
-					shoppingGoodsIdStr: shoppingGoodsIdStr
-				};
-				this.$qj
-					.http(this.$qj.domain)
-					.post(this.orderWay === 0 ? queryToContract : queryShoppingToContract, requestParams)
-					.then(res => {
-						// 如果返回nologin，则return，避免请求并行造成的弹出多个授权框
-						if (res.errorCode == 'nologin') {
-							return;
-						}
-						if (res && res instanceof Array) {
-							this.shoppingItems = res;
-							// console.log(this.shoppingItems,"就是你")
-							this.shoppingItems.map(v => {
-								v.shoppingpackageList.map(vk => {
-									this.copyComDisMoney += vk.disMoney;
-									this.sumPoints += vk.pricesetRefrice;
-									vk.shoppingGoodsList.map(val => {
-										val.dataPic = this.$domain + val.dataPic;
-										this.contractGoodsList.push(val);
-										this.pmContractGoodsDomainListStr.push(val);
-									});
-									if (vk.giftList) {
-										console.log(vk.giftList,"xxxxxx")
-										vk.giftList.map(val => {
-											val.dataPic = this.$domain + val.dataPic;
-											this.contractGoodsList.push(val);
-										});
-									}
-								});
-							});
-
-							// 获取运费
-							let freightFare =
-								this.orderWay === 0 ? {
-									skuIdStr: JSON.stringify([this.skuDataByDetail]),
-									areaCode: this.addressList.areaCode
-								} : {
-									shoppingGoodsIdStr: shoppingGoodsIdStr,
-									areaCode: this.addressList.areaCode
-								};
-
-							this.$qj
-								.http(this.$qj.domain)
-								.post(calculateFreightFare, freightFare)
-								.then(res => {
-									if (res && res.success) {
-										this.freight = res.dataObj;
-										// console.log(this.freight,"哈哈哈")
-									} else {
-										if ((res.errorCode = '-1')) {
-											this.$qj.message.alert(res.msg);
-										}
-									}
-								})
-								.then(() => {
-									this.shoppingItems.map((v, k) => {
-										v.shoppingpackageList.map(vk => {
-											vk.shoppingGoodsList.map((val, index) => {
-												this.shoppingCountPrice += val.pricesetNprice * val.goodsCamount;
-											});
-										});
-										this.shoppingCountPrice = this.shoppingCountPrice;
-										this.getCouponData();
-									});
-								});
-
-							//用户权益差价
-							let skuList = {
-								rsSkuListStr: rsSkuListStr
-							};
-							this.$qj
-								.http(this.$qj.domain)
-								.post(getTotalDiscountPrice, skuList)
-								.then(res => {
-									if (res && res.success) {
-										this.totalDiscountPrice = res.dataObj.totalDiscountPrice;
-										this.contractSettlOpno = res.dataObj.contractSettlOpno;
-									}
-								});
-						}
-					});
-			},
-
-			/**
-			 * 已废弃
-			 */
-			addClass() {
-				this.$qj.router.push('user_modules/address/manage', {
-					json: 1
-				});
-			},
-
-			/**
-			 * 格式化优惠券和红包的时间
-			 * @param {Object} list
-			 */
-			formatCouponDate(list) {
-				list.map(v => {
-					v.couponStart = formatTimes(v.couponStart);
-					v.couponEnd = formatTimes(v.couponEnd);
-				});
-			},
-
-			/**
-			 * 选取最大优惠
-			 * @param {Object} list
-			 */
-			calMaxCoupon(list) {
-				if (list.length > 0) {
-					let item = list[0];
-					let max = item.couponAmount;
-					let index = 0;
-					console.log(item, index, max, '---------');
-					for (let i = 1; i < list.length; i++) {
-						if (list[i].discStart < this.shoppingCountPrice && list[i].couponAmount > max) {
-							item = list[i];
-							index = i;
-							max = item.couponAmount;
-						}
-					}
-					console.log(item, index, max, '++++++++++');
-					return [index, item];
-				}
-				return [-1, ''];
-			},
-
-			/**
-			 * 优惠券和红包同一个接口
-			 * 红包的pbCode = 0021
-			 * 计算最大优惠，自动选取
-			 */
-			getCouponData() {
-				this.$qj
-					.http(this.$qj.domain)
-					.post(coupon.couponListcar, {
-						pmContractGoodsDomainListStr: JSON.stringify(this.pmContractGoodsDomainListStr)
+			initOrderData(scontractId) {
+				this.$qj.http(this.$qj.domain)
+					.get('/web/sp/scontract/getScontract.json', {
+						scontractId
 					})
 					.then(res => {
 						if (res) {
-							this.couponList = res.filter(val => {
-								return val.pbCode != '0021';
-							});
-							this.redPacketList = res.filter(val => {
-								return val.pbCode == '0021';
-							});
-							// 时间格式化
-							this.formatCouponDate(this.couponList);
-							this.formatCouponDate(this.redPacketList);
-							// 计算自动选取最大优惠值
-							this.currentIndex = this.calMaxCoupon(this.couponList)[0];
-							this.currentCoupon = this.calMaxCoupon(this.couponList)[1];
-							this.currentRedPacketIndex = this.calMaxCoupon(this.redPacketList)[0];
-							this.currentRedPacket = this.calMaxCoupon(this.redPacketList)[1];
+							this.contractData.push(res)
 						}
-					});
-			},
-
-			/**
-			 * 优惠券弹窗
-			 */
-			isShowPreferential() {
-				if (this.couponList.length == 0) {
-					this.getCouponData();
-				}
-				if (this.isShow) {
-					this.isShow = false;
-				} else {
-					this.isShow = true;
-				}
-			},
-
-			/**
-			 * 红包弹窗
-			 */
-			getRedPacket() {
-				if (this.couponList.length == 0) {
-					this.getCouponData();
-				}
-				this.redPacketPopup = true;
-			},
-
-			checkCoupon(coupon, couponIndex) {
-				this.currentIndex = couponIndex;
-				this.currentCoupon = coupon;
-			},
-
-			checkRedPacket(item, index) {
-				this.currentRedPacketIndex = index;
-				this.currentRedPacket = item;
-			},
-
-			couponOK() {
-				if (this.currentIndex == -1) {
-					this.isShow = false;
-					return;
-				}
-
-				if (this.couponList[this.currentIndex].discStart > this.shoppingCountPrice) {
-					this.$qj.message.alert('该优惠劵不满足条件，请使用其他优惠劵');
-					return;
-				}
-
-				this.currentCoupon = this.couponList[this.currentIndex];
-
-				this.isShow = false;
-			},
-
-			confirmRedPacket() {
-				if (this.currentRedPacketIndex == -1) {
-					this.redPacketPopup = false;
-					return;
-				}
-
-				if (this.redPacketList[this.currentRedPacketIndex].discStart > this.shoppingCountPrice) {
-					this.$qj.message.alert('该红包不满足条件，请使用其他红包');
-					return;
-				}
-
-				this.currentRedPacke = this.redPacketList[this.currentRedPacketIndex];
-
-				this.redPacketPopup = false;
+					})
 			},
 
 			choosePayMethods() {
@@ -770,56 +330,115 @@
 				this.payMethodsPopup = false;
 			},
 
-			closeRedPacketPopup() {
-				this.redPacketPopup = false;
-			},
-
-			/**
-			 * 获取订单优惠占比
-			 */
-			requestGetContractDiscountRatio() {
-				return this.$qj.http(this.$qj.domain).get(getContractDiscountRatio);
-			},
-
-			dataHandlerFormDetail() {},
-
-			dataHandlerFormShoppingCart() {},
-
 			async savePayPrice() {
 				// if (JSON.stringify(this.addressList) === '{}') {
 				// 	this.$qj.message.alert('请选择地址');
 				// } else {
-					this.scontractPmode = this.payMethodsList.length > 0 ? this.payMethodsList[this.payMethodsIndex].ptfpmodeType : 0;
-					// 计算订单优惠占比
-					let ratio = 0;
-					let getRatioRes = await this.requestGetContractDiscountRatio();
-					if (getRatioRes.success && getRatioRes.dataObj != null) {
-						ratio = getRatioRes.dataObj.flagSettingInfo;
-					}
-					if (ratio > 0 && (this.totalDiscountPrice + this.comDisMoney) / this.shoppingCountPrice > ratio / 100) {
-						this.$qj.message.alert(`订单优惠占比不能超过${ratio}%`);
-						return;
-					}
+				this.scontractPmode = this.payMethodsList.length > 0 ? this.payMethodsList[this.payMethodsIndex]
+					.ptfpmodeType : 0;
+				// 计算订单优惠占比
+				let ratio = 0;
+				let getRatioRes = await this.requestGetContractDiscountRatio();
+				if (getRatioRes.success && getRatioRes.dataObj != null) {
+					ratio = getRatioRes.dataObj.flagSettingInfo;
+				}
+				if (ratio > 0 && (this.totalDiscountPrice + this.comDisMoney) / this.shoppingCountPrice > ratio /
+					100) {
+					this.$qj.message.alert(`订单优惠占比不能超过${ratio}%`);
+					return;
+				}
 
-					let pares = this.$qj.storage.get('contractTypepro');
-					let code;
-					let typepro;
-					if (pares && pares == '01') {
-						code = this.$qj.storage.get('goodsPmbillno');
-						typepro = '01';
-					} else {
-						code = this.$qj.storage.get('promotionCode');
-						typepro = '0';
-					}
-					let dateTimes = new Date();
-					let minTimes = dateTimes.getMinutes();
-					dateTimes.setMinutes(minTimes + this.$qj.storage.get('payTime'));
+				let pares = this.$qj.storage.get('contractTypepro');
+				let code;
+				let typepro;
+				if (pares && pares == '01') {
+					code = this.$qj.storage.get('goodsPmbillno');
+					typepro = '01';
+				} else {
+					code = this.$qj.storage.get('promotionCode');
+					typepro = '0';
+				}
+				let dateTimes = new Date();
+				let minTimes = dateTimes.getMinutes();
+				dateTimes.setMinutes(minTimes + this.$qj.storage.get('payTime'));
 
-					// 购物车下单商品ID
-					let shoppingGoodsIdStr = this.$state.shoppingGoodsIdStr;
-					this.orderDomainStr = [];
-					//商品详情直接下单
-					let detailDomainStr = [{
+				// 购物车下单商品ID
+				let shoppingGoodsIdStr = this.$state.shoppingGoodsIdStr;
+				this.orderDomainStr = [];
+				//商品详情直接下单
+				let detailDomainStr = [{
+					contractPaytime: new Date().getTime(),
+					goodsPbillno: this.$qj.storage.get('goodsPbillno'), // 成团人数
+					goodsPmbillno: code, // 团购 平团  描述营销单号
+					contractProperty: '0', //订单性质
+					contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
+					contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
+					contractPmode: this.scontractPmode || 0, //付款方式：场内、场外，即线上、线下
+					// contractType: this.shoppingItems[0].shoppingType,
+					contractPumode: '0', //提货方式
+					goodsSupplierName: '', //配送商
+					goodsSupplierCode: '', //配送商Code
+					packageList: [],
+					ocContractSettlList: [],
+					packageMode: '', //配送方式
+					contractInmoney: (Number(this.shoppingCountPrice) + Number(this.freight.toFixed(2)))
+						.toFixed(2), //  销售含税金额 (优惠前)
+					contractMoney: this.accountsSumPrice, // 最终销售含税金额 (优惠后)
+					goodsReceiptMem: this.addressList.addressMember, //收货人
+					goodsReceiptPhone: this.addressList.addressPhone, //收货联系方式
+					goodsReceiptArrdess: this.addressList.provinceName + this.addressList.cityName + this
+						.addressList.areaName +
+						this.addressList.addressDetail,
+					areaCode: this.addressList.areaCode, //从地址上面带过来`
+					contractNbillcode: this.shoppingItems[0].contractNbillcode,
+					skuIdList: [this.skuDataByDetail],
+					giftSkuIdList: []
+				}];
+
+				// 优惠券
+				// if (Object.keys(this.currentCoupon).length > 0) {
+				// 	detailDomainStr[0].ocContractSettlList.push({
+				// 		contractSettlBlance: 'COP',
+				// 		contractPmode: '0',
+				// 		contractSettlGmoney: this.couponDiscount,
+				// 		contractSettlPmoney: Number(this.currentCoupon.couponAmount),
+				// 		contractSettlOpno: this.currentCoupon.usercouponCode || '',
+				// 		contractSettlOpemo: this.currentCoupon.promotionCode || ''
+				// 	});
+				// }
+
+				// 红包
+				// if (Object.keys(this.currentRedPacket).length > 0) {
+				// 	detailDomainStr[0].ocContractSettlList.push({
+				// 		contractSettlBlance: 'COP',
+				// 		contractPmode: '0',
+				// 		contractSettlGmoney: this.redPacketDiscount,
+				// 		contractSettlPmoney: Number(this.currentRedPacket.couponAmount || 0),
+				// 		contractSettlOpno: this.currentRedPacket.usercouponCode || '',
+				// 		contractSettlOpemo: this.currentRedPacket.promotionCode || ''
+				// 	});
+				// }
+
+				// 会员权益差价
+				if (this.contractSettlOpno && this.totalDiscountPrice != 0) {
+					detailDomainStr[0].ocContractSettlList.push({
+						contractSettlBlance: 'UR',
+						contractPmode: '0',
+						contractSettlPmoney: this.totalDiscountPrice,
+						contractSettlOpno: this.contractSettlOpno
+					});
+				}
+
+				// 积分订单结算信息 不能包含优惠券，不能包含权益差价
+				if (this.shoppingItems[0].shoppingType == '06' || this.shoppingItems[0].shoppingType == '28') {
+					detailDomainStr[0].ocContractSettlList = [{
+						contractSettlBlance: 'INT',
+						contractSettlPmoney: this.sumPoints
+					}];
+				}
+
+				this.shoppingItems.map((v, index) => {
+					this.orderDomainStr.push({
 						contractPaytime: new Date().getTime(),
 						goodsPbillno: this.$qj.storage.get('goodsPbillno'), // 成团人数
 						goodsPmbillno: code, // 团购 平团  描述营销单号
@@ -827,185 +446,24 @@
 						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
 						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
 						contractPmode: this.scontractPmode || 0, //付款方式：场内、场外，即线上、线下
-						// contractType: this.shoppingItems[0].shoppingType,
 						contractPumode: '0', //提货方式
 						goodsSupplierName: '', //配送商
 						goodsSupplierCode: '', //配送商Code
+						packageMode: '', //配送方式
+						contractType: v.shoppingType,
 						packageList: [],
 						ocContractSettlList: [],
-						packageMode: '', //配送方式
-						contractInmoney: (Number(this.shoppingCountPrice) + Number(this.freight.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)
+						contractInmoney: (Number(this.shoppingCountPrice) + Number(this.freight
+							.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)
 						contractMoney: this.accountsSumPrice, // 最终销售含税金额 (优惠后)
 						goodsReceiptMem: this.addressList.addressMember, //收货人
+						goodsReceiptArrdess: this.addressList.provinceName + this.addressList
+							.cityName + this.addressList.areaName +
+							this.addressList.addressDetail, //收货地址
 						goodsReceiptPhone: this.addressList.addressPhone, //收货联系方式
-						goodsReceiptArrdess: this.addressList.provinceName + this.addressList.cityName + this.addressList.areaName +
-						this.addressList.addressDetail,
-						areaCode: this.addressList.areaCode, //从地址上面带过来`
-						contractNbillcode: this.shoppingItems[0].contractNbillcode,
-						skuIdList: [this.skuDataByDetail],
-						giftSkuIdList: []
-					}];
-
-					// 优惠券
-					// if (Object.keys(this.currentCoupon).length > 0) {
-					// 	detailDomainStr[0].ocContractSettlList.push({
-					// 		contractSettlBlance: 'COP',
-					// 		contractPmode: '0',
-					// 		contractSettlGmoney: this.couponDiscount,
-					// 		contractSettlPmoney: Number(this.currentCoupon.couponAmount),
-					// 		contractSettlOpno: this.currentCoupon.usercouponCode || '',
-					// 		contractSettlOpemo: this.currentCoupon.promotionCode || ''
-					// 	});
-					// }
-
-					// 红包
-					// if (Object.keys(this.currentRedPacket).length > 0) {
-					// 	detailDomainStr[0].ocContractSettlList.push({
-					// 		contractSettlBlance: 'COP',
-					// 		contractPmode: '0',
-					// 		contractSettlGmoney: this.redPacketDiscount,
-					// 		contractSettlPmoney: Number(this.currentRedPacket.couponAmount || 0),
-					// 		contractSettlOpno: this.currentRedPacket.usercouponCode || '',
-					// 		contractSettlOpemo: this.currentRedPacket.promotionCode || ''
-					// 	});
-					// }
-
-					// 会员权益差价
-					if (this.contractSettlOpno && this.totalDiscountPrice != 0) {
-						detailDomainStr[0].ocContractSettlList.push({
-							contractSettlBlance: 'UR',
-							contractPmode: '0',
-							contractSettlPmoney: this.totalDiscountPrice,
-							contractSettlOpno: this.contractSettlOpno
-						});
-					}
-
-					// 积分订单结算信息 不能包含优惠券，不能包含权益差价
-					if (this.shoppingItems[0].shoppingType == '06' || this.shoppingItems[0].shoppingType == '28') {
-						detailDomainStr[0].ocContractSettlList = [{
-							contractSettlBlance: 'INT',
-							contractSettlPmoney: this.sumPoints
-						}];
-					}
-
-					this.shoppingItems.map((v, index) => {
-						this.orderDomainStr.push({
-							contractPaytime: new Date().getTime(),
-							goodsPbillno: this.$qj.storage.get('goodsPbillno'), // 成团人数
-							goodsPmbillno: code, // 团购 平团  描述营销单号
-							contractProperty: '0', //订单性质
-							contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
-							contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
-							contractPmode: this.scontractPmode || 0, //付款方式：场内、场外，即线上、线下
-							contractPumode: '0', //提货方式
-							goodsSupplierName: '', //配送商
-							goodsSupplierCode: '', //配送商Code
-							packageMode: '', //配送方式
-							contractType: v.shoppingType,
-							packageList: [],
-							ocContractSettlList: [],
-							contractInmoney: (Number(this.shoppingCountPrice) + Number(this.freight.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)
-							contractMoney: this.accountsSumPrice, // 最终销售含税金额 (优惠后)
-							goodsReceiptMem: this.addressList.addressMember, //收货人
-							goodsReceiptArrdess: this.addressList.provinceName + this.addressList.cityName + this.addressList.areaName +
-								this.addressList.addressDetail, //收货地址
-							goodsReceiptPhone: this.addressList.addressPhone, //收货联系方式
-							areaCode: this.addressList.areaCode //从地址上面带过来`
-						});
-
-						let arr = []
-						for (let i = 0; i < this.upImg.length; i++) {
-							let obj = {
-								contractproKey: '图片',
-								contractproName: '',
-								contractproValue1: this.upImg[i].url,
-								contractproValue: '',
-
-							}
-							// obj.contractproValue1 = this.upImg[i]
-							arr.push(obj)
-						}
-
-						this.orderDomainStr[index].ocContractproDomainList = arr
-						if (Object.keys(this.currentCoupon).length > 0) {
-							this.orderDomainStr[index].ocContractSettlList.push({
-								contractSettlBlance: 'COP',
-								contractPmode: '0',
-								contractSettlGmoney: this.couponDiscount,
-								contractSettlPmoney: Number(this.currentCoupon.couponAmount),
-								contractSettlOpno: this.currentCoupon.usercouponCode || '',
-								contractSettlOpemo: this.currentCoupon.promotionCode || ''
-							});
-						}
-						if (Object.keys(this.currentRedPacket).length > 0) {
-							this.orderDomainStr[index].ocContractSettlList.push({
-								contractSettlBlance: 'COP',
-								contractPmode: '0',
-								contractSettlGmoney: this.redPacketDiscount,
-								contractSettlPmoney: Number(this.currentRedPacket.couponAmount || 0),
-								contractSettlOpno: this.currentRedPacket.usercouponCode || '',
-								contractSettlOpemo: this.currentRedPacket.promotionCode || ''
-							});
-						}
-
-						// 会员权益差价
-						if (this.contractSettlOpno && this.totalDiscountPrice != 0) {
-							this.orderDomainStr[index].ocContractSettlList.push({
-								contractSettlBlance: 'UR',
-								contractPmode: '0',
-								contractSettlPmoney: this.totalDiscountPrice,
-								contractSettlOpno: this.contractSettlOpno
-							});
-						}
-
-						v.shoppingpackageList.map(val => {
-							let list = [];
-							if (val.giftList) {
-								list = [...val.giftList, ...val.shoppingGoodsList];
-								console.log(list,"gdffhhhhhhhhhhhh")
-							} else {
-								list = val.shoppingGoodsList;
-							}
-							let shoppingGoodsIdList = [];
-							val.shoppingGoodsList.map(vk => {
-								shoppingGoodsIdList.push(vk.shoppingGoodsId);
-							});
-							if (val.disMoney && val.disMoney > 0) {
-								if (val.pmCalcBeanList && val.pmCalcBeanList.length > 0) {
-									val.pmCalcBeanList.map(els => {
-										this.orderDomainStr[index].ocContractSettlList.push({
-											contractSettlBlance: els.promotionInType == 0 ? 'PM' : 'COP',
-											contractPmode: '0',
-											contractSettlGmoney: Number(els.disMoney.toFixed(2)),
-											contractSettlPmoney: Number(els.disMoney.toFixed(2)),
-											contractSettlOpno: els.promotionCode,
-											contractSettlOpemo: els.promotionName
-										});
-										detailDomainStr[0].ocContractSettlList.push({
-											contractSettlBlance: els.promotionInType == 0 ? 'PM' : 'COP',
-											contractPmode: '0',
-											contractSettlGmoney: Number(els.disMoney.toFixed(2)),
-											contractSettlPmoney: Number(els.disMoney.toFixed(2)),
-											contractSettlOpno: els.promotionCode,
-											contractSettlOpemo: els.promotionName
-										});
-									});
-								}
-							}
-							this.orderDomainStr[index].packageList.push({
-								contractGoodsList: list,
-								shoppingGoodsIdList: shoppingGoodsIdList,
-								promotionCode: val.promotionCode,
-								packageRemark: val.packageRemark
-							});
-							detailDomainStr[0].packageList.push({
-								contractGoodsList: list,
-								shoppingGoodsIdList: [],
-								promotionCode: val.promotionCode,
-								packageRemark: val.packageRemark
-							});
-						});
+						areaCode: this.addressList.areaCode //从地址上面带过来`
 					});
+
 					let arr = []
 					for (let i = 0; i < this.upImg.length; i++) {
 						let obj = {
@@ -1013,31 +471,131 @@
 							contractproName: '',
 							contractproValue1: this.upImg[i].url,
 							contractproValue: '',
+
 						}
 						// obj.contractproValue1 = this.upImg[i]
 						arr.push(obj)
 					}
-					console.log(arr, '222222222222')
-					detailDomainStr[0].ocContractproDomainList = arr
-					let orderDomainStr = this.orderWay === 0 ? JSON.stringify(detailDomainStr) : JSON.stringify(this.orderDomainStr);
-					let params = {
-						orderDomainStr: orderDomainStr
-					};
-					this.$qj.message.loading();
-					this.$qj
-						.http(this.$qj.domain)
-						.post(saveContract, params)
-						.then(res => {
-							console.log(res, 'fygryefgre7gtrt')
-							if (res.errorCode == 'nologin') {
-								return;
-							}
-							if (res.dataObj.contractBillcode) {
-								this.contractBillcode = res.dataObj.contractBillcode;
-								this.$state.set('contractBillcode', this.contractBillcode);
-								this.$qj.router.replace('pay/paySelect');
-							}
+
+					this.orderDomainStr[index].ocContractproDomainList = arr
+					if (Object.keys(this.currentCoupon).length > 0) {
+						this.orderDomainStr[index].ocContractSettlList.push({
+							contractSettlBlance: 'COP',
+							contractPmode: '0',
+							contractSettlGmoney: this.couponDiscount,
+							contractSettlPmoney: Number(this.currentCoupon.couponAmount),
+							contractSettlOpno: this.currentCoupon.usercouponCode || '',
+							contractSettlOpemo: this.currentCoupon.promotionCode || ''
 						});
+					}
+					if (Object.keys(this.currentRedPacket).length > 0) {
+						this.orderDomainStr[index].ocContractSettlList.push({
+							contractSettlBlance: 'COP',
+							contractPmode: '0',
+							contractSettlGmoney: this.redPacketDiscount,
+							contractSettlPmoney: Number(this.currentRedPacket.couponAmount || 0),
+							contractSettlOpno: this.currentRedPacket.usercouponCode || '',
+							contractSettlOpemo: this.currentRedPacket.promotionCode || ''
+						});
+					}
+
+					// 会员权益差价
+					if (this.contractSettlOpno && this.totalDiscountPrice != 0) {
+						this.orderDomainStr[index].ocContractSettlList.push({
+							contractSettlBlance: 'UR',
+							contractPmode: '0',
+							contractSettlPmoney: this.totalDiscountPrice,
+							contractSettlOpno: this.contractSettlOpno
+						});
+					}
+
+					v.shoppingpackageList.map(val => {
+						let list = [];
+						if (val.giftList) {
+							list = [...val.giftList, ...val.shoppingGoodsList];
+							console.log(list, "gdffhhhhhhhhhhhh")
+						} else {
+							list = val.shoppingGoodsList;
+						}
+						let shoppingGoodsIdList = [];
+						val.shoppingGoodsList.map(vk => {
+							shoppingGoodsIdList.push(vk.shoppingGoodsId);
+						});
+						if (val.disMoney && val.disMoney > 0) {
+							if (val.pmCalcBeanList && val.pmCalcBeanList.length > 0) {
+								val.pmCalcBeanList.map(els => {
+									this.orderDomainStr[index].ocContractSettlList.push({
+										contractSettlBlance: els.promotionInType == 0 ?
+											'PM' : 'COP',
+										contractPmode: '0',
+										contractSettlGmoney: Number(els.disMoney
+											.toFixed(2)),
+										contractSettlPmoney: Number(els.disMoney
+											.toFixed(2)),
+										contractSettlOpno: els.promotionCode,
+										contractSettlOpemo: els.promotionName
+									});
+									detailDomainStr[0].ocContractSettlList.push({
+										contractSettlBlance: els.promotionInType == 0 ?
+											'PM' : 'COP',
+										contractPmode: '0',
+										contractSettlGmoney: Number(els.disMoney
+											.toFixed(2)),
+										contractSettlPmoney: Number(els.disMoney
+											.toFixed(2)),
+										contractSettlOpno: els.promotionCode,
+										contractSettlOpemo: els.promotionName
+									});
+								});
+							}
+						}
+						this.orderDomainStr[index].packageList.push({
+							contractGoodsList: list,
+							shoppingGoodsIdList: shoppingGoodsIdList,
+							promotionCode: val.promotionCode,
+							packageRemark: val.packageRemark
+						});
+						detailDomainStr[0].packageList.push({
+							contractGoodsList: list,
+							shoppingGoodsIdList: [],
+							promotionCode: val.promotionCode,
+							packageRemark: val.packageRemark
+						});
+					});
+				});
+				let arr = []
+				for (let i = 0; i < this.upImg.length; i++) {
+					let obj = {
+						contractproKey: '图片',
+						contractproName: '',
+						contractproValue1: this.upImg[i].url,
+						contractproValue: '',
+					}
+					// obj.contractproValue1 = this.upImg[i]
+					arr.push(obj)
+				}
+				console.log(arr, '222222222222')
+				detailDomainStr[0].ocContractproDomainList = arr
+				let orderDomainStr = this.orderWay === 0 ? JSON.stringify(detailDomainStr) : JSON.stringify(this
+					.orderDomainStr);
+				let params = {
+					orderDomainStr: orderDomainStr
+				};
+				this.$qj.message.loading();
+				this.$qj
+					.http(this.$qj.domain)
+					.post(saveContract, params)
+					.then(res => {
+						console.log(res, 'fygryefgre7gtrt')
+						if (res.errorCode == 'nologin') {
+							return;
+						}
+						if (res.dataObj.contractBillcode) {
+							this.contractBillcode = res.dataObj.contractBillcode;
+							this.$state.set('contractBillcode', this.contractBillcode);
+							this.$qj.router.replace('pay/paySelect');
+						}
+					});
 				// }
 			}
 		}
@@ -1046,6 +604,92 @@
 
 <style lang="less" scoped>
 	@import '@/node_modules/qj-mini-pages/libs/css/common.less';
+	.popup {
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		height: 100vh;
+		background-color: rgba(0, 0, 0, 0.6);
+		z-index: 9998;
+	}
+	.htImg {
+		width: 95%;
+		margin: 0 auto;
+	}
+	.htImage {
+		text-align: center;
+		width: 88%;
+		height: auto;
+		margin: 0 auto;
+		border: 1px solid #fff;
+		position: absolute;
+		top: 60px;
+		left: 22px;
+		z-index: 20000;
+	
+	}
+	.lookconstr {
+		font-family: 'PingFangSC-Regular', 'PingFang SC', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+		font-size: 10px;
+		color: #169BD5;
+		text-align: right;
+	}
+
+	.miaoshu {
+		font-family: 'PingFangSC-Regular', 'PingFang SC', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+		font-size: 10px;
+		color: #7F7F7F;
+		margin-bottom: 30rpx;
+	}
+
+	.money {
+		height: 20px;
+		line-height: 20px;
+		font-size: 12px;
+		color: rgba(153, 153, 153, 0.619607843137255);
+	}
+
+	.buttonClass {
+		width: 80%;
+		height: 30rpx;
+		line-height: 30rpx;
+		color: #fff;
+		background-color: #004178;
+		font-size: 12px;
+	}
+
+	.entryName {
+		width: 30%;
+		font-family: 'PingFangSC-Regular', 'PingFang SC', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+		line-height: 60rpx;
+	}
+
+	.effctivTime {
+		width: 30%;
+		font-family: 'PingFangSC-Regular', 'PingFang SC', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+		font-size: 12px;
+		color: #AAAAAA;
+		text-align: right;
+		line-height: 60rpx;
+	}
+
+	.contractType {
+		width: 40%;
+		font-family: 'PingFangSC-Regular', 'PingFang SC', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+		font-size: 12px;
+		text-align: right;
+	}
 
 	.accounts {
 		&-back {
@@ -1334,24 +978,19 @@
 		}
 
 		&-sum {
-			position: fixed;
-			bottom: 0;
-			left: 0;
-			z-index: 10;
 			height: 96rpx;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
 			background: @white-color;
-			text-indent: 20rpx;
+			padding: 28rpx;
 			width: 100%;
-
 			p {
 				display: flex;
 				align-items: center;
+				font-size: 15px;
+				font-weight: 550;
 
 				i {
-					color: #d66377;
+					color: #ff557f;
+					font-weight: 500;
 				}
 			}
 

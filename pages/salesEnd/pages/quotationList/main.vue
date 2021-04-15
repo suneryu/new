@@ -16,18 +16,17 @@
 					<div class="order-item">
 						<div class="order-status">
 							<div class="order-info">
-								<div class="order-tag" v-if="order.contractType == '30' || order.contractType == '06'" v-bind:style="[orderTag[order.contractType]]">
-									{{ orderTagText[order.contractType] }}
-								</div>
-								<div>订单编号：{{ order.contractBillcode }}</div>
+								<div>报价单编号：{{ order.contractBillcode }}</div>
 							</div>
 							<div v-if="order.dataState == -1">已取消</div>
 							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '2' ">待审核</div> -->
-							<div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待付款</div>
+							<div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待支付</div>
 							<div v-else-if="order.dataState == 2">待支付</div>
+							<!-- <div v-else-if="order.dataState == 3">待收货</div> -->
 							<div v-else-if="order.dataState == 4">已完成</div>
+							<!-- <button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button> -->
 						</div>
-						<div class="order-msg" v-for="(goods, goodsIndex) in order.goodsList" :key="goodsIndex" @click="orderDetail(order)">
+						<div class="order-msg" v-for="(goods, goodsIndex) in order.goodsList" :key="goodsIndex">
 							<img :src="goods.dataPic || userImgurl" />
 							<div>
 								<div>
@@ -35,8 +34,9 @@
 									<h6>{{ goods.skuName }}</h6>
 								</div>
 								<div style="text-align:right;">
-									<p style="width:160rpx;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>
+									<p style="width:160rpx;color: #ff557f;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>
 									<h6>x{{ goods.goodsNum }}</h6>
+									<!-- <button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button> -->
 								</div>
 							</div>
 						</div>
@@ -52,14 +52,12 @@
 <script>
 import http from '@/api/http.js';	
 import { $storage, $router, $message } from '@/utils/prototype/vue.js';
-import { saveOcRefund } from '@/api/interface.js';
+import { queryContractPageC} from '@/api/interface.js';
 import { myOrder, refund, addShoppingGoods, addShoppingGoodsBySpec } from '@/node_modules/qj-mini-pages/libs/api/interface.js';
 export default {
 	data() {
 		return {
-			
-			pageOptions: '',
-			items: ['全部', '待确认','已确认', '已取消'],
+			items: ['全部', '待支付','已支付', '已取消'],
 			orderList: [], //订单列表
 			myOrder: [], //菜单--》订单搜索路径
 			current: 0,
@@ -68,11 +66,10 @@ export default {
 			total: 0, //列表数据总数
 			rows: 10,
 			//dataState//已取消（-1），初始化（0），待付款（1），待发货（2），待收货（3），成功（4）
-			dataState: 1, //table切换接口标示
+			dataState: '', //table切换接口标示
 			lastPageLine: false, //底部提示
 			userImgurl: this.$imgDomain + '/paas/shop-master/c-static/images/wxminiImg/img_default.jpg',
 			nullImg: this.$imgDomain + '/paas/shop-master/c-static/images/wxminiImg/noOrder.png',
-			pageOptions: '',
 			searchPath: '',
 			topDistance: 0,
 			orderTag: {
@@ -96,8 +93,21 @@ export default {
 	onLoad(options) {
 		// console.log('跳转页面---',options)
 		// console.log('------',JSON.parse(options)[0])
-		if (options) {
-			this.pageOptions = options;
+		if(options.state == '全部'){
+			this.current = 0
+			this.dataState = '';
+			}
+		if(options.state == '待支付'){
+			this.current = 1
+			this.dataState = 2;
+		}
+		if(options.state == '已支付'){
+			this.current = 2
+			this.dataState = 1;
+		}
+		if(options.state == '已取消'){
+			this.current = 3
+			this.dataState = -1;
 		}
 	},
 	computed: {
@@ -115,7 +125,7 @@ export default {
 		this.searchPath = this.$state.orderSearch;
 	},
 	onShow() {
-		this.commonMounted(-1);
+		this.commonMounted();
 	},
 	onReachBottom() {
 		this.loadMore();
@@ -131,75 +141,56 @@ export default {
 			this.topDistance = h;
 		},
 
-		commonMounted(dataState = '') {
-			
-			if (dataState) {
-				this.dataState = dataState;
-				this.current = Number(dataState);
-			}
-			console.log(this.dataState,'-----状态')
-			
+		commonMounted() {
 			let params = {
-				page: this.page,
-				rows: this.rows,
-				childFlag: true
-			};
-		
-				
-			if (this.current !== 0) {
-				params.dataState = this.dataState;
-			} else {
-				delete params.dataState;
-			}
-			if (this.current == 4) {
-				params.dataStateBuy = 1;
-				params.contractAppraise = 0;
-			} else {
-				delete params.dataStateBuy;
-				delete params.contractAppraise;
-			}
-			if( this.dataState ==0 ){
-				delete params.dataState;
-					params.dataState == 1;
-					params.dataStatestr = 2;
+					page: this.page,
+					rows: this.rows,
+					childFlag: true,
+					contractType: 39,
+					// memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
+				};
+				if(this.dataState != ''){
+					params.dataState=this.dataState
 				}
-				if( this.dataState ==1 ){
-						params.dataStatestr = 1;
-					}
-					if( this.dataState == -1 ){
-							delete params.dataState;
-						}
-						
-			this.$qj
-				.http(this.$qj.domain)
-				.get(myOrder.queryContractPage, params)
-				.then(res => {
-					if (res && res.rows) {
-						if (this.page === 1 && res.rows.length === 0) {
-							this.orderList = [];
-						} else {
-							let list = res.rows.filter(({ contractType }) => {
-								return contractType != '28';
-							});
-							list.map(v => {
-								v.goodsList.map(val => {
-									if (!RegExp(/http/).test(val.dataPic)) {
-										val.dataPic = this.$domain + val.dataPic;
-									}
-								});
-							});
-							if (this.page === 1) {
-								this.orderList = list;
+			
+				this.$qj
+					.http(this.$qj.domain)
+					.get(queryContractPageC, params)
+					.then(res => {
+						// console.log(res,111111111111111111111)
+						// this.orderList = res.list
+						if (res && res.rows) {
+							if (this.page === 1 && res.rows.length === 0) {
+								this.orderList = [];
 							} else {
-								this.orderList = [...this.orderList, ...list];
+								let list = res.rows.filter(({ contractType }) => {
+									return contractType != '28';
+								});
+								
+								list.map(v => {
+									if(v.goodsList != null){
+										v.goodsList.map(val => {
+										if (!RegExp(/http/).test(val.dataPic)) {
+											val.dataPic = this.$domain + val.dataPic;
+										}
+										});
+									}else{
+										v.goodsList = []
+									}
+									
+								});
+								if (this.page === 1) {
+									this.orderList = [];
+									this.orderList = list;
+								} else {
+									this.orderList = [...this.orderList, ...list];
+								}
 							}
-							console.log('订单信息------',this.orderList)
+			
+							this.total = res.total;
 						}
-
-						this.total = res.total;
-					}
-				});
-		},
+					});
+			},
 		orderTitle(item, index) {
 			console.log('传来的---0',item,'====',index)
 			this.current = index;
@@ -208,23 +199,17 @@ export default {
 				this.dataState = index;
 			}
 			if(item == '全部'){
+				this.dataState = '';
+				}
+			if(item == '待支付'){
+				this.dataState = 2;
+			}
+			if(item == '已支付'){
+				this.dataState = 1;
+			}
+			if(item == '已取消'){
 				this.dataState = -1;
-				}
-			if(item == '待审核'){
-				this.dataState = 0;
-				}
-				if(item == '待付款'){
-					this.dataState = 1;
-					}
-					if(item == '待发货'){
-						this.dataState = 2;
-						}
-						if(item == '待收货'){
-							this.dataState = 3;
-							}
-							if(item == '已完成'){
-								this.dataState = 4;
-								}
+			}
 			this.page = 1;
 			this.rows = 10;
 			this.commonMounted();

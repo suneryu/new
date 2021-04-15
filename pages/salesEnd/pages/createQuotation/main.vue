@@ -5,7 +5,7 @@
 			<!-- <qj-mini-search-nav-bar :isBack='false' @getNavBarHeight="getNavBarHeight" :isSearch="true"
 				:searchRouter="searchPath"></qj-mini-search-nav-bar> -->
 				<view style="width: 100%;z-index: 99999;position: fixed;top: 0;height: 100rpx;background: #fff;text-align: center;line-height: 100rpx;" >
-					<u-search placeholder="输入商品名称" :show-action="false" v-model='searchValue' bg-color='#f1f5f8' clearabled></u-search>
+					<u-search placeholder="输入商品名称" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
 				</view>
 			<div class="goodsList-title" >
 				<div class="goodsList-title-left">
@@ -34,17 +34,17 @@
 						<div class="item-container">
 							<div class="list-img" @click.stop="goToGoodsDetail(item)">
 								<img :src="item.dataPic || userImgurl" /> <!-- 商品图片-->
-								<span v-if="item.dataState == 0">已下架</span>
+								<!-- <span v-if="item.dataState == 0">已下架</span> -->
 								<!-- <span v-if="item.dataState == 3">已失效</span>
 								<span v-if="item.dataState == 1">库存不足</span> -->
 							</div>
-							<div class="list-r" :style="{ color: item.dataState !== 0 ? '#9b9b9b' : '' }">
+							<div class="list-r" >
 								<p @click.stop="goToGoodsDetail(item)">{{ item.goodsName }}</p>
-								<h3 :style="{ color: item.dataState !== 0 ? '#9b9b9b' : '' }"
+								<h3 
 									@click.stop="goToGoodsDetail(item)">
 									{{ item.skuName }}
 								</h3>
-								<h3 :style="{ color: item.dataState !== 0 ? '#9b9b9b' : '' }"
+								<h3 
 									@click.stop="goToGoodsDetail(item)">
 									起订量：{{ item.goodsMinnum }}
 								</h3>
@@ -219,6 +219,16 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			serarchGoods(value){
+				if(value != ''){
+					this.params.goodsShowname = value
+				}else{
+					delete this.params.goodsShowname
+				}
+				this.params.page = 1;
+				this.page = 1;
+				this.commonMounted()
+			},
 			//添加购物车
 			addShoppingGoodsCode(item){
 				let goodsList = [{
@@ -258,7 +268,6 @@
 						this.$qj.message.alert('请先添加商品到购物车');
 					}
 				})
-				// 
 			},
 			goToGoodsDetail() {},
 			//数量删减

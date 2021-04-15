@@ -26,9 +26,9 @@
 								<img :src="item.dataPic || userImgurl" /> <!-- 商品图片-->
 								<!-- <span v-if="item.dataState == 0">已下架</span> -->
 							</div>
-							<div class="list-r" :style="{ color: '#9b9b9b'  }">
+							<div class="list-r" >
 								<p @click.stop="goToGoodsDetail(item)">{{ item.goodsName }}</p>
-								<h3 :style="{ color: item.dataState !== 0 ? '#9b9b9b' : '' }"
+								<h3 
 									@click.stop="goToGoodsDetail(item)">
 									{{ item.skuName }}
 								</h3>
@@ -167,6 +167,7 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			//取消报价单
 			cancleList(){
 				let shoppingGoodsList =[]
 				this.items.forEach(item=>{
@@ -182,6 +183,7 @@
 					}
 				})
 			},
+			//删除报价单商品
 			deleteQuotation(goosId){
 				this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/deleteShoppingGoods.json', {
 					shoppingGoodsId: goosId,
@@ -195,6 +197,7 @@
 					
 				})
 			},
+			//获取用户信息
 			getPersonal(){
 				this.$qj.http(this.$qj.domain).get('/web/um/userserviceinfo/queryUserinfoservicePage.json', {
 					userinfoPhone: this.userPhone,
@@ -206,6 +209,7 @@
 					this.getQY();
 				})
 			},
+			//推送报价单
 			createQuotation(){
 				let shoppingGoodsList =[]
 				this.items.forEach(item=>{
@@ -231,9 +235,9 @@
 						              shoppingGoodsIdList: shoppingGoodsList,
 						            },
 						          ],
-						          contractInmoney: res.goodsMoney,
-						          contractMoney: res.goodsMoney,
-						          goodsPmbillno: res.goodsPmbillno,
+						          contractInmoney: res[0].goodsMoney,
+						          contractMoney: Number(res[0].goodsMoney)*Number(this.userinfoOcode),
+						          goodsPmbillno: res[0].goodsPmbillno,
 						          // contractRemark: "cccccc",
 						        },
 							];
@@ -243,9 +247,11 @@
 						}
 						this.$qj.http(this.$qj.domain).get('/web/oc/empcontract/saveContract.json', params).then(res=>{
 							if(res.success){
-								this.$qj.message.alert('报价单推送成功！');
+								this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
+									$router.replace('salesEnd/pages/quotationList')
+								})
 							}else{
-								$router.replace('salesEnd/pages/quotationList')
+								this.$qj.message.alert('报价单推送失败！');
 							}
 					})
 				})
@@ -352,6 +358,7 @@
 													
 								v.itemChecked = false;
 								v.itemCheckedDelete = false;
+								v.goodsNum = v.goodsCamount
 								batchCollectData.push({
 									collectType: '0',
 									collectOpcode: v.skuCode

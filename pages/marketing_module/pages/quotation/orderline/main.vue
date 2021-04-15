@@ -89,14 +89,14 @@
 			</div>
 			<div class='goodsPrice-item'>
 				<span>组合优惠：</span>
-				<span>{{ unitPrice.obpay }}0{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span>
 			</div>
 		</div>
 		<div class="accounts-sum">
 			<p>
 				应付金额:
 				<!-- <i>{{ unitPrice.obpay }}{{ accountsSumPrice }}{{ unitPrice.mapay }}</i> -->
-				<i>{{ unitPrice.obpay }}{{ allPrice }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{ Number(userinfoOcode)*Number(allPrice)  }}{{ unitPrice.mapay }}</i>
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
 		</div>
@@ -373,10 +373,9 @@
 					})
 					.then(res => {
 							console.log("用户信息-----",res)
+							this.userinfoOcode = res.rows[0].userinfoOcode
 						if(this.userinfoOcode == null || this.userinfoOcode ==''){
 							this.userinfoOcode = 1;
-						}else{
-							this.userinfoOcode = res.rows[0].userinfoOcode
 						}
 						console.log('权益值',this.userinfoOcode)
 						
@@ -724,8 +723,8 @@
 							packageList: [],
 							ocContractSettlList: [],
 							// contractInmoney: (Number(this.shoppingCountPrice) + Number(this.freight.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)
-							contractInmoney: this.allPrice,
-							contractMoney: this.allPrice, // 最终销售含税金额 (优惠后)
+							contractInmoney: Number(this.allPrice),
+							contractMoney: Number(this.allPrice)*Number(this.userinfoOcode), // 最终销售含税金额 (优惠后)
 							goodsReceiptMem: this.addressList.addressMember, //收货人
 							goodsReceiptArrdess: this.addressList.provinceName + this.addressList.cityName + this.addressList.areaName +
 								this.addressList.addressDetail, //收货地址
@@ -844,27 +843,30 @@
 							if (res.dataObj.contractBillcode) {
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);
-								if(this.goodsClass == '2'){ //耗材订单
-									   let options = {
-											url: 'pay/payhaocai',
-											query: {
-												// userPhone: this.userPhone || this.inputUserPhone 
-											}
-									   };
-									   this.navigateTo(options);
+								this.$qj.router.replace('pay/paySelect');
+								
+								// if(this.goodsClass == '2'){ //耗材订单
+								// 	   let options = {
+								// 			url: 'pay/payhaocai',
+								// 			query: {
+								// 				// userPhone: this.userPhone || this.inputUserPhone 
+								// 			}
+								// 	   };
+								// 	   this.navigateTo(options);
 									
-								}
-								if(this.goodsClass == '1'){ //零配件
-								if(this.contractPmode == '0'){ // 线上
-									this.$qj.router.replace('pay/paySelect');
-								}else{
-									this.$qj.router.replace('order_modules/order/index');
-								}
-									// this.$qj.router.replace('pay/paySelect');
-								}
-								if(this.goodsClass == '3'){ //纪念品
-								   this.$qj.router.replace('pay/paySelect');
-								}
+								// }
+								// if(this.goodsClass == '1'){ //零配件
+								// if(this.contractPmode == '0'){ // 线上
+								
+									
+								// }else{
+								// 	this.$qj.router.replace('order_modules/order/index');
+								// }
+								// 	// this.$qj.router.replace('pay/paySelect');
+								// }
+								// if(this.goodsClass == '3'){ //纪念品
+								//    this.$qj.router.replace('pay/paySelect');
+								// }
 							}
 						});	
 				}

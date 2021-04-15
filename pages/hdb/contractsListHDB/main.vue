@@ -52,7 +52,7 @@
 						<div class='lookconstr' style='width: 20%;'><u style='text-decoration:underline'
 								@click='preview(items)'>合同预览</u></div>
 						<div style='width: 20%;'>
-							<button class="buttonClass" v-if='qyBut' @click="talkOrAsk(items)">签约</button>
+							<button class="buttonClass" v-if='qyBut' @click="talkOrAsk(items.scontractId)">签约</button>
 							<button class="buttonClass" v-else @click="talkOrder(items)">预约</button>
 						</div>
 					</div>
@@ -350,64 +350,62 @@
 				}
 			},
 			//点击签约
-			talkOrAsk(aaa) {
+			talkOrAsk(scontractId) {
 				if (this.userinfoType == "1") {
 					//个人用户
 					this.tankuang();
 				} else {
 					//获取签约时的信息
-					let bbb = aaa
-					const that = this;
+					$router.push('hdb/orderHDB', {scontractId});
 					// if (compareVersion(global.globalData.SDKVersion, "2.8.2") >= 0) {
-					wx.requestSubscribeMessage({
-						tmplIds: ["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"], //需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
-						// 消息模板id在[微信公众平台(mp.weixin.qq.com)-功能-订阅消息]中配置
-						success(res) { // 接口调用成功的回调函数
-							console.log(res, 'compareVersion')
-							if (
-								res["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"] == "accept"
-								// Object res   [TEMPLATE_ID]是动态的键，即模板id，值包括'accept'、'reject'、'ban'。
-								// 'accept'表示用户同意订阅该条id对应的模板消息，'reject'表示用户拒绝订阅该条id对应的模板消息，'ban'表示已被后台封禁。
-							) {
-								if (that.subscribeMes) {
-									console.log("订阅成功")
-									wx.showToast({
-										title: "订阅成功！",
-										duration: 1500,
-										icon: "success",
-										success(data) {
-											that.subscribeMes = false;
-										}
-									});
-								}
-								// mpvue.navigateTo({
-								//   url: `/pages/chat/main`
-								// });
-								$router.push('hdb/orderHDB', bbb);
-							} else {
-								// mpvue.navigateTo({
-								//   url: `/pages/chat/main`
-								console.log("失败")
-								// });
-							}
-						},
-						fail(res) { // 接口调用失败的回调函数
-							if (res.errCode === 20004) {
-								wx.showModal({
-									title: "温馨提示",
-									content: "您已拒绝授权，将无法在微信中收到回复通知！",
-									showCancel: false,
-									success: res => {
-										if (res.confirm) {
-											mpvue.navigateTo({
-												url: `/pages/chat/main`
-											});
-										}
-									}
-								});
-							}
-						}
-					});
+					// wx.requestSubscribeMessage({
+					// 	tmplIds: ["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"], //需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
+					// 	// 消息模板id在[微信公众平台(mp.weixin.qq.com)-功能-订阅消息]中配置
+					// 	success(res) { // 接口调用成功的回调函数
+					// 		console.log(res, 'compareVersion')
+					// 		if (
+					// 			res["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"] == "accept"
+					// 			// Object res   [TEMPLATE_ID]是动态的键，即模板id，值包括'accept'、'reject'、'ban'。
+					// 			// 'accept'表示用户同意订阅该条id对应的模板消息，'reject'表示用户拒绝订阅该条id对应的模板消息，'ban'表示已被后台封禁。
+					// 		) {
+					// 			if (that.subscribeMes) {
+					// 				console.log("订阅成功")
+					// 				wx.showToast({
+					// 					title: "订阅成功！",
+					// 					duration: 1500,
+					// 					icon: "success",
+					// 					success(data) {
+					// 						that.subscribeMes = false;
+					// 					}
+					// 				});
+					// 			}
+					// 			// mpvue.navigateTo({
+					// 			//   url: `/pages/chat/main`
+					// 			// });
+					// 		} else {
+					// 			// mpvue.navigateTo({
+					// 			//   url: `/pages/chat/main`
+					// 			console.log("失败")
+					// 			// });
+							// }
+						// },
+						// fail(res) { // 接口调用失败的回调函数
+						// 	if (res.errCode === 20004) {
+						// 		wx.showModal({
+						// 			title: "温馨提示",
+						// 			content: "您已拒绝授权，将无法在微信中收到回复通知！",
+						// 			showCancel: false,
+						// 			success: res => {
+						// 				if (res.confirm) {
+						// 					mpvue.navigateTo({
+						// 						url: `/pages/chat/main`
+						// 					});
+						// 				}
+						// 			}
+						// 		});
+						// 	}
+						// }
+					// });
 					// } else {
 					//   wx.showModal({
 					//     title: "温馨提示",
