@@ -34,9 +34,6 @@
 						<div class="item-container">
 							<div class="list-img" @click.stop="goToGoodsDetail(item)">
 								<img :src="item.dataPic || userImgurl" /> <!-- 商品图片-->
-								<!-- <span v-if="item.dataState == 0">已下架</span> -->
-								<!-- <span v-if="item.dataState == 3">已失效</span>
-								<span v-if="item.dataState == 1">库存不足</span> -->
 							</div>
 							<div class="list-r" >
 								<p @click.stop="goToGoodsDetail(item)">{{ item.goodsName }}</p>
@@ -143,6 +140,7 @@
 				nullImg: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/noSearchResult.png',
 				params: {},
 				items: [],
+				itemsBak:[],
 				total: 0,
 				page: 1,
 				rows: 10,
@@ -182,14 +180,20 @@
 				userInfoCode: "",
 				rtagCode: "",
 				userInfoCode: "",
-				goodsClass: ""
+				goodsClass: "",
+				scontractCode:''
 			};
 		},
 		onShow() {
 			this.getPersonal()
 		},
 		onLoad(options) {
-			this.userPhone = '15234496108'
+			this.userPhone = options.userinfoPhone
+			// this.userPhone = '15234496108'
+			if(options.scontractCode != undefined){
+				this.scontractCode = options.scontractCode
+				// this.scontractCode = '2020120300000001'
+			}
 		},
 		onReachBottom() {
 			this.loadMore();
@@ -219,15 +223,16 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			//查询商品
 			serarchGoods(value){
 				if(value != ''){
-					this.params.goodsShowname = value
+					this.items = this.itemsBak.filter(item=>item.goodsName.indexOf(value) != -1)
 				}else{
-					delete this.params.goodsShowname
+					this.items = this.itemsBak
 				}
 				this.params.page = 1;
 				this.page = 1;
-				this.commonMounted()
+				// this.commonMounted()
 			},
 			//添加购物车
 			addShoppingGoodsCode(item){
@@ -319,25 +324,13 @@
 			//初始化请求信息
 			initSearchParams(goodsClassCode) {
 				this.params = {
-					// sortField: '',
-					// order: 'desc',
 					page: 1,
 					rows: this.rows,
-					// goodsClassCode:'2020072100000145',
-					// classtreeShopcode:  this.goodsClassCode || goodsClassCode,
-					// goodsOrigin:"0",
-					// // goodsClassCode:this.classtreeCode || classtreeCode,
-					// goodsType: "00",
-					// searchParam: this.searchParam,
-					// // classtreeCode:"2020072100000130", 
-					channelCode: "1526",
-					// searchParam: this.searchParam || this.$qj.storage.get('searchParam')
+					// channelCode: "1526",
 				}
 				if (this.userinfoType == '2') {
 					this.params.channelCode = 'tempChannelCode'
 					this.params.temp = this.channelCode
-					// this.params.temp = 'SHA/SBB0/SB1S1'
-					// this.params.temp = 'SHA/SBB0/SB1S'  //上海
 					this.params.goodsOrigin = "13"
 				}
 
@@ -348,9 +341,9 @@
 			},
 			//查询商品数据
 			commonMounted() {
-				console.log('列表')
 				this.lastPageLine = false;
-				this.$qj
+				if(this.scontractCode == ''){
+					this.$qj
 					.http(this.$qj.domain)
 					.get(search, this.params)
 					.then(res => {
@@ -386,19 +379,59 @@
 									goodsNo: v.goodsNo
 								});
 							});
+							this.itemsBak = this.items
 							this.total = res.total;
 						}
 					});
+				}else{
+					this.$qj
+					.http(this.$qj.domain)
+					.get('/web/sp/scontract/queryScontractGoodsPage.json', {scontractCode:this.scontractCode})
+					.then(res=>{
+						if (res.rows.length > 0) {
+								let batchCollectData = [];
+								// 获取用户维度起订量倍数
+								let skuMinSaleMultiple = [];
+								this.items = res.rows;
+								this.items.map(v => {
+									if (!RegExp(/http/).test(v.dataPic)) {
+										v.dataPic = this.$domain + v.dataPic;
+									}
+									if (this.userinfoType == "2" && this.checkModifyAudit == "3") {
+										// 获取权益价格
+										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
+										console.log("获取权益的价格-------", v.pricesetMakeprice)
+									}
+						
+									v.itemChecked = false;
+									v.skuId = v.goodsSpec5
+									 if (v.goodsMinnum) {
+									     v.goodsNum = v.goodsMinnum;
+									 } else {
+									    v.goodsMinnum = 1;
+									    v.goodsNum = 1;
+									}
+									batchCollectData.push({
+										collectType: '0',
+										collectOpcode: v.skuCode
+									});
+									skuMinSaleMultiple.push({
+										skuNo: v.skuNo,
+										goodsNo: v.goodsNo
+									});
+								});
+								this.itemsBak = this.items
+								this.total = res.total;
+							}
+						});
+				}
+				
 			},
 
 			listClick(list, index) {
 				this.colorCurrent = index;
 				this.brandCode = list.brandCode;
 			},
-			// labelClick(list, index) {
-			// 	this.labelCurrent = index;
-			// 	this.rtagCode = list.rtagCode;
-			// },
 			//重置
 			reverseClick() {
 				this.maxPrice = null;
@@ -520,7 +553,7 @@
 	// @import '../../libs/css/common.less';
 	@import '@/common/css/common.less';
 .itemGoods{
-	margin-top: 180rpx;
+	margin-top: 190rpx;
 	margin-bottom:110rpx ;
 	.item-container {
 		display: flex;
@@ -557,6 +590,7 @@
 		}
 
 		.list-r {
+			width: 60%;
 			p {
 				width: 380rpx;
 				overflow: hidden;

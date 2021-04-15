@@ -247,9 +247,9 @@
 						}
 						this.$qj.http(this.$qj.domain).get('/web/oc/empcontract/saveContract.json', params).then(res=>{
 							if(res.success){
-								this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
+								// this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
 									$router.replace('salesEnd/pages/quotationList')
-								})
+								// })
 							}else{
 								this.$qj.message.alert('报价单推送失败！');
 							}
@@ -496,6 +496,7 @@
 		}
 
 		.list-r {
+			width: 60%;
 			p {
 				width: 380rpx;
 				overflow: hidden;

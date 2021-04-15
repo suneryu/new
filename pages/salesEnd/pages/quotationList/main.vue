@@ -20,10 +20,10 @@
 							</div>
 							<div v-if="order.dataState == -1">已取消</div>
 							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '2' ">待审核</div> -->
-							<div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待支付</div>
-							<div v-else-if="order.dataState == 2">待支付</div>
+							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待支付</div> -->
+							<div v-else-if="order.dataState == 2">待确认</div>
 							<!-- <div v-else-if="order.dataState == 3">待收货</div> -->
-							<div v-else-if="order.dataState == 4">已完成</div>
+							<div v-else-if="order.dataState == 3">已完成</div>
 							<!-- <button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button> -->
 						</div>
 						<div class="order-msg" v-for="(goods, goodsIndex) in order.goodsList" :key="goodsIndex">
@@ -57,7 +57,7 @@ import { myOrder, refund, addShoppingGoods, addShoppingGoodsBySpec } from '@/nod
 export default {
 	data() {
 		return {
-			items: ['全部', '待支付','已支付', '已取消'],
+			items: ['全部', '待确认','已完成', '已取消'],
 			orderList: [], //订单列表
 			myOrder: [], //菜单--》订单搜索路径
 			current: 0,
@@ -97,13 +97,13 @@ export default {
 			this.current = 0
 			this.dataState = '';
 			}
-		if(options.state == '待支付'){
+		if(options.state == '待确认'){
 			this.current = 1
 			this.dataState = 2;
 		}
-		if(options.state == '已支付'){
+		if(options.state == '已完成'){
 			this.current = 2
-			this.dataState = 1;
+			this.dataState = 3;
 		}
 		if(options.state == '已取消'){
 			this.current = 3
@@ -201,11 +201,11 @@ export default {
 			if(item == '全部'){
 				this.dataState = '';
 				}
-			if(item == '待支付'){
+			if(item == '待确认'){
 				this.dataState = 2;
 			}
-			if(item == '已支付'){
-				this.dataState = 1;
+			if(item == '已完成'){
+				this.dataState = 3;
 			}
 			if(item == '已取消'){
 				this.dataState = -1;

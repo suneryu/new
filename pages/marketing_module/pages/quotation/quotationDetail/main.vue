@@ -390,7 +390,9 @@
 				let params = {
 					contractBillcode:this.contractBillcode
 				}
-				$router.push("marketing_module/pages/quotation/orderline",params)
+				this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', params).then(res=>{
+					$router.push("marketing_module/pages/quotation/orderline",params)
+				})
 			}
 		}
 	};
@@ -670,6 +672,7 @@
 								}
 
 								.list-r {
+									width: 60%;
 									p {
 										width: 380rpx;
 										overflow: hidden;
