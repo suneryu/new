@@ -111,6 +111,10 @@ export const coupon = {
 export const updateUCode = "/web/um/userservice/updateUCode.json"; // 生成二维码需要ucode
 export const getImsgPushmsg = "/web/imsg/imsgPushmsg/queryImsgPushmsgPage.json"; // 站内信消息
 
+// 销售端
+export const queryUserinfoPageBySales = "/web/um/userserviceinfo/queryUserinfoPageBySales.json"; // 查询销售员个人信息
+export const queryGroupBuyerPageByAG = "/web/um/userservice/queryGroupBuyerPageByAG.json"; //  根据销售员查询用户信息
+// export const queryBuyerScontractPage = "/web/sp/scontract/queryBuyerScontractPage.json"; //  查询买家合同
 // 发票
 export const invoice = {
 	increasedinvoice: "/web/inv/userinv/saveUserinv.json", // 新增发票信息
