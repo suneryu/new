@@ -2,11 +2,11 @@
 
 	<div class="homepage-content">
 		<div class="search-box">
-			<div class="box-center" @click="search()">
-				<u-search placeholder="输入合同名称" :show-action="false" disabled="false"></u-search>
+			<div class="box-center">
+				<u-search placeholder="输入合同名称" :show-action="false" @blur='serchContract' clearabled v-model='searchValue'></u-search>
 			</div>
 			<div class="box-right" @click="Minemsg()">
-				<span class="iconfont icon-tishi"></span>
+				<span class="iconfont icon-tishi"></span>q
 			</div>
 		</div>
 		<div style="display: flex;background-color: #FAFAFA;">
@@ -153,6 +153,7 @@
 					}
 				],
 				contractData: [],
+				contractDataBak: [],
 				iconShow1: true, //线下合同弹出层
 				iconShow2: false,
 				qyBut: true, //预约按钮
@@ -173,7 +174,7 @@
 				fontColor1: "#004178", //字体颜色
 				fontColor2: "#000000", //字体颜色
 				fontColor3: "#000000", //字体颜色
-
+				searchValue:''
 			}
 		},
 		onLoad(options) {
@@ -229,6 +230,15 @@
 			this.loadMore(this.contractData[0].memberGcode);
 		},
 		methods: {
+			//合同搜索
+			serchContract(value){
+				this.searchValue = value
+				if(value != ''){
+					this.contractData = this.contractDataBak.filter(item=>item.scontractName.indexOf(value) != -1)
+				}else{
+					this.contractData = this.contractDataBak
+				}
+			},
 			//保存图片
 			savePhoto(data) {
 				console.log('data', data)
@@ -358,68 +368,7 @@
 					//获取签约时的信息
 					$router.push('hdb/orderHDB', {scontractId});
 					// if (compareVersion(global.globalData.SDKVersion, "2.8.2") >= 0) {
-					// wx.requestSubscribeMessage({
-					// 	tmplIds: ["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"], //需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
-					// 	// 消息模板id在[微信公众平台(mp.weixin.qq.com)-功能-订阅消息]中配置
-					// 	success(res) { // 接口调用成功的回调函数
-					// 		console.log(res, 'compareVersion')
-					// 		if (
-					// 			res["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"] == "accept"
-					// 			// Object res   [TEMPLATE_ID]是动态的键，即模板id，值包括'accept'、'reject'、'ban'。
-					// 			// 'accept'表示用户同意订阅该条id对应的模板消息，'reject'表示用户拒绝订阅该条id对应的模板消息，'ban'表示已被后台封禁。
-					// 		) {
-					// 			if (that.subscribeMes) {
-					// 				console.log("订阅成功")
-					// 				wx.showToast({
-					// 					title: "订阅成功！",
-					// 					duration: 1500,
-					// 					icon: "success",
-					// 					success(data) {
-					// 						that.subscribeMes = false;
-					// 					}
-					// 				});
-					// 			}
-					// 			// mpvue.navigateTo({
-					// 			//   url: `/pages/chat/main`
-					// 			// });
-					// 		} else {
-					// 			// mpvue.navigateTo({
-					// 			//   url: `/pages/chat/main`
-					// 			console.log("失败")
-					// 			// });
-							// }
-						// },
-						// fail(res) { // 接口调用失败的回调函数
-						// 	if (res.errCode === 20004) {
-						// 		wx.showModal({
-						// 			title: "温馨提示",
-						// 			content: "您已拒绝授权，将无法在微信中收到回复通知！",
-						// 			showCancel: false,
-						// 			success: res => {
-						// 				if (res.confirm) {
-						// 					mpvue.navigateTo({
-						// 						url: `/pages/chat/main`
-						// 					});
-						// 				}
-						// 			}
-						// 		});
-						// 	}
-						// }
-					// });
-					// } else {
-					//   wx.showModal({
-					//     title: "温馨提示",
-					//     content: "您的微信版本过低，将无法在微信中收到回复通知！",
-					//     showCancel: false,
-					//     success: res => {
-					//       if (res.confirm) {
-					//         mpvue.navigateTo({
-					//           url: `/pages/chat/main`
-					//         });
-					//       }
-					//     }
-					//   });
-					// }
+					
 				}
 
 			},
@@ -444,6 +393,7 @@
 							this.contractData.push(element)
 							// this.contractData = res.rows;
 						});
+						this.contractDataBak = this.contractData
 
 					});
 			},
@@ -544,13 +494,13 @@
 									console.log(",,,", element.scontractFileUrl)
 								}
 								if (this.options.length > 0) {
-									let contractDataBak = []
+									this.contractData = []
 									res.rows.forEach(item => {
 										if (this.options.includes(item.memberGcode)) {
-											contractDataBak.push(item)
+											this.contractData.push(item)
 										}
 									})
-									this.contractData = contractDataBak
+									// this.contractData = contractDataBak
 								} else {
 									this.contractData = res.rows
 								}
@@ -559,6 +509,7 @@
 						} else {
 							this.contractData = []
 						}
+						this.contractDataBak = this.contractData
 					});
 
 				this.selectValue = false
@@ -665,7 +616,7 @@
 							this.contractData = []
 						}
 
-
+					this.contractDataBak = this.contractData;
 					});
 			},
 			search() {
@@ -960,7 +911,7 @@
 		width: 100%;
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: space-around;
 		border-bottom: 1rpx solid #F4F4F5;
 
 		.box-left {

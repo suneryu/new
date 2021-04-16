@@ -18,9 +18,18 @@
 						</div>
 					</li>
 				</ul>
-			</div>
+			</div>	
+			<view class="address-choose" v-if='showArea'>
+				<view class="iconfont icon-shouhuodizhi"></view>
+				<view class="container" @click="chooseCity">
+					<input type="text" :disabled="true" v-model="city" placeholder="请选择城市" />
+					<view class="iconfont icon-jiantou12"></view>
+				</view>
+			</view>
 		</div>
-		<div class="goodsList-list" v-if="items.length > 0">
+		<u-picker mode="region" v-model="cityPicker" :area-code="['11', '1101', '110101']" @confirm="cityPickerConfirm">
+		</u-picker>
+		<div class="goodsList-list" v-if="items.length == 0" :style="{marginTop:showArea?'190rpx':'100rpx'}">
 			<ul>
 				<li v-for="(item, index) in items" :key="index">
 					<div @click="goodsDetail(item.skuCode)">
@@ -60,7 +69,7 @@
 		<div class="goodsList-screenLeft" v-show="screenShow" @click="screenLeftClick"></div>
 		<div class="goodsList-screen" v-show="screenShow">
 			<div class="goodsList-screen-screens">
-				<view class="placeholder-container" v-bind:style="{ height: offsetTop + 'px' }"></view>
+				<view class="placeholder-container" v-bind:style="{ height: offsetTop + 'px' ,paddingTop:'80rpx'}"></view>
 				<div class="contents">
 					<div class="box" v-bind:style="{ paddingBottom: 90 + offsetTop * 2 + 'rpx' }">
 						<div class="pinpai">品牌</div>
@@ -116,6 +125,7 @@
 		data() {
 			return {
 				title: '商品列表',
+				showArea:false,
 				leftIcon: true,
 				rightIcon: false,
 				titleList: ['综合', '销量', '价格', '筛选'],
@@ -149,7 +159,9 @@
 				goodsOrigin: 0,
 				userinfoType: '',
 				userInfoCode: '',
-				checkModifyAudit:''
+				checkModifyAudit:'',
+				cityPicker:false,
+				city:''
 			};
 		},
 		onShow() {
@@ -157,6 +169,12 @@
 			this.batchGetSkuMinSaleMultiple();
 		},
 		onShow() {
+			this.userinfoType = this.$qj.storage.get('userdetailsInfo').userinfoType
+			if(this.userinfoType == 2){
+				this.showArea = false
+			}else{
+				this.showArea = true
+			}
 			this.commonMounted();
 		},
 
@@ -172,7 +190,6 @@
 			console.log(options, '111111111')
 			console.log(this.$qj.storage.get('userInfo'))
 			console.log(this.$qj.storage.get('userdetailsInfo'))
-			this.userinfoType = this.$qj.storage.get('userdetailsInfo').userinfoType
 			this.userInfoCode = this.$qj.storage.get('userdetailsInfo').userInfoCode
 			this.searchParams = options.searchParams;
 			if (options.json && JSON.parse(options.json).classtreeCode) {
@@ -220,6 +237,23 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			chooseCity() {
+				this.cityPicker = true;
+			},
+			/**
+			 * 地址选择器回调方法
+			 */
+			cityPickerConfirm(params) {
+				console.log(params);
+				this.city = params.province.label + params.city.label + params.area.label;
+				// this.orderDisabled = false
+				this.provinceCode = params.province.value;
+				this.cityCode = params.city.value;
+				this.areaCode = params.area.value;
+				this.provinceName = params.province.label;
+				this.cityName = params.city.label;
+				this.areaName = params.area.label;
+			},
 			// 查询 认证授权 状态
 			searchStatus() {
 				let that = this
@@ -485,10 +519,15 @@
 				// 	}
 				// };
 				// this.$emit('navigateTo', options);
-				let params = {
-					skuCode: skuCode
-				};
-				this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail", params)
+				if(this.userinfoType == 1 && this.city == ''){
+					this.$qj.message.alert('请先选择渠道地址')
+				}else{
+					let params = {
+						skuCode: skuCode
+					};
+					this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail", params)
+				}
+				
 			},
 
 			goSearch() {
@@ -741,7 +780,32 @@
 <style lang="less" scoped>
 	// @import '../../libs/css/common.less';
 	@import '@/common/css/common.less';
+	.address-choose {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 90rpx;
+		z-index: 999;
+		.container {
+			display: flex;
+			align-items: center;
+			width: 100%;
+			height: 100%;
+			border-bottom: 1rpx solid #e5e5e5;
 
+			input {
+				flex: 1;
+				width: 100%;
+				height: 100%;
+				background: none;
+				color: @color-333;
+			}
+
+			.iconfont {
+				padding: 20rpx;
+			}
+		}
+	}
 	.goodsList {
 		width: 100%;
 		background: @white-color;
@@ -767,10 +831,12 @@
 			text-align: left;
 			left: 30rpx;
 			top: 0;
+			
 		}
 
 		&-title {
 			display: flex;
+			flex-direction: column;
 			position: fixed;
 			top: 90rpx;
 			left: 0;
@@ -845,8 +911,7 @@
 
 		&-list {
 			width: 100%;
-			margin-top: 100rpx;
-
+			margin-top: 200rpx;
 			ul {
 				width: 100%;
 				overflow: hidden;
@@ -962,7 +1027,7 @@
 				.contents {
 					overflow: scroll;
 					height: 100%;
-
+					
 					.box {
 						display: -webkit-box;
 						display: -ms-flexbox;

@@ -249,6 +249,8 @@
 				this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/addShoppingGoodsCode.json',params ).then(res => {
 					if(res.success){
 						this.$qj.message.alert('商品加入购物车成功！');
+					}else{
+						this.$qj.message.alert(res.msg);
 					}
 				})
 			},

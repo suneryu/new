@@ -27,12 +27,12 @@
 					v-if="contractData[0].goodsMoney">{{ unitPrice.obpay }}{{ contractData[0].goodsMoney.toFixed(2) }} {{ unitPrice.mapay }}</span>
 			</div>
 		</div>
-		<div class="accounts-con" @click="choosePayMethods"
+		<div class="accounts-con" 
 			v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
 			<div>
 				支付方式
 				<div>
-					<span>{{ payMethodsList[payMethodsIndex].ptfpmodeName }}</span>
+					<span>在线支付</span>
 					<i class="iconfont">&#xe61d;</i>
 				</div>
 			</div>
@@ -52,6 +52,10 @@
 				<i>{{contractData[0].goodsMoney.toFixed(2)}} {{ unitPrice.mapay }}</i>
 			</p>
 			<!-- <div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div> -->
+		</div>
+		<div class='isSignUp'>
+			<button @click="isSignUp(false)">取消签约</button>
+			<button @click="isSignUp(true)">确认签约</button>
 		</div>
 		<u-popup class="pay-methods-popup" v-model="payMethodsPopup" mode="bottom" height="427rpx">
 			<view class="pay-methods-title">
@@ -121,6 +125,9 @@
 	} from '@/api/interfaceHDB.js';
 	import Vue from 'vue';
 	export default {
+		config: {
+			enablePullDownRefresh: true
+		},
 		data() {
 			return {
 				// // CONTRACT_EARNEST 返利金额  订单使用卷的时候把  卷的名称 存在 CONTRACT_SETTL_OPEMO
@@ -198,6 +205,52 @@
 			},
 		},
 		methods: {
+			//是否签约
+			isSignUp(isSignUp){
+				if(!isSignUp){
+					uni.navigateBack()
+				}else{
+					wx.requestSubscribeMessage({
+						tmplIds: ["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"], //需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
+						// 消息模板id在[微信公众平台(mp.weixin.qq.com)-功能-订阅消息]中配置
+						success(res) { // 接口调用成功的回调函数
+							if (
+								res["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"] == "accept"
+							) {
+									wx.showToast({
+										title: "订阅成功！",
+										duration: 1500,
+										icon: "success",
+										success(data) {
+										}
+									});
+								
+							} else{
+								wx.showModal({
+									title: "温馨提示",
+									content: "您已拒绝授权，将无法在微信中收到回复通知！",
+									showCancel: false,
+									success: res => {
+									}
+								});
+							}
+						},
+						fail(res) { // 接口调用失败的回调函数
+							if (res.errCode === 20004) {
+								wx.showModal({
+									title: "温馨提示",
+									content: "您已拒绝授权，将无法在微信中收到回复通知！",
+									showCancel: false,
+									success: res => {
+									}
+								});
+							}
+						}
+					});
+				} 
+
+			},
+			//关闭图片
 			closeHtImg(){
 				this.htImg = false
 			},
@@ -300,6 +353,7 @@
 			 * 初始化订单数据
 			 */
 			initOrderData(scontractId) {
+				this.$qj.message.loading()
 				this.$qj.http(this.$qj.domain)
 					.get('/web/sp/scontract/getScontract.json', {
 						scontractId
@@ -604,6 +658,26 @@
 
 <style lang="less" scoped>
 	@import '@/node_modules/qj-mini-pages/libs/css/common.less';
+	.isSignUp{
+		width: 100%;
+		height: 130rpx;
+		display: flex;
+		justify-content: space-around;
+		position: fixed;
+		bottom: 0;
+		button{
+			width: 35%;
+			height: 70rpx;
+			font-size: 14px;
+			line-height: 70rpx;
+			color: #094279;
+			border: 1px solid #094279;
+		}
+		button:last-child{
+			background: #094279;
+			color: #fff;
+		}
+	}
 	.popup {
 		position: fixed;
 		left: 0;

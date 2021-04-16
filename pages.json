@@ -562,11 +562,15 @@
 				},
 				{
 					"path": "pages/goodsdetails_modules/o2o_goosDetail/main",
-					"style": {}
+					"style": {
+						"navigationBarTitleText": "商品详情页"
+					}
 				},
 				{
 					"path": "pages/goodsdetails_modules/o2o_goosDetail2/main",
-					"style": {}
+					"style": {
+						"navigationBarTitleText": "商品详情页"
+					}
 				},
 				{
 					"path": "pages/order_modules/o2o_order/index/main",
