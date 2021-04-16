@@ -1033,7 +1033,7 @@
 				"style": {
 					"navigationBarBackgroundColor": "#FFFFFF",
 					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "销售端首页"
+					"navigationBarTitleText": "销售端"
 				}
 			},
 			{
@@ -1099,17 +1099,17 @@
 			{
 				"path": "pages/ChooseaBuyer/main",
 				"style": {
-					// "navigationBarBackgroundColor": "#FFFFFF",
-					// "navigationBarTextStyle": "black",
-					"navigationBarTitleText": "选择买家"
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "报价单"
 				}
 			},
 			{
 				"path": "pages/contractCustomers/main",
 				"style": {
-					// "navigationBarBackgroundColor": "#FFFFFF",
-					// "navigationBarTextStyle": "black",
-					"navigationBarTitleText": "选择买家"
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "报价单"
 				}
 			}
 			]

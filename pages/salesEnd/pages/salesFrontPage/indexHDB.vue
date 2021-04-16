@@ -28,45 +28,45 @@
 					style=" width: 90%;display: flex; flex-direction: column; justify-content: center;align-items: center">
 					<div>
 						<span>公司名称：</span>
-						<input type="text" v-model="infoPage.userinfoCompname" />
+						<input type="text" v-model="infoPage.userinfoCompname" disabled="disabled" />
 					</div>
 					<div>
 						<span>销售员姓名：</span>
-						<input type="text" v-model="infoPage.employeeName" />
+						<input type="text" v-model="infoPage.employeeName" disabled="disabled" />
 					</div>
 					<div>
 						<span>工号：</span>
-						<input type="text" v-model="infoPage.employeeCode" />
+						<input type="text" v-model="infoPage.employeeCode" disabled="disabled" />
 					</div>
 					<div>
 						<span>岗位职称：</span>
-						<input type="text" v-model="infoPage.userinfoMap" />
+						<input type="text" v-model="infoPage.userinfoMap" disabled="disabled" />
 					</div>
 					<div>
 						<span>身份证号：</span>
-						<input type="text" v-model="infoPage.userinfoCertNo"/>
+						<input type="text" v-model="infoPage.userinfoCertNo" disabled="disabled" />
 					</div>
 					<div>
 						<span>联系邮箱：</span>
-						<input type="text" v-model="infoPage.userinfoEmail" />
+						<input type="text" v-model="infoPage.userinfoEmail" disabled="disabled" />
 					</div>
 					<div>
 						<span>联系电话：</span>
-						<input type="text" v-model="infoPage.userinfoConPhone" />
+						<input type="text" v-model="infoPage.userinfoConPhone" disabled="disabled" />
 					</div>
 					<div>
 						<span>联系地址：</span>
-						<input type="" v-model="infoPage.provinceName" placeholder="请选择省" style="width: 20%;" />
-						<input type="" v-model="infoPage.cityName" placeholder="请选择市" style="width: 20%; margin-left: 5px" />
-						<input type="" v-model="infoPage.areaName" placeholder="请选择区" style="width: 20%; margin-left: 5px" />
+						<input type="" v-model="infoPage.provinceName" placeholder="请选择省" style="width: 20%;" disabled="disabled" />
+						<input type="" v-model="infoPage.cityName" placeholder="请选择市" style="width: 20%; margin-left: 5px" disabled="disabled" />
+						<input type="" v-model="infoPage.areaName" placeholder="请选择区" style="width: 20%; margin-left: 5px" disabled="disabled" />
 					</div>
 					<div>
 						<span></span>
-						<input type="text" placeholder="请输入详细地址" v-model="infoPage.companyAddress" />
+						<input type="text" placeholder="请输入详细地址" v-model="infoPage.companyAddress" disabled="disabled" />
 					</div>
 					<div>
 						<span>登录手机号：</span>
-						<input type="text" v-model="infoPage.userinfoConPhone" />
+						<input type="text" v-model="infoPage.userinfoConPhone" disabled="disabled" />
 					</div>
 				</div>
 				<div class="creatButton" style="display: flex; justify-content: center; margin: 40rpx 20rpx 10rpx 20rpx; position: absolute;

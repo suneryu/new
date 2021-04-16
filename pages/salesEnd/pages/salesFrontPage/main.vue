@@ -168,72 +168,72 @@
 				console.log("我的客户")
 				$router.push("salesEnd/pages/myClients")
 			},
-			myInfo(data) {
-				if (data == 0) {
-					console.log("跳转至我的发票")
-					$router.push("hdb/personCenter/myInvoice");
-				}
+			// myInfo(data) {
+			// 	if (data == 0) {
+			// 		console.log("跳转至我的发票")
+			// 		$router.push("hdb/personCenter/myInvoice");
+			// 	}
 
-				if (data == 1) {
-					console.log("跳转至用户协议")
-					$router.push("hdb/personCenter/userAgreement");
-				}
+			// 	if (data == 1) {
+			// 		console.log("跳转至用户协议")
+			// 		$router.push("hdb/personCenter/userAgreement");
+			// 	}
 
-				if (data == 2) {
+			// 	if (data == 2) {
 
-					if (this.userinfoType == '1') {
-						uni.showModal({
-							title: '提示',
-							content: '您还不是企业用户，请先去认证',
-							confirmColor: '#' + $storage.get('baseColor'),
-							success(res) {
-								let pages = getCurrentPages()
-								if (res.confirm) {
-									let currentPage = pages[pages.length - 1]
-									let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
-									$router.push('register/b2bRegisterCom')
-								} else if (res.cancel) {
-									if (pages.length > 1) {
-										$router.back()
-									}
-								}
-							}
-						})
-					} else {
-						console.log("跳转至企业信息")
-						$router.push("register/companyInfo");
-					}
+			// 		if (this.userinfoType == '1') {
+			// 			uni.showModal({
+			// 				title: '提示',
+			// 				content: '您还不是企业用户，请先去认证',
+			// 				confirmColor: '#' + $storage.get('baseColor'),
+			// 				success(res) {
+			// 					let pages = getCurrentPages()
+			// 					if (res.confirm) {
+			// 						let currentPage = pages[pages.length - 1]
+			// 						let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
+			// 						$router.push('register/b2bRegisterCom')
+			// 					} else if (res.cancel) {
+			// 						if (pages.length > 1) {
+			// 							$router.back()
+			// 						}
+			// 					}
+			// 				}
+			// 			})
+			// 		} else {
+			// 			console.log("跳转至企业信息")
+			// 			$router.push("register/companyInfo");
+			// 		}
 
 
-				}
+			// 	}
 
-				if (data == 3) {
-					uni.showModal({
-						title: '提示',
-						content: '积分商城暂未开放！',
-						confirmColor: '#' + $storage.get('baseColor'),
-						success(res) {
-							let pages = getCurrentPages()
-							if (res.confirm) {
-								// let currentPage = pages[pages.length - 1]
-								// let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
-								// $router.push('authorization')
-							} else if (res.cancel) {
+			// 	if (data == 3) {
+			// 		uni.showModal({
+			// 			title: '提示',
+			// 			content: '积分商城暂未开放！',
+			// 			confirmColor: '#' + $storage.get('baseColor'),
+			// 			success(res) {
+			// 				let pages = getCurrentPages()
+			// 				if (res.confirm) {
+			// 					// let currentPage = pages[pages.length - 1]
+			// 					// let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
+			// 					// $router.push('authorization')
+			// 				} else if (res.cancel) {
 
-							}
-						}
-					})
-					// console.log("跳转至积分商城")
-					// $router.push("user_modules/user/pointsMall");
+			// 				}
+			// 			}
+			// 		})
+			// 		// console.log("跳转至积分商城")
+			// 		// $router.push("user_modules/user/pointsMall");
 
-				}
+			// 	}
 
-				if (data == 4) {
-					console.log("跳转至合约商城购物车")
-					$router.push("hdb/personCenter/contractCar");
-				}
+			// 	if (data == 4) {
+			// 		console.log("跳转至合约商城购物车")
+			// 		$router.push("hdb/personCenter/contractCar");
+			// 	}
 
-			},
+			// },
 
 			getPrivacy(data) {
 				if (data == 0) {

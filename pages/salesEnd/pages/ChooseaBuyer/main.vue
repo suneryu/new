@@ -2,44 +2,48 @@
 	<div class="homepage-content">
 		<div class="search-box">
 			<div class="box-center">
-				<u-search placeholder="输入合同名称" :show-action="false" disabled="false"></u-search>
+				<u-search @blur="screen" placeholder="输入合同名称" :show-action="false" clearabled="true" v-model="searchValue"></u-search>
 			</div>
 			<div class="box-right">
 				<span class="iconfont icon-tishi"></span>
 			</div>
 		</div>
-		<div v-for="(item,index) in Buyers" :key="index">
-			<div style="height: 135px;border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
+		<div  v-if="Buyers.length > 0">
+			<div v-for="(item,index) in Buyers" :key="index" >
+				<div style="height: 115px;border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
 				<div style="font-size: 12px">{{item.memberGname}}</div>
 				<div style="display: flex;">
-					<div style="width: 80%; font-size: 17px;">项目合同名称</div>
+					<div style="width: 80%; font-size: 17px;">{{item.scontractName}}</div>
 				</div>
-				<div style="display: flex; font-size: 12px">合同描述</div>
+				<div style="display: flex; font-size: 12px">{{item.contractRemark}}</div>
 				<div style="display: flex; margin: 5px 0;">
 					<div style="width: 80%; font-size: 12px;">合同金额：
-						<span>123</span>
+						<span>{{item.goodsMoney}}</span>
 					</div>
 					<div style="width: 20%; font-size: 12px;text-align: right;">
-						<a href="">预约合同</a>
+<!-- 						<a href="">预约合同</a> -->
 					</div>
 				</div>
 				<div style="display: flex;font-size: 12px;margin: 10px 0;">
 					<div style="width: 100%;">合同有效时间：
-						<span>{{item.scontractCode}}</span>
-						<button class="buttonClass">使用合同</button>
+						<span>{{item.scontractNbcode}}</span>
+						<button class="buttonClass" @click="useContract(item.scontractCode)">使用合同</button>
 					</div>
 				</div>
 				<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;">
 					<div style="width: 40%;">进度：
-						<span>55%</span>
+						<span>{{item.scontractNbcode}}%</span>
 					</div>
 					<div style="width: 40%;">余额：
-						<span>52000</span>
+						<span>{{item.memberCname}}</span>
 					</div>
 					<span style="width: 20%; text-align: right;">使用详情</span>
 				</div>
 			</div>
+			
+			</div>
 		</div>
+		<div class="goodsList-nulls" v-else><img :src="nullImg" /></div>
 		<div class="creatButton"
 			style="position: fixed; bottom: 0; text-align: center; width: 100%; height: 150rpx;display: flex; justify-content: center;">
 			<button @click="toCreateQuo">线上商城</button>
@@ -61,8 +65,11 @@
 	export default {
 		data() {
 			return {
+				searchValue:'',
+				companyPack:[],
 				Buyers: [],
 				options:'',
+				nullImg: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/noSearchResult.png',
 			}
 		},
 		mounted() {
@@ -76,11 +83,25 @@
 				http.get(queryBuyerScontractPage, {
 					goodsSupplierName: this.options
 				}).then(res => {
-					this.Buyers = res.list
+						this.Buyers = res.list || []
+						this.companyPack = this.Buyers				
 				});
 			},
 			toCreateQuo(){
 				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options})
+			},
+			useContract(item){
+				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options,scontractCode:item})
+			},
+			screen(value){
+				console.log(value)
+				this.searchValue = value
+				if(value == ""){
+					this.Buyers = this.companyPack
+				}else{
+					this.Buyers = this.companyPack.filter(item => item.scontractName.indexOf(value) != -1)
+				}
+				
 			}
 		},
 	}
@@ -88,6 +109,17 @@
 
 <style lang="less" scoped>
 	@import '@/node_modules/qj-mini-pages/libs/css/common.less';
+	.goodsList-nulls{
+			width: 100%;
+			margin-top: 200rpx;
+			text-align: center;
+
+			img {
+				width: 402rpx;
+				height: 337rpx;
+				margin: 0 auto;
+			}
+		}
 
 	.search-box {
 		background-color: #ffffff;
