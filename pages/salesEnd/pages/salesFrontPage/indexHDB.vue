@@ -10,70 +10,14 @@
 			<div class="headers-box-img">
 				<img :src="message.avatarUrl || message.avatar || userImgurl" @click="toPersonal" />
 				<h3>
-					<!-- 		<span v-if="userLevel">
-						<i class="iconfont">&#xe771;</i>
-						{{userLevel}}
-					</span>
-					<div style='display: flex;'>
-						<div>
-							<div v-if='showIf' class='renzheng'>√</div>
-							<div><span>企业</span></div>
-						</div>
-						<div>
-							<span style="background: none;font-size: 12px;color: #D9001B;"
-								v-if='userinfoType == "1"'>未认证</span>
-							<span style="background: none;font-size: 12px;color:#D9001B;"
-								v-if='userinfoType == "2" && checkModifyAudit != "3" '>未授权</span>
-							<span style="background: none;font-size: 12px;color: #03BF16;"
-								v-if='userinfoType == "2" && checkModifyAudit == "3"'>已授权</span>
-						</div>
-					</div> -->
-					123
+					{{infoPage.employeeName}}
 				</h3>
-				<h2>213232
+				<h2>{{infoPage.userinfoCompname}}
 					<span>企业员工</span>
 				</h2>
-
-				<!-- <button @click="loginOrRegister" v-else>登录/注册</button> -->
-				<!-- #ifdef MP-WEIXIN -->
-				<!-- <button open-type="getUserInfo" @getuserinfo="bindGetUserInfo" v-else>登录/注册</button> -->
-				<!-- #endif -->
-				<!-- #ifdef MP-TOUTIAO -->
-				<!-- <button @click="userAuth" v-else>登录/注册</button> -->
-				<!-- #endif -->
-				<!-- #ifdef MP-ALIPAY -->
-				<!-- <button open-type="getAuthorize" @getAuthorize="onGetAuthorize" @error="onAuthError" scope="userInfo" v-else>登录/注册</button> -->
-				<!-- #endif -->
-
 			</div>
 
 		</div>
-		<!-- <div class="headers-sum"> -->
-		<!-- 	<div v-for="(item, index) in nav" :key="index" @click="navClick(item)">
-				<p>10</p>
-				<p>{{ item.menuName }}</p>
-			</div> -->
-		<!-- 			<div @click="navClick(0)">
-				<p>{{integralTotal}}</p>
-				<p>我的积分</p>
-			</div>
-			<div @click="navClick(1)">
-				<p>{{contractTotal}}</p>
-				<p>我的合同</p>
-			</div>
-			<div @click="navClick(2)">
-				<p>{{quotationTotal}}</p>
-				<p>我的报价单</p>
-			</div>
-			<div @click="navClick(3)">
-				<p>{{appointmentTotal}}</p>
-				<p>我的预约</p>
-			</div>
-			<div @click="navClick(4)">
-				<p>{{collectionTotal}}</p>
-				<p>我的收藏</p>
-			</div>
-		</div> -->
 		<div class="hd" v-if="handleClose">
 			<div class="handleClose">
 				<div style='display: flex; justify-content: space-between;margin: 10px 10px;width: 95%;'>
@@ -84,45 +28,45 @@
 					style=" width: 90%;display: flex; flex-direction: column; justify-content: center;align-items: center">
 					<div>
 						<span>公司名称：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.userinfoCompname" />
 					</div>
 					<div>
 						<span>销售员姓名：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.employeeName" />
 					</div>
 					<div>
 						<span>工号：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.employeeCode" />
 					</div>
 					<div>
 						<span>岗位职称：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.userinfoMap" />
 					</div>
 					<div>
 						<span>身份证号：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.userinfoCertNo"/>
 					</div>
 					<div>
 						<span>联系邮箱：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.userinfoEmail" />
 					</div>
 					<div>
 						<span>联系电话：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.userinfoConPhone" />
 					</div>
 					<div>
 						<span>联系地址：</span>
-						<input type="" value="" placeholder="请选择省" style="width: 20%;" />
-						<input type="" value="" placeholder="请选择市" style="width: 20%; margin-left: 5px" />
-						<input type="" value="" placeholder="请选择区" style="width: 20%; margin-left: 5px" />
+						<input type="" v-model="infoPage.provinceName" placeholder="请选择省" style="width: 20%;" />
+						<input type="" v-model="infoPage.cityName" placeholder="请选择市" style="width: 20%; margin-left: 5px" />
+						<input type="" v-model="infoPage.areaName" placeholder="请选择区" style="width: 20%; margin-left: 5px" />
 					</div>
 					<div>
 						<span></span>
-						<input type="text" placeholder="请输入详细地址" value="" />
+						<input type="text" placeholder="请输入详细地址" v-model="infoPage.companyAddress" />
 					</div>
 					<div>
 						<span>登录手机号：</span>
-						<input type="text" value="" />
+						<input type="text" v-model="infoPage.userinfoConPhone" />
 					</div>
 				</div>
 				<div class="creatButton" style="display: flex; justify-content: center; margin: 40rpx 20rpx 10rpx 20rpx; position: absolute;
@@ -154,12 +98,14 @@
 		queryScontractPageC,
 		getUpmupointsPageByPC,
 		queryCollectPage,
-		userapplyStateAndAuth
+		userapplyStateAndAuth,
+		queryUserinfoPageBySales,
 	} from '@/api/interfaceHDB.js';
 	export default {
 		props: ['baseColor', 'message', 'isShow', 'nav', 'webmail', 'userLevel'],
 		data() {
 			return {
+				infoPage:'',
 				handleClose: false,
 				userImgurl: require('../../../../static/img/mine/default_header.png'),
 				userinfoType: "", //用户类型
@@ -176,6 +122,12 @@
 			};
 		},
 		mounted() {
+			http.get(queryUserinfoPageBySales, {
+				// userinfoPhone: 18154177826,
+				userinfoPhone: $storage.get('userPhone')
+			}).then(res => {
+				this.infoPage = res.list[0]
+			});
 			console.log('$storage.get()', $storage.get('loginInfor'))
 			console.log('$storage.get(userInfoCode)', $storage.get('loginInfor').userInfoCode)
 

@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div v-for="(item,index) in company" :key="index">
-			<div style="height: 82px;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
+			<div @click="add(item.userinfoPhone)" style="height: 82px;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
 				<div style="display: flex;">
 					<div style="width: 80%; font-size: 17px; color: #004178;">{{item.userinfoCompname}}</div>
 					<div style="width: 20%; position: relative;">
@@ -89,6 +89,7 @@
 		methods: {
 			getdata() {
 				http.get(queryGroupBuyerPageByAG, {
+					userinfoType:2,
 					userinfoCode: $storage.get('loginInfor').userInfoCode
 				}).then(res => {
 					this.company = res.list
@@ -114,6 +115,9 @@
 			backspace() {
 				// 删除value的最后一个字符
 				if (this.areaCode.length) this.areaCode = this.areaCode.substr(0, this.areaCode.length - 1);
+			},
+			add(item){
+				$router.push("salesEnd/pages/ChooseaBuyer",{userinfoPhone:item})
 			}
 		}
 	}

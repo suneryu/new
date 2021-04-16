@@ -1095,6 +1095,22 @@
 					// "navigationBarTextStyle": "black",
 					"navigationBarTitleText": "我的客户"
 				}
+			},
+			{
+				"path": "pages/ChooseaBuyer/main",
+				"style": {
+					// "navigationBarBackgroundColor": "#FFFFFF",
+					// "navigationBarTextStyle": "black",
+					"navigationBarTitleText": "选择买家"
+				}
+			},
+			{
+				"path": "pages/contractCustomers/main",
+				"style": {
+					// "navigationBarBackgroundColor": "#FFFFFF",
+					// "navigationBarTextStyle": "black",
+					"navigationBarTitleText": "选择买家"
+				}
 			}
 			]
 		}
