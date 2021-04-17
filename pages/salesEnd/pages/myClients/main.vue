@@ -89,7 +89,7 @@
 		methods: {
 			getdata() {
 				http.get(queryGroupBuyerPageByAG, {
-					userinfoCode: $storage.get('loginInfor').userInfoCode
+					memberCode: $storage.get('loginInfor').userInfoCode
 				}).then(res => {
 					this.company = res.list
 				})
