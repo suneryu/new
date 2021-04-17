@@ -13,8 +13,10 @@
 			<view class="account">
 				<view class="iconfont icon-shouji"></view>
 				<view class="container">
-					<input class="account-input" type="number" maxlength="11" v-model="userPhone" placeholder="请输入手机号" />
-					<button type="default" open-type="getPhoneNumber" :disabled="btnSwitch" @getphonenumber="getPhoneNumber">
+					<input class="account-input" type="number" maxlength="11" v-model="userPhone"
+						placeholder="请输入手机号" />
+					<button type="default" open-type="getPhoneNumber" :disabled="btnSwitch"
+						@getphonenumber="getPhoneNumber">
 						获取本地手机号
 					</button>
 				</view>
@@ -28,7 +30,8 @@
 				</view>
 			</view>
 		</view>
-		<button type="default" class="login-btn" v-bind:style="{ backgroundColor: baseColor }" @click="login">登录</button>
+		<button type="default" class="login-btn" v-bind:style="{ backgroundColor: baseColor }"
+			@click="login">登录</button>
 		<view style="margin-right: 80rpx;">
 			<view class="forget-password-btn" @click="loginVerification">验证码登录</view>
 		</view>
@@ -39,8 +42,9 @@
 			<view class="agreement-link" v-bind:style="{ color: baseColor }" @click="userPrivacy">隐私政策</view>
 		</view> -->
 		<view class="user-agreement">
-			<view @click="chooseAgreement" class="iconfont" :class="{ 'icon-weixuanzhongkuang': !userAgreementSwitch, 'icon-xuanzhongkuang': userAgreementSwitch }"
-			 v-bind:style="{ color: baseColor }"></view>
+			<view @click="chooseAgreement" class="iconfont"
+				:class="{ 'icon-weixuanzhongkuang': !userAgreementSwitch, 'icon-xuanzhongkuang': userAgreementSwitch }"
+				v-bind:style="{ color: baseColor }"></view>
 			<view>
 				<text>登录即代表同意</text>
 				<view class="agreement-link" v-bind:style="{ color: baseColor }" @click="userAgreement">服务协议</view>
@@ -78,7 +82,7 @@
 				userAgreementSwitch: true,
 				code: '',
 				userOpenid: '',
-				indexGotoUrl:'',
+				indexGotoUrl: '',
 				subscribeMes: true
 			};
 		},
@@ -124,7 +128,7 @@
 				this.$qj.router.back();
 			},
 			login() {
-				
+
 				if (!this.$qj.phoneValidation(this.userPhone)) {
 					return;
 				}
@@ -145,39 +149,60 @@
 						userOpenid: this.$qj.storage.get('userOpenid') || this.userOpenid
 					})
 					.then(res => {
-						console.log('登录结果------',res)
+						console.log('登录结果------', res)
 						let that = this
 						if (res.success) {
-							
-							if(res.dataObj.userInfo){
-							
+
+							if (res.dataObj.userInfo) {
+
 								let loginInfor = JSON.parse(res.dataObj.userInfo);
 								that.$qj.storage.set('loginInfor', loginInfor);
 								that.$qj.storage.set('userId', loginInfor.userId);
 								that.$qj.storage.set('sessionid', loginInfor.ticketTokenid);
 								let miniToken = that.$qj.storage.get('miniToken');
 								let cookie = loginInfor.ticketTokenid;
-								let miniCookie = miniToken + '=' + cookie + '; Domain=' + that.$qj.domain.substring(8) + '; Path=/';
+								let miniCookie = miniToken + '=' + cookie + '; Domain=' + that.$qj.domain.substring(
+									8) + '; Path=/';
 								that.$qj.storage.set('miniUserName', miniCookie);
 								// that.setLoginAfterRouter();
 								getApp().globalData.isShowingLoginModal = false
 								$storage.set('nologin', '')
-                           }
+							}
 							// that.$qj.message.alert('账号和密码不匹配，请重新登录');
-							
-						
-						}else{
+							wx.showModal({
+								title: "温馨提示",
+								content: "为更好的促进您与买家的交流，服务号需要在您创建报价单时发送消息！",
+								confirmText: "同意",
+								cancelText: "拒绝",
+								success: res => {
+									if (res.confirm) {
+										that.messageSubscription()
+									} else if (res.cancel) {
+										wx.showModal({
+											title: '温馨提示',
+											content: '拒绝后您将无法获取实时的与卖家（买家）的交易消息',
+											confirmText: "知道了",
+											showCancel: false,
+											success: function(res) {
+												///点击知道了的后续操作 
+												///如跳转首页面 
+											}
+										});
+									}
+								}
+							});
+
+						} else {
 							this.$qj.message.alert('登录失败，请重新登录');
 							return;
 						}
 					});
-					this.messageSubscription()
-					//跳转到销售员首页
-					
+				//跳转到销售员首页
+
 			},
-			
-			
-			messageSubscription(){
+
+
+			messageSubscription() {
 				const that = this;
 				// if (compareVersion(global.globalData.SDKVersion, "2.8.2") >= 0) {
 				wx.requestSubscribeMessage({
@@ -199,23 +224,23 @@
 										that.subscribeMes = false;
 									}
 								});
-								 let options = {
-								 	url: 'salesEnd/pages/salesFrontPage'
-								 };
-								 that.redirectTo(options);
-					
+								let options = {
+									url: 'salesEnd/pages/salesFrontPage'
+								};
+								that.redirectTo(options);
+
 							}
-							
+
 						} else {
 							console.log("失败")
-							 let options = {
-							 	url: 'salesEnd/pages/salesFrontPage'
-							 };
-							 that.redirectTo(options);
+							let options = {
+								url: 'salesEnd/pages/salesFrontPage'
+							};
+							that.redirectTo(options);
 						}
 					},
 					fail(res) { // 接口调用失败的回调函数
-					console.log('模板调用失败',res)
+						console.log('模板调用失败', res)
 						if (res.errCode === 20004) {
 							wx.showModal({
 								title: "温馨提示",
@@ -248,7 +273,7 @@
 									defaultUrl: this.redirectUrl
 								}
 							};
-							
+
 							this.redirectTo(options);
 						}
 					});
@@ -328,7 +353,8 @@
 									this.$qj.storage.set('sessionid', loginInfor.ticketTokenid);
 									let miniToken = this.$qj.storage.get('miniToken');
 									let cookie = loginInfor.ticketTokenid;
-									let miniCookie = miniToken + '=' + cookie + '; Domain=' + this.$qj.domain.substring(8) + '; Path=/';
+									let miniCookie = miniToken + '=' + cookie + '; Domain=' + this.$qj.domain
+										.substring(8) + '; Path=/';
 									this.$qj.storage.set('miniUserName', miniCookie);
 									// this.setLoginAfterRouter();
 									// } else {
