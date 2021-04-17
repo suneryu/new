@@ -97,6 +97,10 @@
 		userapplyStateAndAuth,
 		queryBuyerScontractPage
 	} from '@/api/interfaceHDB.js';
+	import {
+	queryContractPageC
+	} from '@/api/interface.js';
+	
 	export default {
 		props: ['baseColor', 'message', 'isShow', 'nav', 'webmail', 'userLevel'],
 		data() {
@@ -134,7 +138,7 @@
 
 		created() {
 			// this.getuserInfo();
-			// this.getMycontract();
+			this.getBaojiaDan();
 			// 获取信息
 			this.getuserInfo();
 
@@ -190,6 +194,20 @@
 
 			// 	});
 			// },
+			//获取我的报价单
+			getBaojiaDan(data) {
+				http.get(queryContractPageC, {
+					page: 1,
+					rows: 10,
+					childFlag: true,
+					contractType: '39'
+					
+				}).then(res => {
+					console.log("getmyContract...", res.total)
+					this.quotationTotal = res.total;
+			
+				});
+				},
 			//获取我的合同
 			getMycontract(data) {
 				http.get(queryBuyerScontractPage, {
@@ -201,18 +219,7 @@
 
 				});
 				
-				//获取我的报价单
-			// getMycontract(data) {
-			// 	http.get(queryBuyerScontractPage, {
-			// 		childFlag: true,
-			// 		contractType: 39,
-			// 		memberBcode: 10000210376054,
-					
-			// 	}).then(res => {
-			// 		console.log("getmyContract...", res.total)
-			// 		this.contractTotal = res.total;
-
-			// 	});
+			
 				//获取我的預約合同
 				http.get(queryScontractPageC, {
 					goodsSupplierName: data,
@@ -238,7 +245,9 @@
 			// 我的收藏
 			queryCollectPage() {
 				http.get(queryCollectPage, {
-					userId: $storage.get('userId')
+					page: 1,
+					rows: 10,
+					collectType: '0'
 				}).then(res => {
 					console.log("integralTotal...", res)
 					this.collectionTotal = res.total;

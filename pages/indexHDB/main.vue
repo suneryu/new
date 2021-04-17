@@ -110,6 +110,10 @@
 		queryUserinfoPageBySales
 	} from '@/api/interface.js';
 	import {
+		getUserservice
+	} from '@/api/interfaceHDB.js';
+
+	import {
 		clearTimeout,
 		setTimeout
 	} from 'timers';
@@ -149,7 +153,8 @@
 				indexGotoUrl: '',
 				checkModifyAudit: '',
 				showOnlineBtn:false,
-				salesLogin:''
+				salesLogin:'',
+				userinfoType:''
 				
 
 			};
@@ -189,7 +194,15 @@
 			vueTabBar
 		},
 		methods: {
-			// 获取授权状态
+			getuserInfo() {
+				http.get(getUserservice, {
+					userId: $storage.get('userId')
+				}).then(res => {
+					this.userinfoType = res.userinfoType;
+				
+			
+				});
+				},
 
 			// 弹窗
 			tapPopup() {
@@ -350,13 +363,36 @@
 				http.get(getPersonal, {
 					userId: this.$storage.get('userId')
 				}).then(res => {
+					console.log('点击进去线上商城',res)
 					if(res.errorCode == 'nologin'){
 						this.tapPopup();
 					}else {
-						let options = {
-							url: 'homepage'
+						if(res.userinfoQuality == "dealer"){
+							//查询用户类型，set缓存
+							this.getuserInfo()
+							let info = this.$qj.storage.get('loginInfor')
+							info.userinfoType = this.userinfoType
+							this.$qj.storage.set('loginInfor', info);
+							
+							// userinfoType
+							let options = {
+								url: 'homepage'
+							}
+							this.redirectTo(options);
+						}else{
+							uni.showModal({
+									title: '提示',
+									content: '您不是用户资质，无法进入！',
+									confirmColor: '#' + $storage.get('baseColor'),
+									success(res) {
+										let pages = getCurrentPages()
+										if (res.confirm) {} else if (res.cancel) {
+								
+										}
+									}
+								})
 						}
-						this.redirectTo(options);
+						
 						
 					}
 				});
@@ -379,43 +415,63 @@
 					if(res.errorCode == 'nologin'){
 						this.tapPopup();
 					}else{
-						
-						if (this.checkModifyAudit == '0') {
-							let options = {
-								url: 'register/b2bRegisterCheck',
-								query: {
-									userPhone: userPhone || this.inputUserPhone,
-									checkModifyAudit: res.checkModifyAudit,
+						if(res.userinfoQuality == "dealer"){
+							//查询用户类型，set缓存
+							this.getuserInfo()
+							let info = this.$qj.storage.get('loginInfor')
+							info.userinfoType = this.userinfoType
+							this.$qj.storage.set('loginInfor', info);
+							
+							if (this.checkModifyAudit == '0') {
+								let options = {
+									url: 'register/b2bRegisterCheck',
+									query: {
+										userPhone: userPhone || this.inputUserPhone,
+										checkModifyAudit: res.checkModifyAudit,
+									}
+								};
+								this.redirectTo(options);
+							} else if (this.checkModifyAudit == '-1') {
+								uni.showModal({
+									title: '提示',
+									content: '您还未进行企业认证，请前去认证',
+									// confirmColor: '#' + $storage.get('baseColor'),
+									success(res) {
+										let pages = getCurrentPages()
+										if (res.confirm) {
+											let currentPage = pages[pages.length - 1]
+											let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
+											let options = {
+												url: 'register/b2bRegisterCom',
+												query: {
+													userPhone: userPhone,
+												}
+											};
+											
+											that.redirectTo(options);
+										} else if (res.cancel) {}
+									}
+								})
+							} else {
+								let options = {
+									url: 'register/companyInfo'
 								}
-							};
-							this.redirectTo(options);
-						} else if (this.checkModifyAudit == '-1') {
-							uni.showModal({
-								title: '提示',
-								content: '您还未进行企业认证，请前去认证',
-								// confirmColor: '#' + $storage.get('baseColor'),
-								success(res) {
-									let pages = getCurrentPages()
-									if (res.confirm) {
-										let currentPage = pages[pages.length - 1]
-										let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
-										let options = {
-											url: 'register/b2bRegisterCom',
-											query: {
-												userPhone: userPhone,
-											}
-										};
-										
-										that.redirectTo(options);
-									} else if (res.cancel) {}
-								}
-							})
-						} else {
-							let options = {
-								url: 'register/companyInfo'
+								this.redirectTo(options);
 							}
-							this.redirectTo(options);
+						}else{
+							uni.showModal({
+									title: '提示',
+									content: '您不是用户资质，无法进入！',
+									confirmColor: '#' + $storage.get('baseColor'),
+									success(res) {
+										let pages = getCurrentPages()
+										if (res.confirm) {} else if (res.cancel) {
+								
+										}
+									}
+								})
 						}
+						
 						
 					}
 					

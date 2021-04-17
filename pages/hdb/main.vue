@@ -147,7 +147,8 @@ export default {
 
 	onShow() {
 		console.log('用户类型',$storage.get('loginInfor').userinfoType)
-		this.userinfoType = $storage.get('loginInfor').userinfoType;
+		// this.userinfoType = $storage.get('loginInfor').userinfoType;
+		this.getuserInfo()
 		console.log('个人中心onShow',$storage.get('userId'));
 		if ($storage.get('userInfo')) this.message = $storage.get('userInfo');
 		if ($storage.get('miniUserName') && $storage.get('userId')) {
@@ -181,7 +182,18 @@ export default {
 	},
 	components: { headerCenter, getUserInfo, vueTabBar },
 	methods: {
+		getuserInfo() {
+			http.get(getUserservice, {
+				userId: $storage.get('userId')
+			}).then(res => {
+				this.userinfoType = res.userinfoType;
+				// if(res.userType == '0' && res.userinfoType == '2'){
+				// 	this.isToSub = true
+				// }
 		
+		
+			});
+			},
 		myInfo(data){
 			if(data == 0){
 				console.log("跳转至我的发票")

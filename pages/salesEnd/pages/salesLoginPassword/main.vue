@@ -185,7 +185,10 @@
 											showCancel: false,
 											success: function(res) {
 												///点击知道了的后续操作 
-												///如跳转首页面 
+												let options = {
+													url: 'salesEnd/pages/salesFrontPage'
+												};
+												that.redirectTo(options);
 											}
 										});
 									}

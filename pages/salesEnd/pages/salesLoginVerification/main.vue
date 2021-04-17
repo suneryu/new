@@ -184,6 +184,31 @@
 								getApp().globalData.isShowingLoginModal = false
 								this.$qj.storage.set('nologin', '')
 							}
+							wx.showModal({
+								title: "温馨提示",
+								content: "为更好的促进您与买家的交流，服务号需要向您推送您的客户消息！",
+								confirmText: "同意",
+								cancelText: "拒绝",
+								success: res => {
+									if (res.confirm) {
+										that.messageSubscription()
+									} else if (res.cancel) {
+										wx.showModal({
+											title: '温馨提示',
+											content: '拒绝后您将无法获取实时的与卖家（买家）的交易消息',
+											confirmText: "知道了",
+											showCancel: false,
+											success: function(res) {
+												///点击知道了的后续操作 
+												let options = {
+													url: 'salesEnd/pages/salesFrontPage'
+												};
+												that.redirectTo(options);
+											}
+										});
+									}
+								}
+							});
 							
 						}
 						else {
