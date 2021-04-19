@@ -10,7 +10,8 @@
 			<view class="iconfont icon-xiangyou" v-bind:style="{ color: baseColor }"></view>
 		</view>
 		<!-- 循环遍历类购物车中商品类型 -->
-	<div v-if="listItems.length > 0" v-for='(sanci,index1) in listItems'>
+		<div v-if="listItems.length > 0" >
+		<div v-for='(sanci,index1) in listItems'>
 		<ul :class="{addmargin:index1 === dataLength}">
 			<li v-for="(listItem, listIndex) in listItems[index1]" :key="listIndex">
 				<div v-for="(list, liIndex) in listItem.shoppingpackageList" :key="liIndex">
@@ -92,6 +93,7 @@
 			</li>
 			</ul>
 	</div>
+		</div>
 	<div class="shopcart-nulls" v-else><img :src="nullImg" /></div>  <!-- 购物车没有商品展示图片-->
 		
 		<view class="min-sale-num" v-if="listItems.length > 0 && shopSaleMinNum" v-bind:style="{ backgroundColor: baseColor }">{{ shopSaleMinNum }}</view>
