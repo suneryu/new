@@ -198,7 +198,11 @@
 				http.get(getUserservice, {
 					userId: $storage.get('userId')
 				}).then(res => {
+					console.log('线上商城----',res)
 					this.userinfoType = res.userinfoType;
+				let info = this.$qj.storage.get('loginInfor')			
+				info.userinfoType = this.userinfoType
+				this.$qj.storage.set('loginInfor', info);
 				
 			
 				});
@@ -370,10 +374,8 @@
 						if(res.userinfoQuality == "dealer"){
 							//查询用户类型，set缓存
 							this.getuserInfo()
-							let info = this.$qj.storage.get('loginInfor')
-							info.userinfoType = this.userinfoType
-							this.$qj.storage.set('loginInfor', info);
 							
+
 							// userinfoType
 							let options = {
 								url: 'homepage'

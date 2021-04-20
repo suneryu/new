@@ -216,8 +216,7 @@
 							return;
 						}
 					});
-					this.messageSubscription()
-					//跳转到销售员首页
+		
 			},
 			messageSubscription(){
 				const that = this;

@@ -1123,6 +1123,14 @@
 					"navigationBarTextStyle": "black",
 					"navigationBarTitleText": "报价单"
 				}
+			},
+			{
+				"path": "pages/salesConstractList/main",
+				"style": {
+					"navigationBarBackgroundColor": "#FFFFFF",
+					"navigationBarTextStyle": "black",
+					"navigationBarTitleText": "预约任务列表"
+				}
 			}
 			]
 		}
