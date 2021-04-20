@@ -385,7 +385,7 @@
 							if(res.confirm){
 								let json = {
 									// scontractCode:item.scontractCode,
-									scontractCode:'2020030300000016',
+									scontractCode:'2021030400000001',
 									userinfoPhone:$storage.get('loginInfor').userPhone
 								}
 								http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
