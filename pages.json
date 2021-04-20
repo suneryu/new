@@ -11,7 +11,7 @@
 				"navigationStyle": "custom" //禁用原生导航栏，微信小程序可用
 			}
 		},
-		
+
 		//购物车
 		{
 			"path": "pages/order/shopCar/main",
@@ -21,7 +21,7 @@
 				"navigationBarTitleText": "确认订单页"
 			}
 		},
-        // ///////////////////////////////------todo
+		// ///////////////////////////////------todo
 		{
 			"path": "pages/homepage/main",
 			"style": {}
@@ -281,7 +281,7 @@
 				"navigationBarTitleText": "待支付"
 			}
 		}
-		
+
 	],
 
 	"subPackages": [{
@@ -888,16 +888,16 @@
 				}
 			]
 		},
-	    {
+		{
 			"root": "pages/bindCom",
 			"name": "bindCom",
-			"pages": [ {
+			"pages": [{
 					"path": "pages/bindRegister/main",
 					"style": {
 						"navigationBarBackgroundColor": "#FFFFFF",
 						"navigationBarTextStyle": "black",
 						"navigationBarTitleText": "海德堡官方商城"
-						}
+					}
 				},
 				{
 					"path": "pages/bindInfo/main",
@@ -916,12 +916,12 @@
 					}
 				}
 			]
-			 
+
 		},
 		{
 			"root": "pages/hdb",
 			"name": "hdb",
-			"pages": [ 
+			"pages": [
 				//促销专区
 				{
 					"path": "promotionZone/main",
@@ -932,7 +932,7 @@
 					}
 				},
 				{
-				
+
 					"path": "personCenter/trouble/main",
 					"style": {
 						"navigationBarBackgroundColor": "#374e80",
@@ -942,7 +942,7 @@
 				},
 				//合同商品列表页
 				// {
-				
+
 				// 	"path": "personCenter/myContractGoodsList/main",
 				// 	"style":{
 				// 		"navigationBarBackgroundColor": "#374e80",
@@ -952,7 +952,7 @@
 				// },
 				//个人中心HDB
 				{
-				
+
 					"path": "main",
 					"style": {
 						"navigationBarBackgroundColor": "#374e80",
@@ -965,20 +965,29 @@
 				// 	"path": "pages/hdb/personCenter/contractCar/main",
 				// 	"style":{}
 				// },
-				
+
 				//hdb 我的合同
 				{
 					"path": "personCenter/myContract/main",
 					"style": {}
 				},
 				//hdb 我的发票
-				
+
 				{
 					"path": "personCenter/myInvoice/main",
 					"style": {
 						"navigationBarBackgroundColor": "#374e80",
 						"navigationBarTextStyle": "white",
 						"navigationBarTitleText": "我的发票"
+					}
+				},
+				// hdb 我的预约
+				{
+					"path": "myAppoinTment/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "我的预约"
 					}
 				},
 				//hdb 用户协议
@@ -1035,103 +1044,103 @@
 					}
 				}
 			]
-			 
+
 		},
 		{
 			"root": "pages/salesEnd",
 			"name": "salesEnd",
-			"pages":[{
-				"path": "pages/salesFrontPage/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "销售端"
-				}
-			},
-			{
-				"path": "pages/createQuotation/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "创建报价单"
-				}
-			},
-			{
-				"path": "pages/quotationDetail/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "推送报价单"
-				}
-			},
-			{
-				"path": "pages/salesLoginVerification/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "销售端手机验证码登录"
-				}
+			"pages": [{
+					"path": "pages/salesFrontPage/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "销售端"
+					}
+				},
+				{
+					"path": "pages/createQuotation/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "创建报价单"
+					}
+				},
+				{
+					"path": "pages/quotationDetail/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "推送报价单"
+					}
+				},
+				{
+					"path": "pages/salesLoginVerification/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "销售端手机验证码登录"
+					}
 
-			},
-			{
-				"path": "pages/salesLoginPassword/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "销售端账号密码登录"
-				}
+				},
+				{
+					"path": "pages/salesLoginPassword/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "销售端账号密码登录"
+					}
 
-			},
+				},
 
-			{
-				"path": "pages/salesForgetPassword/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "销售端忘记密码"
-				}
+				{
+					"path": "pages/salesForgetPassword/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "销售端忘记密码"
+					}
 
-			},
-			{
-				"path": "pages/quotationList/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "报价单列表"
+				},
+				{
+					"path": "pages/quotationList/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "报价单列表"
+					}
+				},
+				{
+					"path": "pages/myClients/main",
+					"style": {
+						// "navigationBarBackgroundColor": "#FFFFFF",
+						// "navigationBarTextStyle": "black",
+						"navigationBarTitleText": "我的客户"
+					}
+				},
+				{
+					"path": "pages/ChooseaBuyer/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "报价单"
+					}
+				},
+				{
+					"path": "pages/contractCustomers/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "报价单"
+					}
+				},
+				{
+					"path": "pages/salesConstractList/main",
+					"style": {
+						"navigationBarBackgroundColor": "#FFFFFF",
+						"navigationBarTextStyle": "black",
+						"navigationBarTitleText": "预约任务列表"
+					}
 				}
-			},
-			{
-				"path": "pages/myClients/main",
-				"style": {
-					// "navigationBarBackgroundColor": "#FFFFFF",
-					// "navigationBarTextStyle": "black",
-					"navigationBarTitleText": "我的客户"
-				}
-			},
-			{
-				"path": "pages/ChooseaBuyer/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "报价单"
-				}
-			},
-			{
-				"path": "pages/contractCustomers/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "报价单"
-				}
-			},
-			{
-				"path": "pages/salesConstractList/main",
-				"style": {
-					"navigationBarBackgroundColor": "#FFFFFF",
-					"navigationBarTextStyle": "black",
-					"navigationBarTitleText": "预约任务列表"
-				}
-			}
 			]
 		}
 	],

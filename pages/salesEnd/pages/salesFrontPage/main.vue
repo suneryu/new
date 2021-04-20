@@ -318,10 +318,10 @@
 			},
 
 			// 订单
-			// statusOrder(dataState) {
-			// 	// console.log(dataState, order, '订单点击');
-			// 	$router.push("salesEnd/pages/quotationList",{state:dataState})
-			// },
+			statusOrder(dataState) {
+				// console.log(dataState, order, '订单点击');
+				$router.push("salesEnd/pages/quotationList",{state:dataState})
+			},
 
 			// 应用列表点击
 			applicationList(app, index) {

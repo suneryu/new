@@ -426,7 +426,7 @@
 				}
 				if (item == 3) {
 					console.log("跳转至我的预约页面")
-					$router.push("");
+					$router.push("hdb/myAppoinTment");
 				}
 				if (item == 4) {
 					console.log("跳转至我的收藏页面")
