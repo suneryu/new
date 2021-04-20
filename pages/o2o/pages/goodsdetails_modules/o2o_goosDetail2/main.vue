@@ -219,8 +219,8 @@
 				posterImg: null, //合成海报的img
 				pp: '',
 				goodsClass:'',  //商品类型
-				goodsMinnum:"" //商品最小起订量
-				
+				goodsMinnum:"", //商品最小起订量
+				isContract:false //判断是否为合约商品
 
 			};
 		},
@@ -244,6 +244,9 @@
 		},
 
 		onLoad(options) {
+			if(options.isContract != undefined){
+				this.isContract = true
+			}
 			$storage.set("goodsClass",options.goodsClass)
 			let that = this;
 			console.log('this.options...',that.$options)
@@ -713,6 +716,9 @@
 					skuId: this.skuId,
 					goodsNum: this.goodsnum
 				};
+				if(this.isContract){
+					addstr.shoppingType = 10
+				}
 				http.post(addShoppingGoods, addstr).then(st => {
 					if (st.success) {
 						$message.alert('加入购物车成功');

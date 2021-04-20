@@ -30,7 +30,7 @@
 						<button class="buttonClass" @click="useContract(item.scontractCode)">使用合同</button>
 					</div>
 				</div>
-				<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;">
+				<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;margin-bottom: 20rpx;">
 					<div style="width: 40%;">进度：
 						<span>{{item.scontractNbcode}}%</span>
 					</div>

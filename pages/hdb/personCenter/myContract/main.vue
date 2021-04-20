@@ -32,8 +32,8 @@
 						<div style='height: 25px;width: 100%;display: flex;'>
 							<div style='height: 25px;width: 80%;font-size: 11px;color: rgba(153, 153, 153, 0.619607843137255);line-height: 25px;'>合同有效时间：<span>{{items.date1}}~{{items.date2}}</span></div>
 							<div style='height: 25px;width: 20%;' v-if='items.memberGcode == 0'>
-								<button class="buttonClass" @click="useContract(items)" v-if='now > items.contractValidate'>使用合同</button>
-								<button class="buttonClass1" v-if='now < items.contractValidate'>待启用</button>
+								<button class="buttonClass" @click="useContract(items)" v-if='now > items.contractValidate && items.dataState == 1'>使用合同</button>
+								<!-- <button class="buttonClass1" v-if='now < items.contractValidate'>待启用</button> -->
 							</div>
 							<!-- <div style='height: 25px;width: 20%;' v-if='items.memberGcode == 1'><button class="buttonClass">使用合同</button></div> -->
 						</div>
@@ -192,7 +192,8 @@
 			//点击使用合同
 			useContract(items){
 				console.log("点击使用合同,跳转到合同列表页",items)
-				$router.push("hdb/personCenter/myContractGoodsList",items)
+				// $router.push("hdb/personCenter/myContractGoodsList",items)
+				$router.push('hdb/contractGoodsList', {scontractCode:items.scontractCode,scontractName:items.scontractName});
 
 			},
 			//查询合同附件的接口

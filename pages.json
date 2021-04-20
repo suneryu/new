@@ -1025,6 +1025,14 @@
 						"navigationBarTextStyle": "white",
 						"navigationBarTitleText": "合同列表"
 					}
+				},
+				{
+					"path": "contractGoodsList/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "合同列表"
+					}
 				}
 			]
 			 

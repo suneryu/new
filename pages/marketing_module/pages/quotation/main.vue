@@ -100,7 +100,7 @@ export default {
 				page: this.page,
 				rows: this.rows,
 				childFlag: true,
-				contractType: 39,
+				contractType: '39,40',
 				// memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
 				// memberBcode:'10000210376054'
 			};

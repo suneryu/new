@@ -48,7 +48,7 @@
 								<div class="list-count">
 									<div :style="{ color: item.dataState !== 0 ? '#d66377' : '#d66377' }"
 										style='font-size: 14px;'>
-										<span>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
+										<span>{{ item.pricesetNprice }} 元</span>
 										<!-- <span style='margin-left: 5px;'
 											v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span> -->
 									</div>
@@ -181,7 +181,8 @@
 				rtagCode: "",
 				userInfoCode: "",
 				goodsClass: "",
-				scontractCode:''
+				scontractCode:'',
+				paramsBak:{}
 			};
 		},
 		onShow() {
@@ -205,7 +206,7 @@
 			}
 		},
 		mounted() {
-			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
+			this.baseColor = `#004178`;
 			this.$qj.storage.get('getTopPerMenuList').map(v => {
 				if (v.menuAction == 'search' && v.menuCode == '00000222') {
 					this.searchPath = v.menuJspath;
@@ -225,14 +226,15 @@
 		methods: {
 			//查询商品
 			serarchGoods(value){
-				if(value != ''){
-					this.items = this.itemsBak.filter(item=>item.goodsName.indexOf(value) != -1)
-				}else{
-					this.items = this.itemsBak
-				}
+				this.searchValue = value
+				// if(value != ''){
+				// 	this.items = this.itemsBak.filter(item=>item.goodsName.indexOf(value) != -1)
+				// }else{
+				// 	this.items = this.itemsBak
+				// }
 				this.params.page = 1;
 				this.page = 1;
-				// this.commonMounted()
+				this.commonMounted()
 			},
 			//添加购物车
 			addShoppingGoodsCode(item){
@@ -330,10 +332,17 @@
 					rows: this.rows,
 					// channelCode: "1526",
 				}
+				this.paramsBak = {
+					scontractCode:this.scontractCode,
+					goodsName:this.searchValue,
+					page: 1,
+					rows: this.rows,
+				}
 				if (this.userinfoType == '2') {
 					this.params.channelCode = 'tempChannelCode'
 					this.params.temp = this.channelCode
 					this.params.goodsOrigin = "13"
+					this.params.likeGoodsName = this.searchValue
 				}
 
 				// if (this.classtreeCode || classtreeCode) {
@@ -349,13 +358,14 @@
 					.http(this.$qj.domain)
 					.get(search, this.params)
 					.then(res => {
-						console.log('商品列表----', res)
-						if (res.rows.length > 0) {
+						if (this.page === 1 && res.rows.length === 0) {
+							this.items = [];
+						}else{
 							let batchCollectData = [];
 							// 获取用户维度起订量倍数
 							let skuMinSaleMultiple = [];
 							this.items = res.rows;
-							this.items.map(v => {
+							res.rows.map(v => {
 								if (!RegExp(/http/).test(v.dataPic)) {
 									v.dataPic = this.$domain + v.dataPic;
 								}
@@ -381,21 +391,27 @@
 									goodsNo: v.goodsNo
 								});
 							});
-							this.itemsBak = this.items
-							this.total = res.total;
+							if (this.page === 1) {
+								this.items = [];
+								this.items = res.rows;
+							} else {
+								this.items = [...this.items, ...res.rows];
+							}
 						}
+						this.total = res.total;
 					});
 				}else{
 					this.$qj
 					.http(this.$qj.domain)
-					.get('/web/sp/scontract/queryScontractGoodsPage.json', {scontractCode:this.scontractCode})
+					.get('/web/sp/scontract/queryScontractGoodsPage.json',this.paramsBak )
 					.then(res=>{
-						if (res.rows.length > 0) {
+						if (this.page === 1 && res.rows.length === 0) {
+							this.items = [];
+						}else{
 								let batchCollectData = [];
 								// 获取用户维度起订量倍数
 								let skuMinSaleMultiple = [];
-								this.items = res.rows;
-								this.items.map(v => {
+								res.rows.map(v => {
 									if (!RegExp(/http/).test(v.dataPic)) {
 										v.dataPic = this.$domain + v.dataPic;
 									}
@@ -422,9 +438,14 @@
 										goodsNo: v.goodsNo
 									});
 								});
-								this.itemsBak = this.items
-								this.total = res.total;
+								if (this.page === 1) {
+									this.items = [];
+									this.items = res.rows;
+								} else {
+									this.items = [...this.items, ...res.rows];
+								}
 							}
+							this.total = res.total;
 						});
 				}
 				
@@ -479,19 +500,23 @@
 				switch (index) {
 					case 0:
 						this.params.sortField = '';
+						this.paramsBak.orderStr =''
 						this.commonMounted();
 						break;
 					case 1:
 						this.params.sortField = 'goodsSalesvolume';
+						this.paramsBak.orderStr ='"goodsSalesvolume"'
 						this.commonMounted();
 						break;
 					case 2:
 						if (this.iconColor === true) {
 							this.iconColor = false;
 							this.params.order = 'desc';
+							this.paramsBak.orderStr ='"pricesetNprice desc"'
 						} else {
 							this.iconColor = true;
 							this.params.order = 'asc';
+							this.paramsBak.orderStr ='"pricesetNprice"'
 						}
 						this.params.sortField = 'pricesetNprice';
 						this.commonMounted();
@@ -514,30 +539,31 @@
 					page: this.page
 				});
 				if (params.page <= num) {
-					this.$qj
-						.http(this.$qj.domain)
-						.get(search, params)
-						.then(res => {
-							let batchCollectData = [];
-							let skuMinSaleMultiple = [];
-							let list = res.rows;
-							list.map(v => {
-								if (!RegExp(/http/).test(v.dataPic)) {
-									v.dataPic = this.$domain + v.dataPic;
-								}
-								v.itemChecked = false;
-								batchCollectData.push({
-									collectType: '0',
-									collectOpcode: v.skuCode
-								});
-								skuMinSaleMultiple.push({
-									skuNo: v.skuNo,
-									goodsNo: v.goodsNo
-								});
-							});
-							this.items = [...this.items, ...list];
-							this.allChecked = false;
-						});
+					// this.$qj
+					// 	.http(this.$qj.domain)
+					// 	.get(search, params)
+					// 	.then(res => {
+					// 		let batchCollectData = [];
+					// 		let skuMinSaleMultiple = [];
+					// 		let list = res.rows;
+					// 		list.map(v => {
+					// 			if (!RegExp(/http/).test(v.dataPic)) {
+					// 				v.dataPic = this.$domain + v.dataPic;
+					// 			}
+					// 			v.itemChecked = false;
+					// 			batchCollectData.push({
+					// 				collectType: '0',
+					// 				collectOpcode: v.skuCode
+					// 			});
+					// 			skuMinSaleMultiple.push({
+					// 				skuNo: v.skuNo,
+					// 				goodsNo: v.goodsNo
+					// 			});
+					// 		});
+					// 		this.items = [...this.items, ...list];
+					// 		this.allChecked = false;
+					// 	});
+					this.commonMounted()
 				} else {
 					this.lastPageLine = true;
 				}

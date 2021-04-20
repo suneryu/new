@@ -6,7 +6,7 @@
 				<u-search placeholder="输入合同名称" :show-action="false" @blur='serchContract' clearabled v-model='searchValue'></u-search>
 			</div>
 			<div class="box-right" @click="Minemsg()">
-				<span class="iconfont icon-tishi"></span>q
+				<span class="iconfont icon-tishi"></span>
 			</div>
 		</div>
 		<div style="display: flex;background-color: #FAFAFA;">
@@ -367,8 +367,6 @@
 				} else {
 					//获取签约时的信息
 					$router.push('hdb/orderHDB', {scontractId});
-					// if (compareVersion(global.globalData.SDKVersion, "2.8.2") >= 0) {
-					
 				}
 
 			},
