@@ -344,19 +344,74 @@
 							content: '服务预约确认！',
 							confirmColor: '#' + $storage.get('baseColor'),
 							success(res) {
-								wx.showToast({
-									title: "预约成功！",
-									duration: 2000,
-									icon: "success",
-									success(data) {
-										// that.subscribeMes = false;
+								if(res.confirm){
+									let json = {
+										// scontractCode:item.scontractCode,
+										scontractCode:'2020030300000016',
+										userinfoPhone:$storage.get('loginInfor').userPhone,
+										areaCode:this.areaCode
 									}
-								});
+									http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
+									.then(res1=>{
+										if(res1.success){
+											wx.showToast({
+												title: '预约成功！',
+												duration: 2000,
+												icon: "error",
+												success(data) {
+													this.getShow()
+												}
+											});
+										}else{
+											wx.showToast({
+												title: res1.msg,
+												duration: 2000,
+												icon: "error",
+												success(data) {
+												}
+											});
+										}
+									})
+								}
 							}
 						})
 					}
 				} else {
-					//非线下合同预约
+					uni.showModal({
+						title: '提示',
+						content: '服务预约确认！',
+						confirmColor: '#' + $storage.get('baseColor'),
+						success(res) {
+							if(res.confirm){
+								let json = {
+									// scontractCode:item.scontractCode,
+									scontractCode:'2020030300000016',
+									userinfoPhone:$storage.get('loginInfor').userPhone
+								}
+								http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
+								.then(res1=>{
+									if(res1.success){
+										wx.showToast({
+											title: '预约成功！',
+											duration: 2000,
+											icon: "error",
+											success(data) {
+												this.getShow()
+											}
+										});
+									}else{
+										wx.showToast({
+											title: res1.msg,
+											duration: 2000,
+											icon: "error",
+											success(data) {
+											}
+										});
+									}
+								})
+							}
+						}
+					})
 				}
 			},
 			//点击签约
@@ -580,7 +635,7 @@
 						//个人用户
 						this.showArea = true;
 					} else {
-						this.showArea = true;
+						this.showArea = false;
 					}
 					this.fontColor1 = "#000000"; //字体颜色
 					this.fontColor2 = "#000000"; //字体颜色

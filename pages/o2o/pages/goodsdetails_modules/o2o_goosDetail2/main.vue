@@ -244,9 +244,7 @@
 		},
 
 		onLoad(options) {
-			if(options.isContract != undefined){
-				this.isContract = true
-			}
+			
 			$storage.set("goodsClass",options.goodsClass)
 			let that = this;
 			console.log('this.options...',that.$options)
@@ -254,6 +252,9 @@
 			that.goodsClass = options.goodsClass
 			that.userInfor = $storage.get('loginInfor');
 			Object.assign(that.$data, that.$options.data()); //初始化数据
+			if(options.isContract != undefined){
+				that.isContract = true
+			}
 			let pages = getCurrentPages();
 			let prevpage = pages[0];
 			// 登陆颜色 商城名字信息
@@ -691,24 +692,6 @@
 				this.addCart();
 				// $message.alert(res.msg);
 				this.noAddcat = false;
-				// http.post(addShoppingGoodsBySpec, _data).then(res => {
-				// 	if (res.success) {
-				// 		this.noAddcat = true;
-				// 		if (res.dataObj != null) {
-				// 			this.skuId = res.dataObj.skuId;
-				// 			this.goodsPrice = res.pricesetNprice;
-				// 			this.userImgurl = this.$domain + res.dataObj.dataPic;
-				// 			if (this.getgoodtypes == 24 || this.getgoodtypes == 25 || this.getgoodtypes == 26) {
-				// 				this.goBuy();
-				// 			} else {
-				// 				this.addCart();
-				// 			}
-				// 		}
-				// 	} else {
-				// 		$message.alert(res.msg);
-				// 		this.noAddcat = false;
-				// 	}
-				// });
 			},
 			//请求接口加入购物车
 			addCart() {
