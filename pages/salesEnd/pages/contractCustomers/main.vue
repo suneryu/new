@@ -78,9 +78,10 @@
 						this.getdata()
 					} else {
 						http.get(queryGroupBuyerPageByAG, {
-							buyerPhone: this.areaCode
+							buyerPhone: this.areaCode,
+							memberCode: $storage.get('loginInfor').userInfoCode
 						}).then(res => {
-							this.company = res.list
+							this.company = res.list || []
 						});
 					}
 				}
