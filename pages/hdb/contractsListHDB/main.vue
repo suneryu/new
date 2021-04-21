@@ -18,7 +18,7 @@
 				<i class="iconfont icon-arrfill_l" v-if='iconShow1'></i>
 				<i class="iconfont icon-xialakuangjiantou" v-if='iconShow2'></i>
 			</div>
-		</div>
+		</div> 
 		<view class="address-choose" v-if='showArea'>
 			<view class="iconfont icon-shouhuodizhi"></view>
 			<view class="container" @click="chooseCity">
