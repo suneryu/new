@@ -15,7 +15,7 @@
 			<!-- 统一信用代码 -->
 			<view class="company-or-personal">
 				<view class="iconfont icon-city"></view>
-				<input class="company-personal-input" type="text" v-model="userinfoCert2No" placeholder="请输入统一信用代码(税号)" />
+				<input class="company-personal-input" type="text" @blur="animateWidth(userinfoCert2No)"  v-model="userinfoCert2No" placeholder="请输入统一信用代码(税号)" />
 			</view>
 
 			<view class="address-choose">
@@ -77,7 +77,8 @@
 		saveUserDealer,
 		uploadGoodsFile,
 		uploadGoodsFiles,
-		saveDealerUserinfoapplyNew
+		saveDealerUserinfoapplyNew,
+		queryCompanyUserinfo
 	} from '@/api/interface.js';
 	import http from '@/api/http.js';
 	export default {
@@ -202,6 +203,22 @@
 			this.userPhone = this.$qj.storage.get('userPhone');
 		},
 		methods: {
+			animateWidth(data){
+				console.log('失去焦点',data)
+				let params = {
+					userinfoCert2No:data
+				}
+				http
+					.get(queryCompanyUserinfo, params)
+					.then(res => {
+						if(res.total !=0){
+							this.companyAddress  = res.rows[0].companyAddress							this.userinfoCompname = res.rows[0].userinfoCompname
+						}
+							console.log('res---===',res)
+							// this.$qj.message.alert('认证信息提交失败');
+						
+					});
+			},
 			navigateBack() {
 				this.$qj.router.back();
 			},

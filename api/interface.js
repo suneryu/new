@@ -284,3 +284,5 @@ export const loginOrSell = '/web/ml/mlogin/loginOrSell2.json' // 销售验证码
 export const warrantyLoginInSell = '/web/ml/mlogin/warrantyLoginInSell2.json' //  销售用户名密码授权登录
 export const updateUmuserPwSell = '/web/ml/mlogin/updateUmuserPwSell2.json' //  销售修改密码
 export const queryUserinfoPageBySales = '/web/um/userserviceinfo/queryUserinfoPageBySales.json' //  查询用户资质
+export const updateContractNew = '/web/oc/contract/updateContractNew.json' //  
+export const queryCompanyUserinfo = '/web/um/userDealer/queryCompanyUserinfo.json' //  

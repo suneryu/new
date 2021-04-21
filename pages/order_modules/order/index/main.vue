@@ -23,8 +23,9 @@
 								<div>订单编号：{{ order.contractBillcode }}</div>
 							</div>
 							<div v-if="order.dataState == -1">已取消</div>
-							<div v-else-if="order.dataState == 1 && order.dataStatestr == '2' ">待审核</div>
+							<div v-else-if="order.dataState == 1 && order.dataStatestr == '2' ">待改价</div>
 							<div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待付款</div>
+							<div v-else-if="order.dataState == 1 && order.dataStatestr == '3' ">待审核</div>
 							<div v-else-if="order.dataState == 2">待发货</div>
 							<div v-else-if="order.dataState == 3">待收货</div>
 							<div v-else-if="order.dataState == 4">交易成功</div>
@@ -50,11 +51,11 @@
 								实付:
 								<i :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ order.dataBmoney }}{{ unitPrice.mapay }}</i>
 							</div>
-							<div class="right" v-if="order.dataState == 1 && order.dataStatestr == 2 ">
+							<div class="right" v-if="order.dataState == 1 && (order.dataStatestr == 2  || order.dataStatestr == 3)&& order.pricesetCurrency != 2">
 								<div class="btn" @click="cancelOrder(order)">取消订单</div>
 								<!-- <div class="btn" @click="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">立即支付</div> -->
 							</div>
-							<div class="right" v-if="order.dataState == 1  && order.dataStatestr == 1">
+							<div class="right" v-if="order.dataState == 1  && order.dataStatestr == 1 && order.pricesetCurrency != 2">
 								<div class="btn" @click="cancelOrder(order)">取消订单</div>
 								<div class="btn" @click="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">立即支付</div>
 							</div>
@@ -84,7 +85,7 @@
 <script>
 import http from '@/api/http.js';	
 import { $storage, $router, $message } from '@/utils/prototype/vue.js';
-import { saveOcRefund } from '@/api/interface.js';
+import { saveOcRefund ,updateContractNew} from '@/api/interface.js';
 import { myOrder, refund, addShoppingGoods, addShoppingGoodsBySpec } from '@/node_modules/qj-mini-pages/libs/api/interface.js';
 export default {
 	props: {
@@ -277,11 +278,29 @@ export default {
 		pay(order) {
 			console.log('立即支付-----',order)
 			this.$state.set('contractBillcode', order.contractBillcode);
-			this.$qj.router.push('pay/paySelect', {
-				dataBmoney: order.dataBmoney,
-				contractBillcode: order.contractBillcode,
-				contractPmode: order.contractPmode
-			});
+			
+			if(order.contractPmode == '1' || order.contractPmode == '2' ){
+				
+				let params = {
+					"tempState":'1',
+					"contractId":order.contractId
+				}
+				this.$qj
+					.http(this.$qj.domain)
+					.get(updateContractNew, params)
+					.then(res => {
+						console.log('------',res)
+						this.commonMounted(-1);
+					});
+				}else{
+					this.$qj.router.push('pay/paySelect', {
+						dataBmoney: order.dataBmoney,
+						contractBillcode: order.contractBillcode,
+						contractPmode: order.contractPmode
+					});
+				}
+			
+			
 		},
 		navigateTo(options) {
 						this.$qj.router.push(options.url, options.query ? options.query : '');

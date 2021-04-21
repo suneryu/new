@@ -237,9 +237,9 @@
 			queryScontractFilePage(item){
 				let data = item
 
-				console.log("合同信息code",data.scontractCode)
+				console.log("合同信息code",data.dataStatestr)
 				http.get(queryScontractFilePage, {
-					 scontractCode:data.scontractCode
+					 scontractCode:data.dataStatestr
 				})
 					.then(res => {
 						console.log("合同附件",res)
