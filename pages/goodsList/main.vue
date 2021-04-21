@@ -208,6 +208,7 @@
 				this.goodsClassCode = JSON.parse(options.json).goodsClassCode;
 			 	// this.searchParams.classtreeCode = JSON.parse(options.json).classtreeCode;
 			 }
+			 this.searchParam = options.searchParam
 		},
 		onReachBottom() {
 			this.loadMore();
@@ -301,11 +302,11 @@
 					page: 1,
 					rows: this.rows,
 					// goodsClassCode:'2020072100000145',
-					classtreeShopcode:  this.goodsClassCode || goodsClassCode,
+					classtreeShopcode:  this.goodsClassCode || goodsClassCode || '',
 					goodsOrigin:"0",
 					// goodsClassCode:this.classtreeCode || classtreeCode,
 					goodsType: "00",
-					searchParam: this.searchParam,
+					likeGoodsName: this.searchParam || '',
 					// classtreeCode:"2020072100000130",
 					channelCode: "1526",
 					// searchParam: this.searchParam || this.$qj.storage.get('searchParam')
