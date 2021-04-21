@@ -185,14 +185,15 @@
 			};
 		},
 		onShow() {
-			this.userPhone = $storage.get('loginInfor').userPhone;
+			this.userPhone = this.$qj.storage.get('loginInfor').userPhone;
 			console.log(this.$qj.storage.get('userInfo'))
 			console.log(this.$qj.storage.get('userdetailsInfo'))
-			this.userinfoType = this.$storage.get('loginInfor').userinfoType
-			this.userInfoCode = $storage.get('loginInfor').userInfoCode;
+			this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
+			this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
 			
+			console.log(this.userinfoType)
 				this.searchStatus();
-				this.getQY();
+				
 			this.batchCheckCollect();
 			this.batchGetSkuMinSaleMultiple();
 		},
@@ -282,10 +283,12 @@
 					.http(this.$qj.domain)
 					.get(userapplyStateAndAuth, paramsStatus)
 					.then(res => {
+						console.log('查询渠道------',res)
 						this.channelCode = res.userinfoChannelcode
 						if (res.checkModifyAudit == '3') {
 							that.checkModifyAudit = "3"
 						}
+						this.getQY();
 					this.initSearchParams();
 					this.commonMounted();
 					});
@@ -311,6 +314,7 @@
 					channelCode: "1526",
 					// searchParam: this.searchParam || this.$qj.storage.get('searchParam')
 				};
+				console.log('当前的类型898--8--',this.userinfoType )
 				if(this.userinfoType == '2'){
 					this.params.channelCode = 'tempChannelCode'
 					this.params.temp = this.channelCode

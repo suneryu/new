@@ -127,6 +127,7 @@
 			this.userPhone = options.userPhone;
 			this.pageState = options.pageState ? options.pageState : 0;
 			if (options.registerParams) this.registerParams = JSON.parse(options.registerParams);
+			console.log('---------------')
 			if (this.registerParams != {}) {
 				this.userType = this.registerParams.userinfoType;
 				// this.distributor = this.registerParams.qualityQtypeName;
@@ -146,18 +147,21 @@
 					this.memoauthFileurl = this.$qj.domain + this.registerParams.memoauthFileurl;
 				}
 			}
+			console.log('this.userPhone111111----',this.userPhone)
+			console.log('this.userInfoCode111111111----',this.userInfoCode)
 		},
 		onShow() {},
 		created(){
+			
+		},
+		mounted() {
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			this.userInfoCode = this.$qj.storage.get('loginInfor').userInfoCode
 			this.userInfoId = this.$qj.storage.get('loginInfor').userInfoId
 			this.userPhone = this.$qj.storage.get('userPhone');
-			
+					
+				
 			this.getAuthState()
-		},
-		mounted() {
-			
 		},
 		methods: {
 			navigateBack() {
@@ -203,7 +207,8 @@
 					this.$qj.message.alert('请上传授权书');
 					return;
 				}
-				
+				console.log('this.userPhone----',this.userPhone)
+				console.log('this.userInfoCode----',this.userInfoCode)
 				let params = {
 
 					// 公司名称

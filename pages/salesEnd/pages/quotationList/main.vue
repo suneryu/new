@@ -443,7 +443,7 @@ export default {
 				}
 				.active {
 					span {
-						position: absolute;
+						// position: absolute;
 						height: 3rpx;
 						width: 100%;
 						bottom: 0;

@@ -295,6 +295,7 @@
 			// 初始化地址数据
 			this.initAddressData();
 			
+			
 		},
 		created(){
 			
@@ -304,7 +305,7 @@
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			this.secondaryColor = `#${this.$qj.storage.get('secondaryColor')}` || this.baseColor;
-			this.initPayMethods();
+			
 			this.query = this.$state.order;
 			// this.searchStatus()
 			// this.accountsSumPrice()
@@ -365,20 +366,21 @@
 			searchStatus() {
 				let that = this
 				let paramsStatus = {}
-				paramsStatus.userCode = this.userInfoCode
-				this.$qj
-					.http(this.$qj.domain)
+				paramsStatus.userCode = that.userInfoCode
+				that.$qj
+					.http(that.$qj.domain)
 					.get(userapplyStateAndAuth, paramsStatus)
 					.then(res => {
 						console.log("认证授权状态4444444，",res)
-						this.channelCode = res.userinfoChannelcode
-						this.partnerType = res.partnerType
-
+						that.channelCode = res.userinfoChannelcode
+						that.partnerType = res.partnerType
+						console.log(that.partnerType,'that.partnerType')
 						if (res.checkModifyAudit == '3') {
-							this.checkModifyAudit = "3"
+							that.checkModifyAudit = "3"
 						}
 					// 初始化订单数据
-						this.initOrderData(this.temp);
+						that.initOrderData(that.temp);
+						this.initPayMethods();
 					});
 			},
 			//查询权益
@@ -564,11 +566,14 @@
 						contractPmode:'1'
 					}]
 					//判断是否有信用额度
+						console.log("有信用额度-----")
+						console.log("有信用额度-----",this.partnerType)
 					if(this.partnerType == 1){
 						let type1={
 							ptfpmodeName: '信用额度支付',
 							contractPmode:'2'
 							}
+						
 						this.payMethodsList.push(type1)
 					}
 					

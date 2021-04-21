@@ -14,25 +14,33 @@
 				<div style='width: 100%;height: 150px;padding: 0 8px 0 8px;border-top: 10rpx solid #fafafa;border-bottom: 10rpx solid #fafafa;'>
 					<div style='width: 100%;height: 40px;display: flex;border-bottom: 1rpx solid #E0E0E0;font-size: 11px;'>
 						<div style='width:80%;line-height: 20px;'>
-							<div>服务单编号：<span>102102102</span></div>
-							<div style='color: #169BD5;'>企业预约时间：<span>2021年3月26日 16:23:18</span></div>
+							<div>服务单编号：<span>{{items.scontractId}}</span></div>
+							<div style='color: #169BD5;'>企业预约时间：<span>{{items.goodsPmbillno}}</span></div>
 						</div>
-						<div style='width:20%;line-height: 40px;text-align: center;color: red;'>待接洽</div>
+						<div style='width:20%;line-height: 40px;text-align: center;color: red;' v-if='items.dataState == 0'>待接洽</div>
+						<div style='width:20%;line-height: 40px;text-align: center;color: #169BD5;' v-if='items.dataState == 1'>待接洽</div>
+						<div style='width:20%;line-height: 40px;text-align: center;' v-if='items.dataState == 2'>待接洽</div>
 					</div>
 					<div style='width: 100%;height: 100px;border-bottom: 1rpx solid #E0E0E0;'>
 						<div style='height: 25px;width: 100%;font-size: 14px; sans-serif;font-weight: 400;font-style: normal;line-height: 25px;display: flex;'>
 							<div style='width: 70%;'>{{items.scontractName}}</div>
-							<div style='width: 30%;text-align: center;font-size: 11px;'>线下销售合同</div>
+							<div style='width: 30%;text-align: center;font-size: 11px;' v-if='items.memberGcode =="2-1"'>培训</div>
+							<div style='width: 30%;text-align: center;font-size: 11px;' v-if='items.memberGcode =="2-2"'>咨询</div>
+							<div style='width: 30%;text-align: center;font-size: 11px;' v-if='items.memberGcode =="2-3"'>服务/零备件合同</div>
+							<div style='width: 30%;text-align: center;font-size: 11px;' v-if='items.memberGcode =="2-4"'>设备升级/改造</div>
+							<div style='width: 30%;text-align: center;font-size: 11px;' v-if='items.memberGcode =="2-5"'>服务与零备件套餐</div>
+					
 						</div>
 						<div style='height: 25px;width: 100%;font-size: 12px;rgba(153, 153, 153, 0.619607843137255);line-height: 25px;'>合同描述： <span>{{items.contractRemark}}</span></div>
 						<div style='height: 25px;width: 100%;display: flex;'>
-							<div style='height: 25px;width: 80%;font-size: 12px;color: line-height: 25px;'>公司名称---</div>
+							<div style='height: 25px;width: 80%;font-size: 12px;color: line-height: 25px;'>{{items.contractUserurl}}</div>
 							<div  class='lookconstr' style='height: 25px;width: 20%;text-align: center;'><u style='text-decoration:underline' @click='preview(items)'>合同预览</u></div>
 						</div>
 						<div style='height: 25px;width: 100%;display: flex;'>
-							<div style='height: 25px;width: 75%;font-size: 12px;line-height: 25px;'>企业编号：<span>{{items.date1}}~{{items.date2}}</span></div>
+							<div style='height: 25px;width: 75%;font-size: 12px;line-height: 25px;'>企业编号：<span>{{items.contractInvoice}}</span></div>
 							<div style='height: 25px;width: 25%;'>
-								<button class="buttonClass" @click="useContract(items)" >查看联系方式</button>
+								<button class="buttonClass" @click="contactPerson(items)" v-if='items.dataState == 0'>立即接洽</button>
+								<button class="buttonClass" @click="salesperson(items)" v-if='items.dataState != 0'>查看联系方式</button>
 							</div>
 						</div>
 					</div>
@@ -130,10 +138,10 @@
 			
 			console.log("userPhone",this.info.userPhone)
 			let parmas = {
-				contractInvstate:3,
+				contractInvstate:2,
 				rows: 10,
 				page: 1,
-				goodsSupplierName:this.info.userPhone
+				// goodsSupplierName:this.info.userPhone
 			};
 			this.getData(parmas);
 		},
@@ -143,6 +151,43 @@
 		  this.loadMore(this.contractData[0].memberGcode);
 		},
 		methods: {
+			contactPerson(data){
+				//更新合同状态将待接洽换成已接洽
+				console.log('立即接洽，',data)
+			},
+			salesperson(data) {
+				let showHtml = ""
+				wx.showModal({
+					title: "企业信息",
+					content: '上海测试有限公司 企业编码\r\n企业联系人：123\r\n电话：123',
+					cancelText: '关闭',
+					confirmText:'一键拨号',
+					success: res => {
+						if (res.confirm) {
+							this.gocall()
+						}
+					}
+				});
+			},
+			gocall() {
+				console.log(1111)
+				uni.makePhoneCall({
+			
+					// 手机号
+					phoneNumber: '18154177826',
+			
+					// 成功回调
+					success: (res) => {
+						console.log('调用成功!')
+					},
+			
+					// 失败回调
+					fail: (res) => {
+						console.log('调用失败!')
+					}
+			
+				});
+			},
 			//保存图片
 			savePhoto (data) {
 				console.log('data',data)
@@ -238,12 +283,12 @@
 		 console.log("qqqqqqqqqqqqaaaaa2",code)
 		 let parmas = {
 		 	memberGcode: code,
-		 	contractInvstate:0,
+		 	contractInvstate:2,
 		 	rows: 10,
 		 	page: this.page,
-			goodsSupplierName:this.info.userPhone
+			// goodsSupplierName:this.info.userPhone
 		 };
-		 http.get(queryBuyerScontractPage, parmas)
+		 http.get(queryScontractPageNew, parmas)
 		 	.then(res => {
 		 		console.log("resData....",res)	
 		 		
@@ -272,7 +317,7 @@
 					//合同查询接口  web/sp/scontract/queryScontractPageNew.json? memberGcode=2-1,2-2&contractInvstate=0
 					let parmas = {
 						memberGcode: "0",
-						contractInvstate:1,
+						contractInvstate:2,
 						rows: 10,
 						page: 1,
 						goodsSupplierName:this.info.userPhone
@@ -290,7 +335,7 @@
 					//合同查询接口  web/sp/scontract/queryScontractPageNew.json? memberGcode=2-1,2-2&contractInvstate=0
 					let parmas = {
 						memberGcode: "1",
-						contractInvstate:1,
+						contractInvstate:2,
 						rows: 10,
 						page: 1,
 						goodsSupplierName:this.info.userPhone
@@ -307,7 +352,7 @@
 					
 					let parmas = {
 						memberGcode: "2",
-						contractInvstate:1,
+						contractInvstate:2,
 						rows: 10,
 						page: 1,
 						goodsSupplierName:this.info.userPhone
@@ -325,7 +370,7 @@
 					
 					let parmas = {
 						memberGcode: "2",
-						contractInvstate:1,
+						contractInvstate:2,
 						rows: 10,
 						page: 1,
 						goodsSupplierName:this.info.userPhone

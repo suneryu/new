@@ -276,7 +276,6 @@
 					if (this.userinfoTel && !this.$qj.phoneValidation(this.userinfoTel)) {
 						return;
 					}
-
 				//  注册接口
 				let params = {
 
@@ -290,8 +289,8 @@
 					userinfoTel: this.userinfoTel,
 					// 公司或者个人type
 					userinfoType: this.userType,
-					provinceCode: this.provinceCode + '0000',
-					cityCode: this.cityCode + '00',
+					provinceCode: (this.provinceCode + '0000').slice(0,6),
+					cityCode: (this.cityCode + '00').slice(0,6),
 					areaCode: this.areaCode,
 					provinceName: this.provinceName,
 					cityName: this.cityName,
