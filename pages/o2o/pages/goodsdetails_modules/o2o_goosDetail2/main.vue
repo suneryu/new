@@ -220,7 +220,10 @@
 				pp: '',
 				goodsClass:'',  //商品类型
 				goodsMinnum:"", //商品最小起订量
-				isContract:false //判断是否为合约商品
+				isContract:false, //判断是否为合约商品
+				contractProperty:'',
+				userInfoCode:'',
+				warehouseName:''
 
 			};
 		},
@@ -254,6 +257,8 @@
 			Object.assign(that.$data, that.$options.data()); //初始化数据
 			if(options.isContract != undefined){
 				that.isContract = true
+				that.contractProperty = options.contractProperty
+				that.warehouseName = options.warehouseName
 			}
 			let pages = getCurrentPages();
 			let prevpage = pages[0];
@@ -695,21 +700,43 @@
 			},
 			//请求接口加入购物车
 			addCart() {
+				
 				let addstr = {
 					skuId: this.skuId,
 					goodsNum: this.goodsnum
 				};
-				if(this.isContract){
-					addstr.shoppingType = 10
+				let goodsList = [{
+					skuId:this.skuId,
+					goodsNum:this.goodsnum,
+					shoppingType:"6",
+					// channelCode:this.userInfor.channelCode,
+					warehouseCode: this.contractProperty,
+					warehouseName: this.warehouseName
+				}]
+				let params = {
+					memberBcode:$storage.get('loginInfor').userInfoCode,
+					goodsBeanStr:JSON.stringify(goodsList)
 				}
-				http.post(addShoppingGoods, addstr).then(st => {
+				if(this.isContract){
+					http.get('/web/oc/empshopping/addShoppingGoodsCode.json',params ).then(res => {
+						if(res.success){
+							$message.alert('商品加入购物车成功！');
+							this._close();
+						}else{
+							$message.alert(res.msg);
+						}
+					})
+				}else{
+					http.post(addShoppingGoods, addstr).then(st => {
 					if (st.success) {
 						$message.alert('加入购物车成功');
 						this._close();
 					} else {
 						$message.alert(st.msg);
 					}
-				});
+					});
+				}
+				
 			},
 			//立即购买
 			goBuy() {

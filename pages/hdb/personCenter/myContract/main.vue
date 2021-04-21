@@ -193,7 +193,7 @@
 			useContract(items){
 				console.log("点击使用合同,跳转到合同列表页",items)
 				// $router.push("hdb/personCenter/myContractGoodsList",items)
-				$router.push('hdb/contractGoodsList', {scontractCode:items.scontractCode,scontractName:items.scontractName});
+				$router.push('hdb/contractGoodsList', {scontractCode:items.scontractCode,scontractName:items.scontractName,contractProperty:items.scontractId});
 
 			},
 			//查询合同附件的接口

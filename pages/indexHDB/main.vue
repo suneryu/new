@@ -203,10 +203,8 @@
 				let info = this.$qj.storage.get('loginInfor')			
 				info.userinfoType = this.userinfoType
 				this.$qj.storage.set('loginInfor', info);
-				
-			
 				});
-				},
+			},
 
 			// 弹窗
 			tapPopup() {

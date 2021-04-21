@@ -145,7 +145,9 @@
 				rtagCode:"",
 				userInfoCode:"",
 				goodsClass:"",
-				scontractCode:''
+				scontractCode:'',
+				scontractId:'',
+				warehouseName:''
 			};
 		},
 		onShow() {
@@ -160,6 +162,8 @@
 		},
 		onLoad(options) {
 			this.scontractCode = options.scontractCode
+			this.scontractId = options.contractProperty
+			this.warehouseName = options.scontractName
 			wx.setNavigationBarTitle({
 				title: options.scontractName
 			});
@@ -513,7 +517,9 @@
 				let params = {
 					goodsClass:goodsClass ? goodsClass : '1',
 					skuCode: skuCode,
-					isContract:true
+					isContract:true,
+					contractProperty:this.scontractId,
+					warehouseName:this.warehouseName
 				};
 				this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
 			},

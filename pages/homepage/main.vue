@@ -141,6 +141,9 @@
 	import {
 		getHomePage
 	} from '@/api/interface.js';
+	import {
+		getUserservice
+	} from '@/api/interfaceHDB.js';
 	export default {
 		components: { vueTabBar },
 		data() {
@@ -175,6 +178,7 @@
 		
 		
 		mounted() {
+			this.getuserInfo()
 			this.baseColor = `#${$storage.get('baseColor')}`;
 			wx.setNavigationBarTitle({
 				title: "商城首页"
@@ -188,6 +192,16 @@
 			
 		},
 		methods: {
+			getuserInfo() {
+				http.get(getUserservice, {
+					userId: $storage.get('userId')
+				}).then(res => {
+					console.log('线上商城----',res)
+				let info = this.$qj.storage.get('loginInfor')			
+				info.userinfoType =  res.userinfoType;
+				this.$qj.storage.set('loginInfor', info);
+				});
+			},
 		onShareAppMessage(res) {
 			  return {
 			   title: '海德堡',

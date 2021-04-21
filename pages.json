@@ -940,16 +940,6 @@
 						"navigationBarTitleText": "常见问题"
 					}
 				},
-				//合同商品列表页
-				// {
-
-				// 	"path": "personCenter/myContractGoodsList/main",
-				// 	"style":{
-				// 		"navigationBarBackgroundColor": "#374e80",
-				// 		"navigationBarTextStyle": "white",
-				// 		"navigationBarTitleText": "合同商品列表"
-				// 	}
-				// },
 				//个人中心HDB
 				{
 
@@ -961,10 +951,14 @@
 					}
 				},
 				//hdb 合約商城購物車
-				// {
-				// 	"path": "pages/hdb/personCenter/contractCar/main",
-				// 	"style":{}
-				// },
+				{
+					"path": "personCenter/contractCar/main",
+					"style":{
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "合约商城购物车"
+					}
+				},
 
 				//hdb 我的合同
 				{

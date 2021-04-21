@@ -43,6 +43,9 @@
 import vueTabBar from '@/components/communal/vueTabBar';
 import { $storage, $router } from '@/utils/prototype/vue.js';
 import { queryGoodsClassTree, search, addShoppingGoodsBySpec, addShoppingGoods } from '@/api/interface.js';
+import {
+	getUserservice
+} from '@/api/interfaceHDB.js';
 import http from '@/api/http.js';
 export default {
 	components: { vueTabBar },
@@ -68,6 +71,7 @@ export default {
 		// });
 	},
 	mounted() {
+		this.getuserInfo()
 		this.footerMenu = $storage.get('footerMenu');
 		http.get(queryGoodsClassTree).then(res => {
 			console.log("商品分类。。。",res)
@@ -79,6 +83,17 @@ export default {
 		// uni.hideHomeButton();
 	},
 	methods: {
+		getuserInfo() {
+			http.get(getUserservice, {
+				userId: $storage.get('userId')
+			}).then(res => {
+				console.log('线上商城----',res)
+
+			let info = this.$qj.storage.get('loginInfor')			
+			info.userinfoType = res.userinfoType;
+			this.$qj.storage.set('loginInfor', info);
+			});
+		},
 		onShareAppMessage(res) {
 			return {
 				title: '海德堡',
