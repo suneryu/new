@@ -141,6 +141,7 @@
 				contractInvstate:2,
 				rows: 10,
 				page: 1,
+				goodsPbillno:'18326154207'
 				// goodsSupplierName:this.info.userPhone
 			};
 			this.getData(parmas);

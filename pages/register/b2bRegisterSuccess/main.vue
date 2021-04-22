@@ -11,7 +11,7 @@
 			<div class="successTip">感谢您的支持</div>
 			<div class="successBtn">
 				<div class="goToShop" @click="goToShopIndex">前去登录</div>
-				<div class="goToRegister" v-bind:style="{ backgroundColor: baseColor }" @click="goToRegister">企业认证</div>
+				<!-- <div class="goToRegister" v-bind:style="{ backgroundColor: baseColor }" @click="goToRegister">企业认证</div> -->
 			</div>
 
 		</div>

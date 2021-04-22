@@ -29,7 +29,7 @@
 		</div>
 		<u-picker mode="region" v-model="cityPicker" :area-code="['11', '1101', '110101']" @confirm="cityPickerConfirm">
 		</u-picker>
-		<div class="goodsList-list" v-if="items.length == 0" :style="{marginTop:showArea?'190rpx':'100rpx'}">
+		<div class="goodsList-list" v-if="items.length > 0" :style="{marginTop:showArea?'190rpx':'100rpx'}">
 			<ul>
 				<li v-for="(item, index) in items" :key="index">
 					<div @click="goodsDetail(item.skuCode)">

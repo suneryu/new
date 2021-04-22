@@ -165,6 +165,7 @@
 			},
 		},
 		onLoad(options) {
+			console.log(options,'--------options')
 			this.userPhone = options.userPhone;
 			this.pageState = options.pageState ? options.pageState : 0;
 			if (options.registerParams) this.registerParams = JSON.parse(options.registerParams);
@@ -301,7 +302,7 @@
 			getComInfo() {
 				let that = this
 				let params = {}
-				params.userPhone = this.$qj.storage.get('userPhone');
+				params.userPhone = this.$qj.storage.get('loginInfor').userPhone;
 				http
 					.get(userInfoApplyByPhone, params)
 					.then(res => {
