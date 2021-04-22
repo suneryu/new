@@ -95,7 +95,9 @@
 		getUpmupointsPageByPC,
 		queryCollectPage,
 		userapplyStateAndAuth,
-		queryBuyerScontractPage
+		queryBuyerScontractPage,
+		queryScontractPage
+		
 	} from '@/api/interfaceHDB.js';
 	import {
 	queryContractPageC
@@ -200,7 +202,7 @@
 					page: 1,
 					rows: 10,
 					childFlag: true,
-					contractType: '39,41'
+					contractType: '39,40'
 					
 				}).then(res => {
 					console.log("getmyContract...", res.total)
@@ -221,9 +223,9 @@
 				
 			
 				//获取我的預約合同
-				http.get(queryScontractPageC, {
-					goodsSupplierName: data,
-					contractInvstate: "1"
+				http.get(queryScontractPage, {
+					contractInvstate: 2,
+					goodsPbillno: $storage.get('loginInfor').userPhone,
 				}).then(res => {
 					console.log("appointmentTotal...", res.total)
 					this.appointmentTotal = res.total;

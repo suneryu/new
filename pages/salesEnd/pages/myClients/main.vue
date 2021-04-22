@@ -3,7 +3,8 @@
 	<div class="homepage-content">
 		<div class="search-box">
 			<div class="box-center">
-				<u-keyboard ref="uKeyboard" mode="number" @backspace="backspace"  @change="valChange" v-model="show"></u-keyboard>
+				<u-keyboard ref="uKeyboard" mode="number" @backspace="backspace" @change="valChange" v-model="show">
+				</u-keyboard>
 				<u-search @blur="screen" @focus="show=true" placeholder="输入查询手机号" :show-action="true" animation="true"
 					clearabled="true" v-model="areaCode"></u-search>
 			</div>
@@ -71,9 +72,17 @@
 		mounted() {
 			this.getdata()
 		},
-		watch:{
-			show(value){
-				if(value == false){
+		// onShow() {
+		// 	console.log("home-监听页面显示");
+		// 	//执行频率：game（20ms/次）、ui（60ms/次）、normal（200ms/次）
+		// 	setInterval(function() {
+		// 		uni.hideKeyboard(); //隐藏软键盘
+		// 		// plus.key.hideSoftKeybord();
+		// 	}, 60);
+		// },
+		watch: {
+			show(value) {
+				if (value == false) {
 					if (this.areaCode == "") {
 						this.getdata()
 					} else {
