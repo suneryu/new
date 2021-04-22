@@ -814,7 +814,9 @@
 				},
 				{
 					"path": "pages/groupBuy/grouporder_modules/infor/main",
-					"style": {}
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
 				},
 				{
 					"path": "pages/assemble/assembleorder_modules/index/main",

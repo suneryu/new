@@ -5,13 +5,13 @@
 		<div class="user-order">
 			<div class="user-order-title">
 				<span>我的订单</span>
-				<div @click="statusOrder(0, 1)">
+				<div @click="statusOrder('-1', 1)">
 					全部订单
 					<i class="iconfont">&#xe61d;</i>
 				</div>
 			</div>
 			<div class="user-order-my">
-				<div @click="statusOrder(orderIndex + 1, order)" v-for="(order, orderIndex) in myOrder" :key="orderIndex">
+				<div @click="statusOrder(orderIndex+1, order)" v-for="(order, orderIndex) in myOrder" :key="orderIndex">
 					<i class="iconfont" :class="order.menuSelectClass ? order.menuSelectClass : 'icon-wodedingdan'" :style="{ color: baseColor }"></i>
 					<p>{{ order.menuName }}</p>
 				</div>

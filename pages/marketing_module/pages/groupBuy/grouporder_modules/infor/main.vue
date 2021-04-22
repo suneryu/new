@@ -1,6 +1,6 @@
 <template>
   <div class="orderDetail">
-    <commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" />
+    <!-- <commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" /> -->
     <div class="orderDetail-box">
       <div class="orderDetail-box-tit" :style="{background:baseColor}">
         <div class="orderDetail-box-tit-l" v-if="items.dataState==1">
@@ -25,13 +25,13 @@
           class="orderDetail-box-tit-l showtimes"
           v-if="items.dataState==1 || items.dataState==30"
         >
-          <i>{{items.goodsPbillno}}人团，团购创建时间{{items.gmtCreate}}</i>
+          <i>{{items.goodsPbillno || 1}}人团，团购创建时间{{gmtCreate || '暂无'}}</i>
         </div>
         <div
           class="orderDetail-box-tit-l showtimes"
           v-if="items.dataState==2 || items.dataState==3 || items.dataState==4"
         >
-          <i>{{items.goodsPbillno}}人团，成团时间{{items.contractValidate}}</i>
+          <i>{{items.goodsPbillno || 1}}人团，成团时间 {{items.contractValidate || '暂无'}}</i>
         </div>
 
         <!-- <div class="orderDetail-box-tit-r" v-if="items.dataState==3 || items.dataState==4">{{items.packageList[0].expressName}}</div> -->
@@ -184,13 +184,13 @@ export default {
     };
   },
   onLoad() {
-    wx.setNavigationBarTitle({
-      title: $storage.get("proappEnvName")
-    });
-    wx.setNavigationBarColor({
-      frontColor: "#ffffff", // 必写项
-      backgroundColor: "#" + this.$state.baseColor
-    });
+    // wx.setNavigationBarTitle({
+    //   title: $storage.get("proappEnvName")
+    // });
+    // wx.setNavigationBarColor({
+    //   frontColor: "#ffffff", // 必写项
+    //   backgroundColor: "#" + this.$state.baseColor
+    // });
   },
   mounted() {
     this.unitPrice = this.$state.unitPrice || $storage.get("unitPrice");
@@ -318,7 +318,7 @@ export default {
   // height: 100%;
   background: @white-color;
   &-box {
-    margin-top: 90rpx;
+    // margin-top: 90rpx;
     &-tit {
       height: 138rpx;
       // display: flex;

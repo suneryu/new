@@ -133,7 +133,9 @@ export default {
 		};
 	},
 	onLoad(options) {
-		// console.log('跳转页面---',options)
+		console.log('跳转页面---',options)
+		this.dataState = options.dataState || '-1'
+		this.current = Number(options.dataState)+1 || 0;
 		// console.log('------',JSON.parse(options)[0])
 		if (options) {
 			this.pageOptions = options;
@@ -161,7 +163,7 @@ export default {
 		this.searchPath = this.$state.orderSearch;
 	},
 	onShow() {
-		this.commonMounted(-1);
+		this.commonMounted();
 	},
 	onReachBottom() {
 		this.loadMore();
@@ -338,8 +340,14 @@ export default {
 				refundType: 'B01'  //退货类型
 			};
 			
-			http.post(refund.saveRefund, { params: JSON.stringify(fund) }).then(res => {						if (res.success) {							let refundCode = JSON.parse(res.dataObj).code;
-							$message.alert('退款申请成功');							$router.replace(this.menuJspath, { refundCode: refundCode });						} else {							$message.alert(res.msg);						}
+			http.post(refund.saveRefund, { params: JSON.stringify(fund) }).then(res => {
+						if (res.success) {
+							let refundCode = JSON.parse(res.dataObj).code;
+							$message.alert('退款申请成功');
+							$router.replace(this.menuJspath, { refundCode: refundCode });
+						} else {
+							$message.alert(res.msg);
+						}
 			})
 			
 			},
@@ -443,14 +451,15 @@ export default {
 		orderDetail(order) {
 			let params = {
 				contractBillcode: order.contractBillcode,
-				expressType: order.packageList[0].expressCode,
-				expressNo: order.packageList[0].packageBillno
+				// expressType: order.packageList[0].expressCode,
+				// expressNo: order.packageList[0].packageBillno
 			};
-			this.$state.orderMenu.map(v => {
-				if (v.menuAction == 'orderInfor') {
-					this.$qj.router.push(v.menuJspath, params);
-				}
-			});
+			$router.push("marketing_module/pages/groupBuy/grouporder_modules/infor",params)
+			// this.$state.orderMenu.map(v => {
+			// 	if (v.menuAction == 'orderInfor') {
+			// 		this.$qj.router.push(v.menuJspath, params);
+			// 	}
+			// });
 		},
 		toSearch(value) {
 			if (!value) {

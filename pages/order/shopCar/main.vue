@@ -376,7 +376,7 @@
 		},
 		methods: {
 			navigateTo(options) {
-				this.$qj.router.push(options.url, options.query ? options.query : '');
+				this.$qj.router.replace(options.url, options.query ? options.query : '');
 			},
 			confirmPayMethods() {
 				console.log('点击确定按钮')
