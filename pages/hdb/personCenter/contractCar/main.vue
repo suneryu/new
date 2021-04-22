@@ -352,118 +352,40 @@ export default {
 					console.log('查询购物车商品页',res)
 					if (res && res.rows) {
 						that.typeList=[];
-						// this.listItems = res.rows
 						let listItemsBak = JSON.parse(JSON.stringify(res.rows))
-						listItemsBak[0].shoppingpackageList[0].shoppingGoodsList=[]
-						let packageListBak = listItemsBak[0].shoppingpackageList[0]
+						let listBak = []
 						let wareName = []
 						res.rows[0].shoppingpackageList[0].shoppingGoodsList.forEach(item=>{
 							wareName.push(item.warehouseName)
 						})
 						let warehouseName = [...new Set(wareName)]
-						// for(let i = 1;i<warehouseName.length;i++){
-						// }
 						warehouseName.forEach((item,index)=>{
-							if(index > 0 ){
-								listItemsBak[0].shoppingpackageList.push(packageListBak)
-							}
-							listItemsBak[0].shoppingpackageList[index].shoppingGoodsList = res.rows[0].shoppingpackageList[0].shoppingGoodsList.filter(items=>items.warehouseName== item)
-							listItemsBak[0].shoppingpackageList[index].warehouseName = item
+							let aa = JSON.parse(JSON.stringify(res.rows))
+							aa[0].warehouseName = item
+							aa[0].shoppingpackageList[0].shoppingGoodsList = res.rows[0].shoppingpackageList[0].shoppingGoodsList.filter(items=>items.warehouseName== item)
+							aa.map(v => {
+								if (v.shoppingpackageList) {
+									v.rowsCheck = 1;
+									v.shoppingpackageList.map(v1=>{
+										v1.titChecked = 1
+										if (v1.shoppingGoodsList.filter(vm => vm.shoppingGoodsCheck === 0).length === v1.shoppingGoodsList.length) {
+											v1.titChecked = 0;
+										}
+									})
+									if (v.shoppingpackageList.filter(vm => vm.titChecked === 0).length === v.shoppingpackageList.length) {
+										v.rowsCheck = 0;
+									}
+								}
+							});
+							listBak.push(aa)
 						})
-						this.listItems = [...listItemsBak]
-						// var tt = res.rows
-						// let a= JSON.parse(JSON.stringify(res.rows))
-						// let b= JSON.parse(JSON.stringify(res.rows))
-						// let c= JSON.parse(JSON.stringify(res.rows))
+						if (listBak.filter(val => val[0].rowsCheck === 0).length === listBak.length) {
+							this.countChecked = true;
+						} else {
+							this.countChecked = false;
+						}
+						this.listItems = [...listBak]
 
-						// let listData1 = JSON.parse(res.rows[0].shoppingpackageList[0].areaCode);
-						// let listData2 = JSON.parse(res.rows[0].shoppingpackageList[0].areaName);
-						// let listData3 = JSON.parse(res.rows[0].shoppingpackageList[0].warehouseName);
-						// let aa = a
-						// aa[0].shoppingpackageList[0].shoppingGoodsList = [];
-						// aa[0].shoppingpackageList[0].shoppingGoodsList = listData1;
-						// aa[0].shoppingpackageList[0].goodsClass = 1;
-						// if(listData1.length>0){
-						// 	this.typeList.push(aa)
-						// }
-						// // console.log(this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList,'this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList')
-						//  let bb = b
-						//  bb[0].shoppingpackageList[0].shoppingGoodsList = [];
-						//  bb[0].shoppingpackageList[0].shoppingGoodsList = listData2;
-						// bb[0].shoppingpackageList[0].goodsClass = 2;
-						// if(listData2.length>0){
-						// 	this.typeList.push(bb)
-						// }
-						
-						// // this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList = listData1 ;
-						// // console.log(this.typeList[1][0].shoppingpackageList[0].shoppingGoodsList,'this.typeList[1][0].shoppingpackageList[0].shoppingGoodsList')
-						// // console.log(this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList,'this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList')
-						// let cc = c
-						//  cc[0].shoppingpackageList[0].shoppingGoodsList = [];
-						// cc[0].shoppingpackageList[0].shoppingGoodsList = listData3;
-						// cc[0].shoppingpackageList[0].goodsClass = 3;
-						// if(listData3.length>0){
-						// 	this.typeList.push(cc)
-						// }
-						
-						// console.log(this.typeList,'----this.typeList---')
-						
-						// console.log('qqqqqq',that.listItems)
-						// this.typeList.map(shopCartData =>{
-						// 	// console.log(shopCartData,'shopCartData----')
-						// 	shopCartData.map(v => {
-						// 		if (v.shoppingpackageList) {
-						// 			v.shoppingpackageList.map(val => {
-										
-						// 				val.titChecked = 1; //先设置没有全选，判断shoppingGoodsList下的shoppingGoodsCheck是不是都为0，是的话就全选按钮生效
-						// 				if (val.shoppingGoodsList.filter(vm => vm.shoppingGoodsCheck === 0).length === val.shoppingGoodsList.length) {
-						// 					//vm.shoppingGoodsCheck   没选的情况下为1   
-						// 					val.titChecked = 0;  //商品全选状态0是全选
-						// 				}
-						// 				val.shoppingGoodsList.map(vk => {
-						// 					if(vk.goodsClass=='1'){
-						// 						vk.pricesetNprice1 = Number(vk.pricesetNprice) *  this.userinfoOcode
-						// 					}
-						// 					// 遍历所有商品图片
-						// 					vk.dataPic =  vk.dataPic;
-						// 					// console.log("所有图片的url----",vk.dataPic)
-						// 					// 第一次进来为空
-						// 					if (this.checkSkuMultipleData.length > 0) {
-						// 						this.checkSkuMultipleData.forEach(item => {
-						// 							if (item.skuNo == vk.skuNo) {
-						// 								vk.skuOneNum = item.skuOneNum;
-						// 							}
-						// 						});
-						// 					}
-						// 					if (this.batchCollectData.length > 0) {
-						// 						this.batchCollectData.forEach(item => {
-						// 							if (item.collectOpcode == vk.skuCode) {
-						// 								vk.collectObj = item;
-						// 								vk.isCollect = true;
-						// 							}
-						// 						});
-						// 					}
-						// 				});
-						// 			});
-						// 		}
-						// 	});
-						// 	shopCartData.map(v => {
-						// 		if (v.shoppingpackageList) {
-						// 			v.rowsCheck = 1;
-						// 			if (v.shoppingpackageList.filter(vm => vm.titChecked === 0).length === v.shoppingpackageList.length) {
-						// 				v.rowsCheck = 0;
-						// 			}
-						// 		}
-						// 	});
-						// 	if (shopCartData.filter(val => val.rowsCheck === 0).length === shopCartData.length) {
-						// 		this.countChecked = true;
-						// 	} else {
-						// 		this.countChecked = false;
-						// 	}
-						// 	// this.listItems = shopCartData;
-						// 	this.listItems.push(shopCartData);
-						// 	console.log("查询商品后的listItems----",this.listItems)
-						// });
 						this.$forceUpdate();
 						let totalPrice = 0;
 						let totalPointPrice = 0;

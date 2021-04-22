@@ -31,7 +31,7 @@
 								<div class="itemGoods" v-for="(item, index) in itemList.goodsList" :key="index">
 									<div style='height: 100%;position: relative;'>
 										<div class="item-container">
-											<div class="list-l" @click.stop="listCheckBox(index)">
+											<div class="list-l" @click.stop="listCheckBox(index)" v-if='itemList.contractType != 41'>
 												<i class="iconfont" :style="{ color: baseColor }"
 													v-if="item.shoppingGoodsCheck == 0">&#xe671;</i>
 												<i class="iconfont" :style="{ color: '#ededed' }" v-else>&#xe671;</i>
@@ -53,7 +53,7 @@
 														<span
 															style='color: #000000;'>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
 													</div>
-													<view class="list-right-container">
+													<view class="list-right-container" v-if="itemList.contractType != 41">
 														<div class="list-add">
 															<div @click.stop="subtract(index)">
 																<i class="iconfont"
@@ -96,7 +96,7 @@
 			</div>
 			<div class='totalPrice'>
 				<div style='width: 70%;float: left;padding: 20rpx;box-sizing: border-box;'>应付金额：
-					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice - itemList.freight == null?0:Number(itemList.freight)}}{{ unitPrice.mapay }}</span>
+					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice}}{{ unitPrice.mapay }}</span>
 				</div>
 				<div class='goPay' @click='toSettle'>去结算</div>
 			</div>

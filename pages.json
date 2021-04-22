@@ -859,13 +859,13 @@
 				{
 					"path": "pages/quotation/main",
 					"style": {
-						"navigationBarTitleText": "报价单"
+						"navigationBarTitleText": "报价单列表"
 					}
 				},
 				{
 					"path": "pages/quotation/quotationDetail/main",
 					"style": {
-						"navigationBarTitleText": "报价咨询单"
+						"navigationBarTitleText": "报价单详情"
 					}
 				},
 				{
