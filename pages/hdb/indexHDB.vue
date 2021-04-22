@@ -202,7 +202,7 @@
 					page: 1,
 					rows: 10,
 					childFlag: true,
-					contractType: '39,40'
+					contractType: '39,41'
 					
 				}).then(res => {
 					console.log("getmyContract...", res.total)
