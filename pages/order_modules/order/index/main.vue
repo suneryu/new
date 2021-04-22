@@ -284,7 +284,7 @@ export default {
 			if(order.contractPmode == '1' || order.contractPmode == '2' ){
 				
 				let params = {
-					"tempState":'1',
+					"tempState":'true',
 					"contractId":order.contractId
 				}
 				this.$qj

@@ -266,7 +266,7 @@
 				contractGoodsList: [], //结算时候需要将所有的商品信息传过去
 				scontractBlance: '', // 结算方式 0 全款 1 订金 2 分次 3 分期    多个用,分割
 				// scontractPmode: '', // 付款方式 0 线上、 1 线下  2 不付款  多个用,分割
-				contractPmode: '', // 付款方式 0 线上、 1 线下  2 不付款  多个用,分割
+				contractPmode: '0', // 付款方式 0 线上、 1 线下  2 不付款  多个用,分割
 				orderDomainStr: [],
 				contractBillcode: '',
 				contractSubCode: '',
@@ -901,7 +901,7 @@
 				} else {
 					
 					// this.scontractPmode = this.payMethodsList.length > 0 ? this.payMethodsList[this.payMethodsIndex].ptfpmodeType : 0;
-					this.contractPmode = this.payMethodsList.length > 0 ? this.payMethodsList[this.payMethodsIndex].ptfpmodeType : 0;
+					// this.contractPmode = this.payMethodsList.length > 0 ? this.payMethodsList[this.payMethodsIndex].ptfpmodeType : 0;
 					// 计算订单优惠占比
 					let ratio = 0;
 					let getRatioRes = await this.requestGetContractDiscountRatio();
@@ -963,7 +963,7 @@
 					if (Object.keys(this.currentCoupon).length > 0) {
 						detailDomainStr[0].ocContractSettlList.push({
 							contractSettlBlance: 'COP',
-							contractPmode: '0',
+							contractPmode:this.contractPmode || 0,
 							contractSettlGmoney: this.couponDiscount,
 							contractSettlPmoney: Number(this.currentCoupon.couponAmount),
 							contractSettlOpno: this.currentCoupon.usercouponCode || '',
@@ -975,7 +975,7 @@
 					if (Object.keys(this.currentRedPacket).length > 0) {
 						detailDomainStr[0].ocContractSettlList.push({
 							contractSettlBlance: 'COP',
-							contractPmode: '0',
+							contractPmode:this.contractPmode || 0,
 							contractSettlGmoney: this.redPacketDiscount,
 							contractSettlPmoney: Number(this.currentRedPacket.couponAmount || 0),
 							contractSettlOpno: this.currentRedPacket.usercouponCode || '',
@@ -987,7 +987,7 @@
 					if (this.contractSettlOpno && this.totalDiscountPrice != 0) {
 						detailDomainStr[0].ocContractSettlList.push({
 							contractSettlBlance: 'UR',
-							contractPmode: '0',
+							contractPmode:this.contractPmode || 0,
 							contractSettlPmoney: this.totalDiscountPrice,
 							contractSettlOpno: this.contractSettlOpno
 						});
@@ -1012,7 +1012,7 @@
 							contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
 							contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
 							// contractPmode: this.scontractPmode || 0, //付款方式：场内、场外，即线上、线下
-							contractPmode: this.contractPmode || 0, //付款方式：场内、场外，即线上、线下
+							contractPmode: this.contractPmode , //付款方式：场内、场外，即线上、线下
 							contractPumode: '0', //提货方式
 							goodsSupplierName: '', //配送商
 							goodsSupplierCode: '', //配送商Code
@@ -1046,7 +1046,7 @@
 						if (Object.keys(this.currentCoupon).length > 0) {
 							this.orderDomainStr[index].ocContractSettlList.push({
 								contractSettlBlance: 'COP',
-								contractPmode: '0',
+								contractPmode: this.contractPmode || 0,
 								contractSettlGmoney: this.couponDiscount,
 								contractSettlPmoney: Number(this.currentCoupon.couponAmount),
 								contractSettlOpno: this.currentCoupon.usercouponCode || '',
@@ -1056,7 +1056,7 @@
 						if (Object.keys(this.currentRedPacket).length > 0) {
 							this.orderDomainStr[index].ocContractSettlList.push({
 								contractSettlBlance: 'COP',
-								contractPmode: '0',
+								contractPmode:this.contractPmode || 0,
 								contractSettlGmoney: this.redPacketDiscount,
 								contractSettlPmoney: Number(this.currentRedPacket.couponAmount || 0),
 								contractSettlOpno: this.currentRedPacket.usercouponCode || '',
@@ -1068,7 +1068,7 @@
 						if (this.contractSettlOpno && this.totalDiscountPrice != 0) {
 							this.orderDomainStr[index].ocContractSettlList.push({
 								contractSettlBlance: 'UR',
-								contractPmode: '0',
+								contractPmode: this.contractPmode || 0,
 								contractSettlPmoney: this.totalDiscountPrice,
 								contractSettlOpno: this.contractSettlOpno
 							});
@@ -1091,7 +1091,7 @@
 									val.pmCalcBeanList.map(els => {
 										this.orderDomainStr[index].ocContractSettlList.push({
 											contractSettlBlance: els.promotionInType == 0 ? 'PM' : 'COP',
-											contractPmode: '0',
+											contractPmode: this.contractPmode || 0,
 											contractSettlGmoney: Number(els.disMoney.toFixed(2)),
 											contractSettlPmoney: Number(els.disMoney.toFixed(2)),
 											contractSettlOpno: els.promotionCode,
@@ -1099,7 +1099,7 @@
 										});
 										detailDomainStr[0].ocContractSettlList.push({
 											contractSettlBlance: els.promotionInType == 0 ? 'PM' : 'COP',
-											contractPmode: '0',
+											contractPmode: this.contractPmode || 0,
 											contractSettlGmoney: Number(els.disMoney.toFixed(2)),
 											contractSettlPmoney: Number(els.disMoney.toFixed(2)),
 											contractSettlOpno: els.promotionCode,
