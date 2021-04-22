@@ -986,6 +986,14 @@
 						"navigationBarTitleText": "我的预约"
 					}
 				},
+				{
+					"path": "personCenter/contractOrder/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "我的订单"
+					}
+				},
 				//hdb 用户协议
 				{
 					"path": "personCenter/userAgreement/main",

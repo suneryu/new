@@ -44,6 +44,8 @@ export const saveOrderToPay = "web/pte/pay/saveOrderToPay.json"; // 获取支付
 
 export const loginOut = "/web/ml/mlogin/loginOut.json"; // 获取支付方式
 
+export const queryScontractPage = "/web/sp/scontract/queryScontractPage.json"; // 我的预约
+
 export const myOrder = {
 	queryContractPage: "/web/oc/contract/queryContractPageC.json", // 查看全部订单
 	delContractPage: "/web/oc/contract/deleteContract.json", // 删除订单接口

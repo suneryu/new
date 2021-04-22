@@ -3,13 +3,15 @@
 	<div class="homepage-content">
 		<div class="search-box">
 			<div class="box-center">
-				<u-keyboard ref="uKeyboard" mode="number" @backspace="backspace"  @change="valChange" v-model="show"></u-keyboard>
+				<u-keyboard ref="uKeyboard" mode="number" @backspace="backspace" @change="valChange" v-model="show">
+				</u-keyboard>
 				<u-search @blur="screen" @focus="show=true" placeholder="输入查询手机号" :show-action="true" animation="true"
 					clearabled="true" v-model="areaCode"></u-search>
 			</div>
 		</div>
 		<div v-for="(item,index) in company" :key="index">
-			<div @click="add(item.userinfoPhone)" style="height: 82px;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
+			<div @click="add(item.userinfoPhone)"
+				style="height: 82px;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
 				<div style="display: flex;">
 					<div style="width: 80%; font-size: 17px; color: #004178;">{{item.userinfoCompname}}</div>
 					<div style="width: 20%; position: relative;">
@@ -71,15 +73,24 @@
 		mounted() {
 			this.getdata()
 		},
-		watch:{
-			show(value){
-				if(value == false){
+		onShow() {
+			console.log("home-监听页面显示");
+			//执行频率：game（20ms/次）、ui（60ms/次）、normal（200ms/次）
+			setInterval(function() {
+				uni.hideKeyboard(); //隐藏软键盘
+				// plus.key.hideSoftKeybord();
+			}, 60);
+		},
+		watch: {
+			show(value) {
+				if (value == false) {
 					if (this.areaCode == "") {
 						this.getdata()
 					} else {
 						http.get(queryGroupBuyerPageByAG, {
+							userinfoType: 2,
 							buyerPhone: this.areaCode,
-							memberCode: $storage.get('loginInfor').userInfoCode
+							memberCode: $storage.get('loginInfor').userInfoCode,
 						}).then(res => {
 							this.company = res.list || []
 						});
@@ -90,7 +101,7 @@
 		methods: {
 			getdata() {
 				http.get(queryGroupBuyerPageByAG, {
-					userinfoType:2,
+					userinfoType: 2,
 					memberCode: $storage.get('loginInfor').userInfoCode
 				}).then(res => {
 					this.company = res.list
@@ -117,8 +128,10 @@
 				// 删除value的最后一个字符
 				if (this.areaCode.length) this.areaCode = this.areaCode.substr(0, this.areaCode.length - 1);
 			},
-			add(item){
-				$router.push("salesEnd/pages/ChooseaBuyer",{userinfoPhone:item})
+			add(item) {
+				$router.push("salesEnd/pages/ChooseaBuyer", {
+					userinfoPhone: item
+				})
 			}
 		}
 	}
