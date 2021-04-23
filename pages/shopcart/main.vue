@@ -271,11 +271,6 @@ export default {
 	onShow() {
 		this.domain=this.$domain ;
 		this.queryShopSet();
-	},
-	onLoad(options) {
-		this.footerMenu = this.$qj.storage.get('footerMenu');
-	},
-	mounted() {
 		this.userinfoType = $storage.get('loginInfor').userinfoType;
 		this.userInfoCode = $storage.get('loginInfor').userInfoCode;
 		this.userPhone = $storage.get('loginInfor').userPhone;
@@ -286,6 +281,21 @@ export default {
 		this.getQY();
 		this.dataLength = this.sanci.length-1
 		this.searchStatus()
+	},
+	onLoad(options) {
+		this.footerMenu = this.$qj.storage.get('footerMenu');
+	},
+	mounted() {
+		// this.userinfoType = $storage.get('loginInfor').userinfoType;
+		// this.userInfoCode = $storage.get('loginInfor').userInfoCode;
+		// this.userPhone = $storage.get('loginInfor').userPhone;
+		// this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
+		// this.delStatus = true;
+		// // this.commonMounted();
+		// // 获取权益值
+		// this.getQY();
+		// this.dataLength = this.sanci.length-1
+		// this.searchStatus()
 	},
 	methods: {
 		// 查询 认证授权 状态
