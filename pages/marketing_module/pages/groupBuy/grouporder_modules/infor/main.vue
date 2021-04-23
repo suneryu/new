@@ -10,7 +10,8 @@
           <i class="iconfont">&#xe675;</i>等待发货
         </div>
         <div class="orderDetail-box-tit-l" v-if="items.dataState==3">
-          <i class="iconfont">&#xe675;</i>已成团，等待收货
+          <!-- <i class="iconfont">&#xe675;</i>已成团，等待收货 -->
+          <i class="iconfont">&#xe675;</i>等待收货
         </div>
         <div class="orderDetail-box-tit-l" v-if="items.dataState==4">
           <i class="iconfont">&#xe675;</i>已完成
@@ -21,7 +22,7 @@
         <div class="orderDetail-box-tit-l" v-if="items.dataState==30">
           <i class="iconfont">&#xe675;</i>待成团
         </div>
-        <div
+        <!-- <div
           class="orderDetail-box-tit-l showtimes"
           v-if="items.dataState==1 || items.dataState==30"
         >
@@ -32,7 +33,7 @@
           v-if="items.dataState==2 || items.dataState==3 || items.dataState==4"
         >
           <i>{{items.goodsPbillno || 1}}人团，成团时间 {{items.contractValidate || '暂无'}}</i>
-        </div>
+        </div> -->
 
         <!-- <div class="orderDetail-box-tit-r" v-if="items.dataState==3 || items.dataState==4">{{items.packageList[0].expressName}}</div> -->
       </div>

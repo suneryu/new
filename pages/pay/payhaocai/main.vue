@@ -95,7 +95,8 @@
 						// agreementType: 'yinsi'
 					}
 				};
-				this.navigateTo(options);
+				// this.navigateTo(options);
+				this.$qj.router.replace('homepage')
 
 			},
 			orderDetails() {

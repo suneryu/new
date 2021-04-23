@@ -89,14 +89,15 @@
 			</div>
 			<div class='goodsPrice-item'>
 				<span>组合优惠：</span>
-				<span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span>
+				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
+				<span>{{ unitPrice.obpay }}0{{ unitPrice.mapay }}</span>
 			</div>
 		</div>
 		<div class="accounts-sum">
 			<p>
 				应付金额:
-				<!-- <i>{{ unitPrice.obpay }}{{ accountsSumPrice }}{{ unitPrice.mapay }}</i> -->
-				<i>{{ unitPrice.obpay }}{{ Number(userinfoOcode)*Number(allPrice)  }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{ allPrice }}{{ unitPrice.mapay }}</i>
+				<!-- <i>{{ unitPrice.obpay }}{{ Number(userinfoOcode)*Number(allPrice)  }}{{ unitPrice.mapay }}</i> -->
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
 		</div>
@@ -774,6 +775,7 @@
 								delete item.contractGoodsId
 								delete item.contractGoodsCode
 								delete item.contractBillcode
+								item.goodsCamount = item.goodsNum
 							})
 							if (val.giftList) {
 								list = [...val.giftList, ...val.contractGoodsList];

@@ -43,7 +43,8 @@ export default {
   methods: {
     backHome() {
       // $router.replace('web',{defaultUrl:this.$businessDomain+'/paas/shop/'+this.$state.homeUrl})
-      $router.reOpen("mainindex");
+      // $router.reOpen("mainindex");
+	 $router.replace('homepage')
     },
     orderDetail() {
       console.log(this.$root.$mp.query, "this.$root.$mp.query");

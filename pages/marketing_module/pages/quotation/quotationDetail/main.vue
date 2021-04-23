@@ -88,7 +88,8 @@
 							</div>
 							<div class='goodsPrice-item'>
 								<span>组合优惠：</span>
-								<span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span>
+								<!-- <span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span> -->
+								<span>{{ unitPrice.obpay }}0{{ unitPrice.mapay }}</span>
 							</div>
 						</div>
 					</li>
@@ -96,7 +97,8 @@
 			</div>
 			<div class='totalPrice'>
 				<div style='width: 70%;float: left;padding: 20rpx;box-sizing: border-box;'>应付金额：
-					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice}}{{ unitPrice.mapay }}</span>
+					<!-- <span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice}}{{ unitPrice.mapay }}</span> -->
+					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{totalPrice}}{{ unitPrice.mapay }}</span>
 				</div>
 				<div class='goPay' @click='toSettle'>去结算</div>
 			</div>
