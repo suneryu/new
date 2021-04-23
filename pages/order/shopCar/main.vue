@@ -19,7 +19,7 @@
 		</div>
 
 		<div class="accounts-info" v-for="(shoppingItem, index) in shoppingItems" :key="index" v-if="shoppingItems && shoppingItems.length > 0">
-			<div class="accounts-info-tit">{{ shoppingItem.memberName }}</div>
+			<div class="accounts-info-tit">{{ shoppingItem.memberMname }}</div>
 			<div v-for="(list, listIndex) in shoppingItem.shoppingpackageList" :key="listIndex">
 				<div class="accounts-info-con" v-for="(goods, goodsIndex) in list.shoppingGoodsList" :key="goodsIndex">
 					<img :src="goods.dataPic" />
@@ -27,7 +27,7 @@
 						<h2>{{ goods.goodsName }}</h2>
 						<h3>{{ goods.skuName }}</h3>
 						<h4>
-							{{ unitPrice.obpay }}{{goods.goodsClass=='1'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):pricesetNprice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goods.goodsClass=='1'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):goods.pricesetNprice }}{{ unitPrice.mapay }}
 							<span>×{{ goods.goodsCamount }}</span>
 						</h4>
 					</div>
