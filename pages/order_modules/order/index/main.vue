@@ -70,7 +70,7 @@
 							</div>
 							<div class="right" v-else-if="(order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3)">
 								
-								<div class="btn" @click="refund(order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
+								<div class="btn" @click="refund(order,orderList)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
 							</div>
 						</div>
 					</div>
@@ -307,49 +307,50 @@ export default {
 		navigateTo(options) {
 						this.$qj.router.push(options.url, options.query ? options.query : '');
 					},
-		refund(order){
-			console.log('退款当前商品',order)
-			let ocRefundGoodsBeanList = []
-			let ocRefundGoodsBean = {};
-			let price = 0;
-			for(var i=0;i<order.goodsList.length;i++){
-				ocRefundGoodsBean.contractGoodsCode = order.goodsList[i].contractGoodsCode;
-				ocRefundGoodsBean.goodsCamount = order.goodsList[i].goodsCamount
-				ocRefundGoodsBean.refundGoodsNum = order.goodsList[i].goodsCamount
-				ocRefundGoodsBean.refundGoodsAmt = order.goodsList[i].pricesetNprice
-				price +=order.goodsList[i].pricesetNprice
-				ocRefundGoodsBeanList.push(ocRefundGoodsBean)
+		refund(order,orderList){
+	// 		console.log('退款当前商品',order)
+	// 		let ocRefundGoodsBeanList = []
+	// 		let ocRefundGoodsBean = {};
+	// 		let price = 0;
+	// 		for(var i=0;i<order.goodsList.length;i++){
+	// 			ocRefundGoodsBean.contractGoodsCode = order.goodsList[i].contractGoodsCode;
+	// 			ocRefundGoodsBean.goodsCamount = order.goodsList[i].goodsCamount
+	// 			ocRefundGoodsBean.refundGoodsNum = order.goodsList[i].goodsCamount
+	// 			ocRefundGoodsBean.refundGoodsAmt = order.goodsList[i].pricesetNprice
+	// 			price +=order.goodsList[i].pricesetNprice
+	// 			ocRefundGoodsBeanList.push(ocRefundGoodsBean)
 			
-			}
+	// 		}
 	
-			let fund = {
-				ocRefundGoodsBeanList : ocRefundGoodsBeanList, 
-				// ocRefundGoodsBeanList: [
-				// 	{
-				// 		contractGoodsCode: this.items.contractGoodsCode,
-				// 		goodsCamount: this.items.goodsCamount,
-				// 		refundGoodsNum: this.items.goodsCamount,
-				// 		refundGoodsAmt: this.items.pricesetNprice
-				// 	}
-				// ],
-				contractBillcode: order.contractBillcode,  //原合同单据号
-				refundMoney: price,   //退款金额
-				// refundEx: order.pickerValue,   //退货理由
-				// refundMeo: order.refundMeo,  //退货说明
-				// ocRefundFileDomainList: domainList,
-				refundType: 'B01'  //退货类型
-			};
+	// 		let fund = {
+	// 			ocRefundGoodsBeanList : ocRefundGoodsBeanList, 
+	// 			// ocRefundGoodsBeanList: [
+	// 			// 	{
+	// 			// 		contractGoodsCode: this.items.contractGoodsCode,
+	// 			// 		goodsCamount: this.items.goodsCamount,
+	// 			// 		refundGoodsNum: this.items.goodsCamount,
+	// 			// 		refundGoodsAmt: this.items.pricesetNprice
+	// 			// 	}
+	// 			// ],
+	// 			contractBillcode: order.contractBillcode,  //原合同单据号
+	// 			refundMoney: price,   //退款金额
+	// 			// refundEx: order.pickerValue,   //退货理由
+	// 			// refundMeo: order.refundMeo,  //退货说明
+	// 			// ocRefundFileDomainList: domainList,
+	// 			refundType: 'B01'  //退货类型
+	// 		};
 			
-			http.post(refund.saveRefund, { params: JSON.stringify(fund) }).then(res => {
-						if (res.success) {
-							let refundCode = JSON.parse(res.dataObj).code;
-							$message.alert('退款申请成功');
-							$router.replace(this.menuJspath, { refundCode: refundCode });
-						} else {
-							$message.alert(res.msg);
-						}
-			})
-			
+	// 		http.post(refund.saveRefund, { params: JSON.stringify(fund) }).then(res => {
+	// 					if (res.success) {
+	// 						let refundCode = JSON.parse(res.dataObj).code;
+	// 						$message.alert('退款申请成功');
+	// 						$router.replace(this.menuJspath, { refundCode: refundCode });
+	// 					} else {
+	// 						$message.alert(res.msg);
+	// 					}
+	// 		})
+			  order.dataState = orderList.dataState;
+			  $router.push('order_modules/refund/apply', order);
 			},
 		evaluate(order) {
 			this.$state.set('order', order);

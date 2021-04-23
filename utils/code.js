@@ -1,4 +1,4 @@
-import drawQrcode from 'weapp-qrcode'
+// import drawQrcode from 'weapp-qrcode'
 import upng from 'upng-js'
 
 export const code = (object,cb) => {

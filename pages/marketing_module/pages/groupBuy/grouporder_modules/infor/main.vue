@@ -136,7 +136,7 @@
     </div>
     <div :style="{display:items.dataState==2||items.dataState==-1?'none':'block'}">
       <div class="orderDetail-footer">
-        <div v-if="items.dataState == 1">
+        <div v-if="items.dataState == 1 && items.dataStatestr != 3">
           <span @click="cancelOrder(items)">取消订单</span>
           <span :style="{borderColor:baseColor,color:baseColor}" @click="pay(items)">立即支付</span>
         </div>

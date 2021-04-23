@@ -123,8 +123,8 @@ export default {
 		// picker
 	},
 	onLoad(options) {
-		
-		console.log('传参',$storage.get('aaa'))
+		this.items = options
+		console.log('传参',options)
 		this.aaa = $storage.get('aaa')
 		console.log(this.$root.$mp.query, '参数212111111111');
 		console.log(this.aaa, '参数212111111111');
@@ -151,7 +151,7 @@ export default {
 			}
 		});
 		this.array = [];
-		this.items = this.aaa
+		// this.items = this.aaa
 		// this.items = this.$root.$mp.query;
 		this.sumCont = this.items.goodsCamount;
 		if (this.items.dataState == '3' || this.items.dataState == '4') {

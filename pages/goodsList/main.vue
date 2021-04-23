@@ -365,6 +365,8 @@
 							this.batchCheckCollect(batchCollectData, this.items);
 							this.batchGetSkuMinSaleMultiple(skuMinSaleMultiple, this.items);
 							this.total = res.total;
+						}else{
+							this.items = [];
 						}
 					});
 			},
