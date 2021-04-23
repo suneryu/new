@@ -1168,6 +1168,7 @@
 						.http(this.$qj.domain)
 						.post(saveContract, params)
 						.then(res => {
+							this.$state.set('contractBillcode', res.dataObj.contractBillcode);
 							console.log(res, 'fygryefgre7gtrt')
 							if (res.errorCode == 'nologin') {
 								return;
