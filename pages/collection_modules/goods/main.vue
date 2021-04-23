@@ -31,7 +31,7 @@
 					<div class="right-container">
 						<p :style="{ color: item.dataState !== 0 ? '#ccc' : '' }">{{ item.collectOpcont }}</p>
 						<view class="price-and-btn">
-							<h3 :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }">{{ unitPrice.obpay }}{{ item.collectNum1 }}{{ unitPrice.mapay }}</h3>
+							<h3 :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }">{{ unitPrice.obpay }}{{ item.collectOpnum }}{{ unitPrice.mapay }}</h3>
 							<view class="add-cart" v-bind:style="{backgroundColor: baseColor}" @click.stop="itemAddCart(item)">加入购物车</view>
 						</view>
 					</div>
@@ -149,6 +149,7 @@ export default {
 					collectType: '0'
 				})
 				.then(res => {
+					console.log('qwwwww',res)
 					let list = JSON.parse(JSON.stringify(res.rows));
 
 					list.map(v => {
@@ -250,9 +251,15 @@ export default {
 				});
 		},
 		toGoodsDetail(item) {
-			this.$qj.router.push('web', {
-				defaultUrl: this.$qj.businessDomain + '/paas/shop/' + this.$qj.storage.get('hrefs') + item.collectOpcode + '.html'
-			});
+			console.log('list-----列表页',item)
+			// let params = {
+			// 	goodsClass:goodsClass ? goodsClass : '1',
+			// 	skuCode: skuCode
+			// };
+			// this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
+			// this.$qj.router.push('web', {
+			// 	defaultUrl: this.$qj.domain + '/paas/shop/' + this.$qj.storage.get('hrefs') + item.collectOpcode + '.html'
+			// });
 		},
 		loadMore() {
 			let num = Math.ceil(this.total / 10);
@@ -315,7 +322,7 @@ export default {
 				if(skuMultipleRes.errorCode == 2 && skuMultipleRes.dataObj.length > 0){
 					multipleNum = skuMultipleRes.dataObj[0].skuOneNum;
 				}
-				let minNum = item.collectOpnum != 0 ? item.collectOpnum : 1;
+				let minNum = item.collectOpnum >= 1 ? item.collectOpnum : 1;
 				let params = [{
 					skuCode: item.collectOpcode,
 					goodsNum: (multipleNum && multipleNum > 0) ? (multipleNum * minNum) : minNum
