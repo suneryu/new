@@ -82,7 +82,7 @@
     <div class="orderDetail-goods">
       <ul>
         <li v-for="(goods,index) in items.goodsList" :key="index">
-          <a>
+          <a  @click="goodsDetail(goods.goodsClass,goods.skuCode)">
             <img :src="goods.dataPic" />
             <div>
               <div>
@@ -242,6 +242,22 @@ export default {
     }
   },
   methods: {
+	  goodsDetail(goodsClass,skuCode) {
+	  	// let att = this.$qj.businessDomain + '/paas/shop/' + this.$qj.storage.get('hrefs') + skuCode + '.html';
+	  	// let options = {
+	  	// 	url: 'web',
+	  	// 	query: {
+	  	// 		defaultUrl: att
+	  	// 	}
+	  	// };
+	  	// this.$emit('navigateTo', options);
+	  	console.log('list-----列表页',goodsClass)
+	  	let params = {
+	  		goodsClass:goodsClass ? goodsClass : '1',
+	  		skuCode: skuCode
+	  	};
+	  	this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
+	  },
     cancelOrder(items) {
       let that = this;
       wx.showModal({
