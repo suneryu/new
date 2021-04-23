@@ -252,11 +252,11 @@ export default {
 		},
 		toGoodsDetail(item) {
 			console.log('list-----列表页',item)
-			// let params = {
-			// 	goodsClass:goodsClass ? goodsClass : '1',
-			// 	skuCode: skuCode
-			// };
-			// this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
+			let params = {
+				// goodsClass:goodsClass ? goodsClass : '1',
+				// skuCode: skuCode
+			};
+			this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
 			// this.$qj.router.push('web', {
 			// 	defaultUrl: this.$qj.domain + '/paas/shop/' + this.$qj.storage.get('hrefs') + item.collectOpcode + '.html'
 			// });
