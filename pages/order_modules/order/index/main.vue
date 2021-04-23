@@ -101,7 +101,7 @@ export default {
 		return {
 			
 			pageOptions: '',
-			items: ['全部', '待审核','待付款', '待发货', '待收货', '已完成'],
+			items: ['全部', '待改价','待付款', '待发货', '待收货', '已完成'],
 			orderList: [], //订单列表
 			myOrder: [], //菜单--》订单搜索路径
 			current: 0,
@@ -262,7 +262,7 @@ export default {
 			if(item == '全部'){
 				this.dataState = -1;
 				}
-			if(item == '待审核'){
+			if(item == '待改价'){
 				this.dataState = 0;
 				}
 				if(item == '待付款'){
