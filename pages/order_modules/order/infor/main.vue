@@ -1,11 +1,15 @@
 <template>
 	<div class="orderDetail">
-		<commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" />
+		<!-- <commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" /> -->
 		<div class="orderDetail-box">
 			<div class="orderDetail-box-tit" :style="{ background: baseColor }">
-				<div class="orderDetail-box-tit-l" v-if="items.dataState == 1">
+				<div class="orderDetail-box-tit-l" v-if="items.dataState == 1 && items.dataStatestr == '1'">
 					<i class="iconfont">&#xe675;</i>
 					等待付款
+				</div>
+				<div class="orderDetail-box-tit-l" v-if="items.dataState == 1 && (items.dataStatestr == '2'||items.dataStatestr == '3')">
+					<i class="iconfont">&#xe675;</i>
+					等待审核
 				</div>
 				<div class="orderDetail-box-tit-l" v-if="items.dataState == 2">
 					<i class="iconfont">&#xe675;</i>
@@ -292,7 +296,7 @@ export default {
 	// height: 100%;
 	background: @white-color;
 	&-box {
-		margin-top: 90rpx;
+		// margin-top: 90rpx;
 		&-tit {
 			height: 138rpx;
 			display: flex;

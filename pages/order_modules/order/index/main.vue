@@ -51,7 +51,7 @@
 								实付:
 								<i :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ order.dataBmoney }}{{ unitPrice.mapay }}</i>
 							</div>
-							<div class="right" v-if="order.dataState == 1 && (order.dataStatestr == 2  || order.dataStatestr == 3)&& order.pricesetCurrency != 2">
+							<div class="right" v-if="order.dataState == 1 && (order.dataStatestr == 2 )&& order.pricesetCurrency != 2">
 								<div class="btn" @click="cancelOrder(order)">取消订单</div>
 								<!-- <div class="btn" @click="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">立即支付</div> -->
 							</div>
@@ -68,7 +68,7 @@
 								<div v-if="order.contractAppraise == 1"><!-- <span>已评价</span> --></div>
 								<div class="btn" v-else @click="evaluate(order.goodsList)" :style="{ borderColor: baseColor, color: baseColor }">去评价</div>
 							</div>
-							<div class="right" v-else-if="order.dataState == 2 && order.pricesetCurrency != 2">
+							<div class="right" v-else-if="(order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3)">
 								
 								<div class="btn" @click="refund(order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
 							</div>
@@ -190,7 +190,7 @@ export default {
 			let params = {
 				page: this.page,
 				rows: this.rows,
-				childFlag: true
+				childFlag: true,
 			};
 		
 				

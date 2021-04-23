@@ -3,9 +3,13 @@
     <!-- <commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" /> -->
     <div class="orderDetail-box">
       <div class="orderDetail-box-tit" :style="{background:baseColor}">
-        <div class="orderDetail-box-tit-l" v-if="items.dataState==1">
+        <div class="orderDetail-box-tit-l" v-if="items.dataState==1 && items.dataStatestr == '1'">
           <i class="iconfont">&#xe675;</i>等待付款
         </div>
+		<div class="orderDetail-box-tit-l" v-if="items.dataState == 1 && (items.dataStatestr == '2'||items.dataStatestr == '3')">
+			<i class="iconfont">&#xe675;</i>
+			等待审核
+		</div>
         <div class="orderDetail-box-tit-l" v-if="items.dataState==2">
           <i class="iconfont">&#xe675;</i>等待发货
         </div>
