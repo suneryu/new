@@ -108,9 +108,9 @@
 					<view class="total-price-and-weight">
 						<view class="total-price">
 							总计：
-							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice }}{{ unitPrice.mapay }}</i>
+							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice && totalPointPrice">+</i>
-							<i :style="{ color: baseColor }" v-if="totalPrice > 0">{{ unitPrice.obpay }}{{ totalPrice }}{{ unitPrice.mapay }}</i>
+							<i :style="{ color: baseColor }" v-if="totalPrice > 0">{{ unitPrice.obpay }}{{ totalPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice == 0 && totalPointPrice == 0">{{ unitPrice.obpay }}0.00{{ unitPrice.mapay }}</i>
 						</view>
 						<view class="total-weight" v-if="totalGoodsWeight && totalGoodsWeight > 0">
@@ -271,7 +271,6 @@ export default {
 	onShow() {
 		this.domain=this.$domain ;
 		this.queryShopSet();
-		this.commonMounted(true, true);
 	},
 	onLoad(options) {
 		this.footerMenu = this.$qj.storage.get('footerMenu');
@@ -286,7 +285,7 @@ export default {
 		// 获取权益值
 		this.getQY();
 		this.dataLength = this.sanci.length-1
-
+		this.searchStatus()
 	},
 	methods: {
 		// 查询 认证授权 状态
@@ -298,6 +297,7 @@ export default {
 				.http(this.$qj.domain)
 				.get(userapplyStateAndAuth, paramsStatus)
 				.then(res => {
+					this.commonMounted(true, true);
 					console.log("认证授权状态，",res)
 					if (res.checkModifyAudit == '3') {
 						that.checkModifyAudit = "3"
@@ -411,7 +411,7 @@ export default {
 										}
 										val.shoppingGoodsList.map(vk => {
 											if(vk.goodsClass=='1'){
-												vk.pricesetNprice1 = Number(vk.pricesetNprice) *  this.userinfoOcode
+												vk.pricesetNprice1 = (Number(vk.pricesetNprice) *  this.userinfoOcode).toFixed(2)
 											}
 										
 										

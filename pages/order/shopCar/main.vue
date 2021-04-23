@@ -27,7 +27,7 @@
 						<h2>{{ goods.goodsName }}</h2>
 						<h3>{{ goods.skuName }}</h3>
 						<h4>
-							{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goods.goodsClass=='1'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):pricesetNprice }}{{ unitPrice.mapay }}
 							<span>×{{ goods.goodsCamount }}</span>
 						</h4>
 					</div>
@@ -61,7 +61,8 @@
 				</div>
 				<div class="accounts-info-money">
 					共{{ list.goodsNum }}件，小计：
-					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span>
+					<!-- <span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span> -->
+					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ shoppingCountPrice.toFixed(2) }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
@@ -245,6 +246,10 @@
 		Add
 	} from '@/node_modules/qj-mini-pages/libs/util/prototype/number.js';
 	import {
+		queryNewUserinfoPageByDealerqt
+	
+	} from '@/api/interfaceHDB.js';
+	import {
 		$storage,
 		$router,
 		$message
@@ -311,6 +316,7 @@
 				isupload:false,
 				temp: '',
 				contractTemPmode:'',
+				userinfoOcode:1,
 				goodsClass:''  //商品类型
 			};
 		},
@@ -323,7 +329,7 @@
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			this.secondaryColor = `#${this.$qj.storage.get('secondaryColor')}` || this.baseColor;
-			
+			this.getQY()
 			this.query = this.$state.order;
 	
 			
@@ -375,6 +381,24 @@
 			}
 		},
 		methods: {
+			//查询权益
+			getQY(){
+				this.$qj
+					.http(this.$qj.domain)
+					.get(queryNewUserinfoPageByDealerqt, {
+						userinfoPhone:$storage.get('loginInfor').userPhone
+					})
+					.then(res => {
+							console.log("用户信息-----",res)
+						if(this.userinfoOcode == null || this.userinfoOcode ==''){
+							this.userinfoOcode = 1;
+						}else{
+							this.userinfoOcode = res.rows[0].userinfoOcode
+						}
+						console.log('权益值',this.userinfoOcode)
+						
+					})
+			},
 			navigateTo(options) {
 				this.$qj.router.replace(options.url, options.query ? options.query : '');
 			},
@@ -696,7 +720,7 @@
 									this.shoppingItems.map((v, k) => {
 										v.shoppingpackageList.map(vk => {
 											vk.shoppingGoodsList.map((val, index) => {
-												this.shoppingCountPrice += val.pricesetNprice * val.goodsCamount;
+												this.shoppingCountPrice += (val.goodsClass=='1'?(val.pricesetNprice*this.userinfoOcode).toFixed(2):val.pricesetNprice) * val.goodsCamount;
 											});
 										});
 										this.shoppingCountPrice = this.shoppingCountPrice;
