@@ -30,7 +30,7 @@
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
 								<span class="originalPrice1">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }} </span>
-								<span style='margin-left: 4px;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ goods.pricesetCGprice }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ goods.pricesetCGprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
 							</div>
 							<span>×{{ goods.goodsCamount }}</span>
 						</h4>
@@ -65,7 +65,7 @@
 				</div>
 				<div class="accounts-info-money">
 					共{{ list.goodsNum }}件，小计：
-					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span>
+					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney.toFixed(2) }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
@@ -115,7 +115,7 @@
 			<p>
 				应付金额:
 				<!-- <i>{{ unitPrice.obpay }}{{ accountsSumPrice }}{{ unitPrice.mapay }}</i> -->
-				<i>{{ unitPrice.obpay }}{{ allPrice }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{ allPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
 		</div>

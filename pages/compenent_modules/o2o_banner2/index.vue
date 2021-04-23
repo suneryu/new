@@ -36,7 +36,7 @@
 		  </p>
 		  <p class="price" v-if="goodsClass == '1' && userinfoType == '2' && checkModifyAudit == '3'">
 		    采购价：{{ unitPrice.obpay }}
-		    <span>{{ price }}</span>
+		    <span>{{ price.toFixed(2) }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
 	  </div>
