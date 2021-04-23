@@ -40,9 +40,10 @@
 									<h6>{{ goods.skuName }}</h6>
 								</div>
 								<div style="text-align:right;">
-									<p style="width:160rpx;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>
+									<p style="width:160rpx;" v-if='order.goodsClass != "1"'>{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>
+									<p style="width:160rpx;" v-if='order.goodsClass == "1"'>{{ unitPrice.obpay }}{{ (Number(goods.pricesetNprice) * userinfoOcode).toFixed(2)}}{{ unitPrice.mapay }}</p>
 									<h6>x{{ goods.goodsNum }}</h6>
-									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if="(order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3)">
+									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if="((order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3) )&& contractPmode =='0'">
 										<div style='border-radius: 26rpx;border: 1rpx solid #d4d4d4;text-align: center;' @click="refund(goods,order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
 									</div>
 								</div>
@@ -90,6 +91,11 @@ import http from '@/api/http.js';
 import { $storage, $router, $message } from '@/utils/prototype/vue.js';
 import { saveOcRefund ,updateContractNew} from '@/api/interface.js';
 import { myOrder, refund, addShoppingGoods, addShoppingGoodsBySpec } from '@/node_modules/qj-mini-pages/libs/api/interface.js';
+
+	import {
+		queryNewUserinfoPageByDealerqt
+	
+	} from '@/api/interfaceHDB.js';
 export default {
 	props: {
 		propPageOptions: {
@@ -99,7 +105,7 @@ export default {
 	},
 	data() {
 		return {
-			
+			userinfoOcode:'',
 			pageOptions: '',
 			items: ['全部', '待改价','待付款', '待发货', '待收货', '已完成'],
 			orderList: [], //订单列表
@@ -137,6 +143,7 @@ export default {
 	},
 	onLoad(options) {
 		console.log('跳转页面---',options)
+		this.getQY();
 		this.dataState = options.dataState || '-1'
 		this.current = Number(options.dataState)+1 || 0;
 		// console.log('------',JSON.parse(options)[0])
@@ -178,6 +185,24 @@ export default {
 		}
 	},
 	methods: {
+		//查询权益
+		getQY(){
+			this.$qj
+				.http(this.$qj.domain)
+				.get(queryNewUserinfoPageByDealerqt, {
+					userinfoPhone: this.$qj.storage.get('loginInfor').userPhone
+				})
+				.then(res => {
+						console.log("用户信息-----",res)
+					if(res.rows[0].userinfoOcode == null || res.rows[0].userinfoOcode ==''){
+						this.userinfoOcode = 1;
+					}else{
+						this.userinfoOcode = res.rows[0].userinfoOcode
+					}
+					console.log('权益值',this.userinfoOcode)
+					
+				})
+		},
 		getNavBarHeight(h) {
 			this.topDistance = h;
 		},
