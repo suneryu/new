@@ -482,8 +482,9 @@ export default {
 						// 获取当前零配件商品权益的价格 1-权益值
 						let qyNumber = 0;
 						if(aa[0].shoppingpackageList[0].shoppingGoodsList.length>0 && this.userinfoType == "2" && this.checkModifyAudit == "3"){
+							console.log('zhaodaole----',aa[0].shoppingpackageList[0].shoppingGoodsList)
 							aa[0].shoppingpackageList[0].shoppingGoodsList.map(price =>{
-								qyNumber += price.pricesetNprice * (1-this.userinfoOcode)
+								qyNumber += price.pricesetNprice * (1-this.userinfoOcode) * price.goodsCamount
 							})
 						}
 						
@@ -775,6 +776,7 @@ export default {
 				.http(this.$qj.domain)
 				.post(updateShoppingGoodsNum, params)
 				.then(res => {
+					console.log('购物车加商品--',res)
 					if (res && res.success) {
 						this.commonMounted();
 					} else {

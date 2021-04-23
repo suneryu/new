@@ -42,7 +42,7 @@
 			</view> -->
 		</view>
 
-		<button type="default" class="register-btn" v-bind:style="{ backgroundColor: baseColor }" @click="register">提交</button>
+		<button type="default" class="register-btn" v-bind:style="{ backgroundColor: baseColor }" @click="register" >提交</button>
 
 
 		<!-- <u-picker mode="selector" v-model="distributorPicker" :default-selector="[0]" :range="distributorArray" range-key="qtypeQtypeName"
@@ -211,6 +211,7 @@
 			register() {
 				if(this.checkModifyAudit == 3){
 					this.$qj.message.alert('企业已授权，请不要重复提交');
+					return;
 				}
 
 				if (!this.imgBusinessHttp) {
@@ -294,6 +295,7 @@
 		    		.http(this.$qj.domain)
 		    		.get(userapplyStateAndAuth, paramsStatus)
 		    		.then(res => {
+						console.log('获取授权转台--',res)
 		    			 this.checkModifyAudit = res.checkModifyAudit
 		    
 		    		});

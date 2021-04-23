@@ -1,20 +1,22 @@
 <template>
-	<!-- 隱私政策的詳情頁 -->
-	<div v-html="detail"></div>
+ <rich-text :nodes="strings"></rich-text>
 </template>
 <script>
+	
 import getUserInfo from '@/components/communal/getUserInfo';
 import { $storage, $router } from '@/utils/prototype/vue.js';
 import http from '@/api/http.js';
 import { queryProappConfigPageForPlat,getUserservice,loginOut, getProappinfo, loginIn, getTopPerMenuList, getTopPerMenuListFPc, thirdLogin, loginMicroMessenger, loginMiniProgram, getPersonal } from '@/api/interfaceHDB.js';
 import { clearTimeout, setTimeout } from 'timers';
 export default {
+
 	data() {
 		return {
-			detail: '',  //隱私政策
+			strings:''
 		};
 	},
-	onLoad() {
+	onLoad() {	
+		this.queryProappConfigPageForPlat()
 		this.baseColor = `#${$storage.get('baseColor')}`;
 		wx.setNavigationBarTitle({
 			title: "隐私政策"
@@ -25,26 +27,25 @@ export default {
 		});
 	},
 
-	onShow() {
-		console.log('个人中心onShow',$storage.get('userId'));
-		if ($storage.get('userInfo')) this.message = $storage.get('userInfo');
-		if ($storage.get('miniUserName') && $storage.get('userId')) {
-			http.get(getPersonal, {
-				userId: $storage.get('userId')
-			}).then(res => {
-				this.userLevel = res.userinfoLevel;
-			});
-		}
-	},
+	// onShow() {
+	// 	console.log('个人中心onShow',$storage.get('userId'));
+	// 	if ($storage.get('userInfo')) this.message = $storage.get('userInfo');
+	// 	if ($storage.get('miniUserName') && $storage.get('userId')) {
+	// 		http.get(getPersonal, {
+	// 			userId: $storage.get('userId')
+	// 		}).then(res => {
+	// 			this.userLevel = res.userinfoLevel;
+	// 		});
+	// 	}
+	// },
 	created() {
-		// console.log('这里是个人中心')
-		// this.aaa();
 	},
 	mounted() {
-		this.queryProappConfigPageForPlat()
+		
 	},
 	methods: {
 		queryProappConfigPageForPlat(){
+			let that = this
 			http.get(queryProappConfigPageForPlat, {
 				proappCode: "001",
 				tenantCode: "2020063000000001"
@@ -52,7 +53,9 @@ export default {
 				console.log("用户协议",res)
 				res.rows.forEach(element => {
 					if (element.proappConfigName == '隐私') {
-					this.detail = element.proappConfigText2;
+						// console.log('proappConfigText2---',element.proappConfigText2)
+					that.strings= element.proappConfigText2;
+						
 				}
 			});
 				// this.userLevel = res.userinfoLevel;
@@ -65,6 +68,5 @@ export default {
 };
 </script>
 <style lang="less">
-
-
+// @import '@/components/gaoyia-parse/parse.css';
 </style>

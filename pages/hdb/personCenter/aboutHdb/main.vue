@@ -1,6 +1,6 @@
 <template>
 	<!-- 关于企业 -->
-	<div v-html="detail"></div>
+	<rich-text :nodes="detail"></rich-text>
 </template>
 <script>
 	import getUserInfo from '@/components/communal/getUserInfo';
@@ -43,17 +43,17 @@
 			});
 		},
 
-		onShow() {
-			console.log('个人中心onShow', $storage.get('userId'));
-			if ($storage.get('userInfo')) this.message = $storage.get('userInfo');
-			if ($storage.get('miniUserName') && $storage.get('userId')) {
-				http.get(getPersonal, {
-					userId: $storage.get('userId')
-				}).then(res => {
-					this.userLevel = res.userinfoLevel;
-				});
-			}
-		},
+		// onShow() {
+		// 	console.log('个人中心onShow', $storage.get('userId'));
+		// 	if ($storage.get('userInfo')) this.message = $storage.get('userInfo');
+		// 	if ($storage.get('miniUserName') && $storage.get('userId')) {
+		// 		http.get(getPersonal, {
+		// 			userId: $storage.get('userId')
+		// 		}).then(res => {
+		// 			this.userLevel = res.userinfoLevel;
+		// 		});
+		// 	}
+		// },
 		created() {
 			// console.log('这里是个人中心')
 			// this.aaa();

@@ -1,6 +1,6 @@
 <template>
 	<!-- 用户协议的詳情頁 -->
-	<div v-html="detail"></div>
+	 <rich-text :nodes="detail"></rich-text>
 </template>
 <script>
 import getUserInfo from '@/components/communal/getUserInfo';
@@ -11,7 +11,7 @@ import { clearTimeout, setTimeout } from 'timers';
 export default {
 	data() {
 		return {
-			detail: '用户协议',  //用户协议
+			detail: '',  //用户协议
 		};
 	},
 	onLoad() {
@@ -53,6 +53,7 @@ export default {
 				console.log("用户协议",res)
 				res.rows.forEach(element => {
 					if (element.proappConfigName == '协议') {
+						// console.log('yyyyyyy',element.proappConfigText2)
 					this.detail = element.proappConfigText2;
 				}
 			});

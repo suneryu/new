@@ -427,7 +427,7 @@
 									url: 'register/b2bRegisterCheck',
 									query: {
 										userPhone: userPhone || this.inputUserPhone,
-										checkModifyAudit: res.checkModifyAudit,
+										checkModifyAudit: this.checkModifyAudit,
 									}
 								};
 								this.redirectTo(options);
@@ -681,6 +681,7 @@
 					.http(this.$qj.domain)
 					.get(userapplyStateAndAuth, paramsStatus)
 					.then(res => {
+						console.log('22222222---',res)
 						this.checkModifyAudit = res.checkModifyAudit
 
 					});
