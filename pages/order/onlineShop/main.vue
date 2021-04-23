@@ -393,7 +393,7 @@
 					})
 					.then(res => {
 							console.log("用户信息-----",res)
-						if(this.userinfoOcode == null || this.userinfoOcode ==''){
+						if(res.rows[0].userinfoOcode == null || res.rows[0].userinfoOcode ==''){
 							this.userinfoOcode = 1;
 						}else{
 							this.userinfoOcode = res.rows[0].userinfoOcode
