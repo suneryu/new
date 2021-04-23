@@ -35,7 +35,7 @@
 		onLoad() {
 			this.baseColor = `#${$storage.get('baseColor')}`;
 			wx.setNavigationBarTitle({
-				title: "常见问题"
+				title: "关于海德堡"
 			});
 			wx.setNavigationBarColor({
 				frontColor: '#ffffff',

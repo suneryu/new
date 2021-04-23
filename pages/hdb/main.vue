@@ -96,6 +96,9 @@
 	</div>
 </template>
 <script>
+	import {
+		userapplyStateAndAuth,		
+	} from '@/api/interface.js';
 import getUserInfo from '@/components/communal/getUserInfo';
 import headerCenter from './indexHDB';
 import { $storage, $router } from '@/utils/prototype/vue.js';
@@ -131,7 +134,8 @@ export default {
 			columnApplicationIndex: [],
 			// 用户等级
 			userLevel: '',
-			userinfoType:""  //用户类型
+			userinfoType:"" , //用户类型
+			checkModifyAudit:''
 		};
 	},
 	onLoad() {
@@ -182,15 +186,35 @@ export default {
 	},
 	components: { headerCenter, getUserInfo, vueTabBar },
 	methods: {
+		redirectTo(options) {
+			this.$qj.router.replace(options.url, options.query ? options.query : '');
+		},
+		navigateTo(options) {
+			this.$qj.router.push(options.url, options.query ? options.query : '');
+		},
+		getAuthState() {
+			let that = this
+			let paramsStatus = {}
+			paramsStatus.userCode = this.$qj.storage.get('loginInfor').userInfoCode
+			this.$qj
+				.http(this.$qj.domain)
+				.get(userapplyStateAndAuth, paramsStatus)
+				.then(res => {
+					this.checkModifyAudit = res.checkModifyAudit
+		
+				});
+		
+		},
 		getuserInfo() {
 			http.get(getUserservice, {
 				userId: $storage.get('userId')
 			}).then(res => {
+				console.log('qqqqqwwww',res)
 				this.userinfoType = res.userinfoType;
 				// if(res.userType == '0' && res.userinfoType == '2'){
 				// 	this.isToSub = true
 				// }
-		
+				this.getAuthState()
 		
 			});
 			},
@@ -206,25 +230,55 @@ export default {
 			}
 			
 			if(data == 2){
-				
+				let that = this
 				if(this.userinfoType == '1'){
-					uni.showModal({
-						title: '提示',
-						content: '您还不是企业用户，请先去认证',
-						confirmColor: '#' + $storage.get('baseColor'),
-						success(res) {
-							let pages = getCurrentPages()
-							if (res.confirm) {
-								let currentPage = pages[pages.length - 1]
-								let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
-								$router.push('register/b2bRegisterCom')
-							} else if (res.cancel) {
-								if (pages.length > 1) {
-									$router.back()
-								}
+					if (this.checkModifyAudit == '0') {
+						let options = {
+							url: 'register/b2bRegisterCheck',
+							query: {
+								userPhone: $storage.get('loginInfor').userPhone,
+								checkModifyAudit: this.checkModifyAudit,
 							}
+						};
+						that.navigateTo(options);
+					} else if (this.checkModifyAudit == '-1') {
+						uni.showModal({
+							title: '提示',
+							content: '您还未进行企业认证，请前去认证',
+							// confirmColor: '#' + $storage.get('baseColor'),
+							success(res) {
+								let pages = getCurrentPages()
+								if (res.confirm) {
+									let currentPage = pages[pages.length - 1]
+									let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
+									let options = {
+										url: 'register/b2bRegisterCom',
+										query: {
+											userPhone: $storage.get('loginInfor').userPhone,
+										}
+									};
+									
+									that.navigateTo(options);
+								} else if (res.cancel) {}
+							}
+						})
+					}else if(this.checkModifyAudit == '2'){
+						// 企业资质认证失败
+						let options = {
+							url: 'register/b2bRegisterCheck',
+							query: {
+								userPhone: $storage.get('loginInfor').userPhone,
+								checkModifyAudit: this.checkModifyAudit,
+							}
+						};
+						
+						that.navigateTo(options);
+					} else {
+						let options = {
+							url: 'register/companyInfo'
 						}
-					})
+						this.redirectTo(options);
+					}
 				}else{
 					console.log("跳转至企业信息")
 					$router.push("register/companyInfo");
