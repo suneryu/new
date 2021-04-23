@@ -73,7 +73,7 @@
 							<span v-if="getgoodtypes == '25'">拼团价</span>
 							<span v-if="getgoodtypes == '26'">秒杀价</span>
 							<!-- {{ unitPrice.obpay }}{{ goodsPrice }}{{ unitPrice.mapay }} -->
-							{{ unitPrice.obpay }}{{goodsClass=='1'?Number(goodsPrice)*Number(userinfoOcode):goodsPrice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goodsClass=='1'?(Number(goodsPrice)*Number(userinfoOcode)).toFixed(2):goodsPrice }}{{ unitPrice.mapay }}
 						</h3>
 						已选择:
 						<span id="goodsSku">{{ specsList }}</span>
@@ -221,7 +221,8 @@
 				miniErImg: null,
 				posterImg: null, //合成海报的img
 				pp: '',
-				userinfoOcode:1
+				userinfoOcode:1,
+				goodsClass:''
 
 			};
 		},
@@ -357,6 +358,7 @@
 			this.collectUrl = collectUrl;
 			this.baseColor = '#' + this.$state.baseColor;
 			this.getStore()
+			this.getQY()
 		},
 		onShareAppMessage: function(res) {
 			let that = this;
@@ -503,6 +505,7 @@
 					$storage.set('goodsType', res.goodsType);
 
 					this.goodsCode = res.goodsCode;
+					this.goodsClass = res.goodsClass
 					this.ginfoCode = res.ginfoCode && res.ginfoCode;
 					//拼团请求快速成团接口
 					if (res.goodsType == '25') {

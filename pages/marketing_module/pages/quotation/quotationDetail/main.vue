@@ -262,9 +262,9 @@
 				let item = this.listItems[0].goodsList[index]
 				let goodsCamount = item.goodsNum;
 				if (item.goodsMinnum && item.goodsMinnum > 0) {
-					if (item.goodsCamount <= item.goodsMinnum) {
+					if (goodsCamount <= item.goodsMinnum) {
 						this.$qj.message.alert('购买数量不能小于起订量');
-					} else if (item.goodsCamount > item.goodsMinnum && goodsCamount > 1) {
+					} else if (goodsCamount > item.goodsMinnum && goodsCamount > 1) {
 						// 用户维度的起订量倍数，优先级最高
 						if (item.skuOneNum) {
 							goodsCamount = goodsCamount - item.goodsMinnum * item.skuOneNum;

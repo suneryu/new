@@ -75,7 +75,7 @@ export default {
     this.pricesetNprice = this.skuList.pricesetNprice
     // this.pricesetNprice  = (this.skuList.pricesetNprice  * 1).toFixed(2) //对外价格
 	if(this.userinfoType == '2' && this.checkModifyAudit == '3'){
-		this.price = Number(this.pricesetNprice) * this.userinfoOcode
+		this.price = Number(this.pricesetNprice) * Number(this.userinfoOcode)
 	}
 	
   },

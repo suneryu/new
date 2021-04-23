@@ -73,7 +73,7 @@
 							<span v-if="getgoodtypes == '24'">团购价</span>
 							<span v-if="getgoodtypes == '25'">拼团价</span>
 							<span v-if="getgoodtypes == '26'">秒杀价</span>
-							{{ unitPrice.obpay }}{{goodsClass==1?Number(goodsPrice)*Number(userinfoOcode):goodsPrice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goodsClass==1?(Number(goodsPrice)*Number(userinfoOcode)).toFixed(2):goodsPrice }}{{ unitPrice.mapay }}
 						</h3>
 						已选择:
 						<span id="goodsSku">{{ specsList }}</span>
@@ -376,6 +376,7 @@
 			this.collectUrl = collectUrl;
 			this.baseColor = '#' + this.$state.baseColor;
 			this.getStore()
+			this.getQY()
 		},
 		onShareAppMessage: function(res) {
 			let that = this;
@@ -532,6 +533,7 @@
 					console.log(res, 'res------------');
 					$storage.set('goodsType', res.goodsType);
 					this.goodsMinnum = res.goodsMinnum
+					this.goodsClass = res.goodsClass
 					this.goodsnum = res.goodsMinnum
 					this.goodsCode = res.goodsCode;
 					this.ginfoCode = res.ginfoCode && res.ginfoCode;
