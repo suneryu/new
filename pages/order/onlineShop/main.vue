@@ -27,8 +27,8 @@
 						<h2>{{ goods.goodsName }}</h2>
 						<h3>{{ goods.skuName }}</h3>
 						<h4>
-							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
-							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
+							<h3 v-if="userinfoType=='2' && goodsClass != '1'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
+							<div style="text-align: left;" v-if="goodsClass==1 && userinfoType=='2' && checkModifyAudit == '3' ">
 								<span class="originalPrice1">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }} </span>
 								<span style='margin-left: 4px;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ goods.pricesetCGprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
 							</div>
@@ -92,7 +92,7 @@
 		<!-- <div class="accounts-count">
 			<p>
 				商品金额
-				<span>{{ unitPrice.obpay }}{{ shoppingCountPrice.toFixed(2) }}{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{ shoppingCountPrice }}{{ unitPrice.mapay }}</span>
 			</p>
 			<p>
 				运费
@@ -115,7 +115,7 @@
 			<p>
 				应付金额:
 				<!-- <i>{{ unitPrice.obpay }}{{ accountsSumPrice }}{{ unitPrice.mapay }}</i> -->
-				<i>{{ unitPrice.obpay }}{{ allPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{ allPrice }}{{ unitPrice.mapay }}</i>
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
 		</div>
@@ -280,6 +280,7 @@
 			this.goodsClass = options.goodsClass
 			this.temp = options;
 			console.log('传来的option是啥，', this.temp)
+			console.log('传来的option是啥，', options)
 			// this.userInfoCode = this.$qj.storage.get('userdetailsInfo').userInfoCode
 		},
 		onShow() {
@@ -650,7 +651,7 @@
 									this.sumPoints += vk.pricesetRefrice;
 									// 商品不减优惠 应付金额
 									if(this.goodsClass == '1' && this.userinfoType == '2' && this.checkModifyAudit =='3'){
-										that.allPrice =Number(that.allPrice) + (vk.goodsMoney *this.userinfoOcode)
+										that.allPrice =(Number(that.allPrice) + (vk.goodsMoney *this.userinfoOcode)).toFixed(2)
 									}else{
 										that.allPrice += vk.goodsMoney
 									}

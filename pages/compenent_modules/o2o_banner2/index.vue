@@ -27,9 +27,9 @@
       <h3>{{ skuList.goodsName }}</h3>
 	  <div v-if='userinfoType=="1"' style='margin-top: 10px;font-size: 11px;color: #b7b5b5;'>认证为企业用户可以查看价格</div>
 	  <!-- <div style='display: flex;' v-else> -->
-	  <h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ pricesetNprice }}{{ unitPrice.mapay }}</h3>
+	  <h3 v-if="userinfoType=='2' && goodsClass != '1'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ pricesetNprice }}{{ unitPrice.mapay }}</h3>
 	  <div style='display: flex;'>
-		  <p class="price1" v-if="pricesetNprice && pricesetNprice != 'NaN' && userinfoType == '2'  && checkModifyAudit == '3'">
+		  <p class="price1" v-if="goodsClass == '1' && pricesetNprice && pricesetNprice != 'NaN' && userinfoType == '2'  && checkModifyAudit == '3'">
 		    原价：{{ unitPrice.obpay }}
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
