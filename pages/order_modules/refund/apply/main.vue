@@ -1,6 +1,6 @@
 <template>
 	<div class="afterApply">
-		<commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" />
+		<!-- <commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" /> -->
 		<div class="afterApply-box">
 			<ul>
 				<li>
@@ -129,7 +129,8 @@ export default {
 		console.log(this.$root.$mp.query, '参数212111111111');
 		console.log(this.aaa, '参数212111111111');
 		wx.setNavigationBarTitle({
-			title: $storage.get('proappEnvName')
+			// title: $storage.get('proappEnvName')
+			title: this.title
 		});
 		wx.setNavigationBarColor({
 			frontColor: '#ffffff', // 必写项
@@ -152,7 +153,7 @@ export default {
 		});
 		this.array = [];
 		// this.items = this.aaa
-		// this.items = this.$root.$mp.query;
+		this.items = this.$root.$mp.query;
 		this.sumCont = this.items.goodsCamount;
 		if (this.items.dataState == '3' || this.items.dataState == '4') {
 			this.refundType = '';

@@ -42,6 +42,9 @@
 								<div style="text-align:right;">
 									<p style="width:160rpx;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>
 									<h6>x{{ goods.goodsNum }}</h6>
+									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if="(order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3)">
+										<div style='border-radius: 26rpx;border: 1rpx solid #d4d4d4;text-align: center;' @click="refund(goods,order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -68,10 +71,10 @@
 								<div v-if="order.contractAppraise == 1"><!-- <span>已评价</span> --></div>
 								<div class="btn" v-else @click="evaluate(order.goodsList)" :style="{ borderColor: baseColor, color: baseColor }">去评价</div>
 							</div>
-							<div class="right" v-else-if="(order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3)">
+							<!-- <div class="right" v-else-if="(order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3)">
 								
-								<div class="btn" @click="refund(order,orderList)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
-							</div>
+								<div class="btn" @click="refund(order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
+							</div> -->
 						</div>
 					</div>
 				</li>
@@ -307,7 +310,7 @@ export default {
 		navigateTo(options) {
 						this.$qj.router.push(options.url, options.query ? options.query : '');
 					},
-		refund(order,orderList){
+		refund(goods,order){
 	// 		console.log('退款当前商品',order)
 	// 		let ocRefundGoodsBeanList = []
 	// 		let ocRefundGoodsBean = {};
@@ -349,8 +352,8 @@ export default {
 	// 						$message.alert(res.msg);
 	// 					}
 	// 		})
-			  order.dataState = orderList.dataState;
-			  $router.push('order_modules/refund/apply', order);
+			  goods.dataState = order.dataState;
+			  $router.push('order_modules/refund/apply', goods);
 			},
 		evaluate(order) {
 			this.$state.set('order', order);

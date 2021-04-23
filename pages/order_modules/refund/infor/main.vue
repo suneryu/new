@@ -1,10 +1,10 @@
 <template>
     <div class="afterDetail">
-      <commonHeader 
+      <!-- <commonHeader 
       :title="title"
       :leftIcon="leftIcon"
       :rightIcon="rightIcon"
-      />
+      /> -->
       <div class="afterDetail-tit" :style="{background:baseColor}">
         <div>
           <h3>{{refundStateInfor}}</h3>
@@ -99,7 +99,8 @@ export default {
   onLoad() {
     this.commonMounted();
     wx.setNavigationBarTitle({
-      title: $storage.get('proappEnvName')
+      // title: $storage.get('proappEnvName')
+      title: this.title
     })
     wx.setNavigationBarColor({
       frontColor: '#ffffff', // 必写项
@@ -178,7 +179,7 @@ export default {
   width: 100%;
   background: @white-color;
   &-tit{
-    margin-top: 90rpx;
+    // margin-top: 90rpx;
     height: 138rpx;
     width: calc(100% - 60rpx);
 	width: 100%;
@@ -267,7 +268,7 @@ export default {
   &-revokeBtn{
     height: 98rpx;
     width:calc(100% - 60rpx);
-	width: 100%;
+	// width: 100%;
     border-top: 1rpx solid #f6f6f8;
     padding: @padding-30;
     position: fixed;

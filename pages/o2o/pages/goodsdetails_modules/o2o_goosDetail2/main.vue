@@ -73,7 +73,7 @@
 							<span v-if="getgoodtypes == '24'">团购价</span>
 							<span v-if="getgoodtypes == '25'">拼团价</span>
 							<span v-if="getgoodtypes == '26'">秒杀价</span>
-							{{ unitPrice.obpay }}{{ goodsPrice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goodsClass==1?Number(goodsPrice)*Number(userinfoOcode):goodsPrice }}{{ unitPrice.mapay }}
 						</h3>
 						已选择:
 						<span id="goodsSku">{{ specsList }}</span>
@@ -131,6 +131,9 @@
 		$router,
 		$message
 	} from '@/utils/prototype/vue.js';
+	import {
+		queryNewUserinfoPageByDealerqt
+		} from '@/api/interfaceHDB.js';
 	import {
 		getResourceGoodsInfoBySkuCode,
 		fetchSpeOptByPntCodeNomRel,
@@ -223,7 +226,8 @@
 				isContract:false, //判断是否为合约商品
 				contractProperty:'',
 				userInfoCode:'',
-				warehouseName:''
+				warehouseName:'',
+				userinfoOcode:1
 
 			};
 		},
@@ -404,6 +408,22 @@
 			}
 		},
 		methods: {
+			//查询权益
+			getQY(){
+				this.$qj
+					.http(this.$qj.domain)
+					.get(queryNewUserinfoPageByDealerqt, {
+						userinfoPhone: $storage.get('loginInfor').userPhone
+					})
+					.then(res => {
+							console.log("-----",res)
+						console.log('权益值',res.rows[0].userinfoOcode)
+						this.userinfoOcode = res.rows[0].userinfoOcode
+							if(this.userinfoOcode == null || this.userinfoOcode ==''){
+								this.userinfoOcode = 1;
+							}
+					})
+			},
 			navigateTo(options) {
 				this.$qj.router.push(options.url, options.query ? options.query : '');
 			},
