@@ -421,7 +421,7 @@
 							let info = this.$qj.storage.get('loginInfor')
 							info.userinfoType = this.userinfoType
 							this.$qj.storage.set('loginInfor', info);
-							
+							console.log('22222222222--',this.checkModifyAudit)
 							if (this.checkModifyAudit == '0') {
 								let options = {
 									url: 'register/b2bRegisterCheck',
@@ -452,6 +452,17 @@
 										} else if (res.cancel) {}
 									}
 								})
+							}else if(this.checkModifyAudit == '2'){
+								// 企业资质认证失败
+								let options = {
+									url: 'register/b2bRegisterCheck',
+									query: {
+										userPhone: userPhone || this.inputUserPhone,
+										checkModifyAudit: res.checkModifyAudit,
+									}
+								};
+								
+								that.redirectTo(options);
 							} else {
 								let options = {
 									url: 'register/companyInfo'

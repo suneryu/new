@@ -18,8 +18,11 @@
 				<div class="successTip" >请耐心等待审核结果</div>
 				
 			</div>
+			
 			<!-- <text v-if="checkModifyAudit == 0">请等待审核</text> -->
-			<text v-if="checkModifyAudit == 2">审核失败</text>
+			<div v-if="checkModifyAudit == 2">审核失败
+			<div class="successTip" >拒绝理由：{{checkModifyMemo}}</div>
+			</div>
 			<text v-if="checkModifyAudit == 1">审核成功</text>
 		</view>
 		
@@ -78,10 +81,12 @@ export default {
 			userinfoPhone: '',
 			userInfoCode: '',
 			checkModifyAudit:'',
+			checkModifyMemo:''
 			
 		};
 	},
 	onLoad(options) {
+		console.log('qqqqqqqqqqq',options)
 		this.userPhone = options.userPhone;
 		this.redirectUrl = options.redirectUrl;
 		this.checkModifyAudit = options.checkModifyAudit || this.checkModifyAudit
@@ -133,6 +138,7 @@ export default {
 				.http(this.$qj.domain)
 				.get(userapplyStateAndAuth, paramsStatus)
 				.then(res => {
+					this.checkModifyMemo = res.checkModifyMemo
 					 this.checkModifyAudit = res.checkModifyAudit
 		
 				});

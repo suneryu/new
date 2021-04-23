@@ -109,7 +109,8 @@
 				userInfoCode:'',
 				userinfoCert2No:'',
 				userinfoapplyType:'0',
-				checkModifyAudit:''
+				checkModifyAudit:'',
+				provinceCode:'',				provinceName:'',				cityCode:'',				cityName:'',				areaName:'',				areaCode:''
 			};
 		},
 		watch: {
@@ -128,7 +129,14 @@
 			this.pageState = options.pageState ? options.pageState : 0;
 			if (options.registerParams) this.registerParams = JSON.parse(options.registerParams);
 			console.log('---------------')
+			console.log('---------------',JSON.parse(options.registerParams))
 			if (this.registerParams != {}) {
+				this.provinceCode= this.registerParams.provinceCode;
+				this.provinceName= this.registerParams.provinceName;
+				this.cityCode= this.registerParams.cityCode;
+				this.cityName= this.registerParams.cityName;
+				this.areaName= this.registerParams.areaName;
+				this.areaCode= this.registerParams.areaCode;
 				this.userType = this.registerParams.userinfoType;
 				// this.distributor = this.registerParams.qualityQtypeName;
 				// this.distributorCode = this.registerParams.qualityQtypeCode;
@@ -183,13 +191,15 @@
 			},
 			downLodeFile(){
 				uni.downloadFile({
-				  url: 'https://devmpb2b12020063000000001.xytest.qjclouds.com/paas/shop/2020063000000001/2021-03-31/d0e478b822e1451a894ec4028f22aaab.jpg', //仅为示例，并非真实的资源
+				  url: this.$domain +'/20210419-%E5%BE%AE%E4%BF%A1%E6%8E%88%E6%9D%83%E4%B9%A6.docx', //仅为示例，并非真实的资源
 				  success (res) {
+					  console.log(res,'-----')
 				    // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
 				    if (res.statusCode === 200) {
 				      uni.saveFile({
 				      	tempFilePath: res.tempFilePaths,
 				      	      success: function (res) {
+								  console.log(res,'====')
 				      	        var savedFilePath = res.savedFilePath;
 				      	      }
 				      })
@@ -211,6 +221,12 @@
 				console.log('this.userInfoCode----',this.userInfoCode)
 				let params = {
 
+					provinceCode:this.provinceCode,
+						provinceName: this.provinceName,
+						cityCode: this.cityCode,
+						cityName: this.cityName,
+						areaName: this.areaName,
+						areaCode: this.areaCode,
 					// 公司名称
 					userinfoCompname: this.userinfoCompname,
 					// userinfoCertNo: this.userinfoCertNo,

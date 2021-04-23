@@ -30,7 +30,7 @@
 
 		<button type="default" class="login-btn" v-bind:style="{ backgroundColor: baseColor }" @click="login">登录</button>
 		<view class="register-btn" @click="register">新用户注册</view>
-		<view class="register-btn" @click="comBind">企业账号绑定</view>
+		<!-- <view class="register-btn" @click="comBind">企业账号绑定</view> -->
 		<view style="margin-right: 80rpx;">
 			<view class="forget-password-btn" @click="loginPassword">账号密码登录</view>
 		</view>
