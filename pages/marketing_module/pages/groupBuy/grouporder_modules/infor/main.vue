@@ -140,7 +140,11 @@
     </div>
     <div :style="{display:items.dataState==2||items.dataState==-1?'none':'block'}">
       <div class="orderDetail-footer">
-        <div v-if="items.dataState == 1 && items.dataStatestr != 3">
+		  <div v-if="items.dataState == 1 && (items.dataStatestr == 2 )&& items.pricesetCurrency != 2">
+		    <span @click="cancelOrder(items)">取消订单</span>
+		  </div>
+		  <!-- order.dataState == 1  && order.dataStatestr == 1 && order.pricesetCurrency != 2 -->
+        <div v-if="items.dataState == 1 && items.dataStatestr == 1 && items.pricesetCurrency != 2">
           <span @click="cancelOrder(items)">取消订单</span>
           <span :style="{borderColor:baseColor,color:baseColor}" @click="pay(items)">立即支付</span>
         </div>
