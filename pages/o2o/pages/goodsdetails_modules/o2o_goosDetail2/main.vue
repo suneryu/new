@@ -588,9 +588,11 @@
 
 					if (res.rsSkuDomainList.length > 0) {
 						this.skuList = {};
+						console.log('res.rsSkuDomainList----',res.rsSkuDomainList)
 						res.rsSkuDomainList.map((el, index) => {
 							if (el.skuCode == this.getJson) {
 								this.skuList = res.rsSkuDomainList[index];
+								this.skuId = this.skuList && this.skuList.skuId;
 							}
 							if (res.goodsType == '24' || res.goodsType == '25' || res.goodsType == '26') {
 								$storage.set('goodsPmbillno', res.ginfoCode);
@@ -623,7 +625,9 @@
 						this.skuList.goodsSalesvolume = '0';
 					}
 					this.specsList = this.skuList.skuName && this.skuList.skuName.split('/');
-					this.skuId = this.skuList && this.skuList.skuId;
+					console.log('qqqqqqqqqqq--',this.skuList)
+					console.log('this.skuList.skuId--',this.skuList.skuId)
+					
 					// this.goodsPrice = this.skuList.pricesetNprice && (this.skuList.pricesetNprice * 1).toFixed(2);
 					console.log(this.skuList.pricesetNprice,66666666666)
 					this.goodsInforbox = res;
@@ -806,14 +810,15 @@
 									// 	json: JSON.stringify(atr)
 									// });
 									
-									let goodsClass = $storage.get("goodsClass")
-									console.log('----详情页----',goodsClass)
+									// let goodsClass = $storage.get("goodsClass")
+									console.log('----详情页----',that.goodsClass)
+									console.log('----that.skuId----',that.skuId)
 									let options = {
 										url: 'order/onlineShop',
 										query: {
 												skuId: that.skuId,
 												goodsNum: that.goodsnum,
-												goodsClass:goodsClass
+												goodsClass:that.goodsClass
 										}
 									};
 									
