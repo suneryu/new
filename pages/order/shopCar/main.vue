@@ -256,6 +256,10 @@
 	} from '@/utils/prototype/vue.js';
 	import http from '@/api/http.js';
 	import Vue from 'vue';
+	import {
+			userapplyStateAndAuth
+	
+	} from '@/api/interface.js';
 	export default {
 		data() {
 			return {
@@ -316,6 +320,7 @@
 				isupload:false,
 				temp: '',
 				contractTemPmode:'',
+				partnerType:'',
 				userinfoOcode:1,
 				checkModifyAudit:"",  // 是否授权
 				goodsClass:''  //商品类型
@@ -393,7 +398,7 @@
 					.then(res => {
 						console.log("认证授权状态4444444，",res)
 						// that.channelCode = res.userinfoChannelcode
-						// that.partnerType = res.partnerType
+						that.partnerType = res.partnerType
 						console.log(that.partnerType,'that.partnerType')
 						if (res.checkModifyAudit == '3') {
 							that.checkModifyAudit = "3"
