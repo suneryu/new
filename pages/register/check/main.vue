@@ -264,7 +264,7 @@
 				}
 				
 
-				if (!this.imgBusinessHttp) {
+				if (!this.imgBusinessHttp || this.memoauthFileurl  == this.aaaa) {
 					this.$qj.message.alert('请上传授权书');
 					return;
 				}

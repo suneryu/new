@@ -311,6 +311,7 @@ export default {
 				});
 		},
 		async itemAddCart(item){
+			console.log('item----',item)
 			if(this.handling){
 				return
 			}
@@ -325,7 +326,8 @@ export default {
 				let minNum = item.collectOpnum >= 1 ? item.collectOpnum : 1;
 				let params = [{
 					skuCode: item.collectOpcode,
-					goodsNum: (multipleNum && multipleNum > 0) ? (multipleNum * minNum) : minNum
+					// goodsNum: (multipleNum && multipleNum > 0) ? (multipleNum * minNum) : minNum
+					goodsNum: 1
 				}]
 				this.$qj.message.loading();
 				this.$qj
