@@ -645,6 +645,7 @@
 						if (res && res instanceof Array) {
 							this.shoppingItems = res;
 							// console.log(this.shoppingItems,"就是你")
+							that.allPrice = 0
 							this.shoppingItems.map(v => {
 								v.shoppingpackageList.map(vk => {
 									this.copyComDisMoney += vk.disMoney;
