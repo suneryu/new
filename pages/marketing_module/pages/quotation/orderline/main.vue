@@ -30,7 +30,7 @@
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
 								<span style='margin-left: 4px;' :style="{ color: '#000000' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
-								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1'>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1 && shoppingItem.contractType == 39 '>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 							</div>
 							<span>×{{ goods.goodsNum }}</span>
 						</h4>
@@ -89,7 +89,7 @@
 				<span>{{ unitPrice.obpay }}{{freight}}{{ unitPrice.mapay }}</span>
 			</div>
 			<div class='goodsPrice-item'>
-				<span>组合优惠：</span>
+				<span>权益优惠：</span>
 				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
 				<span>{{ unitPrice.obpay }}{{discountMoney}}{{ unitPrice.mapay }}</span>
 			</div>
@@ -586,7 +586,7 @@
 						this.shoppingItems = []
 						this.discountMoney = 0
 						res.goodsList.forEach(item=>{
-							if(item.goodsClass==1){
+							if(item.goodsClass==1 && res.contractType == 39){
 								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 							}
 						})

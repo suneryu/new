@@ -61,7 +61,7 @@
 							</div>
 							<div class="right" v-if="order.dataState == 1  && order.dataStatestr == 1 && order.pricesetCurrency != 2">
 								<div class="btn" @click="cancelOrder(order)">取消订单</div>
-								<div class="btn" @click="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">立即支付</div>
+								<div class="btn" @click="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">去支付</div>
 							</div>
 						
 							<div class="right" v-else-if="order.dataState == 3">

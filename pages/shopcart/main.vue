@@ -387,9 +387,9 @@
 							// console.log('耗材---',JSON.parse(res.rows[0].shoppingpackageList[0].areaName))
 							// console.log('纪念品---',JSON.parse(res.rows[0].shoppingpackageList[0].warehouseName))
 							// console.log('list---',res.rows[0].shoppingpackageList[0].shoppingGoodsList)
-							let listData1 = JSON.parse(res.rows[0].shoppingpackageList[0].areaCode);
-							let listData2 = JSON.parse(res.rows[0].shoppingpackageList[0].areaName);
-							let listData3 = JSON.parse(res.rows[0].shoppingpackageList[0].warehouseName);
+							let listData1 = JSON.parse(res.rows[0].shoppingpackageList[0].areaCode) || [];
+							let listData2 = JSON.parse(res.rows[0].shoppingpackageList[0].areaName) || [];
+							let listData3 = JSON.parse(res.rows[0].shoppingpackageList[0].warehouseName) || [];
 							let aa = a
 							aa[0].shoppingpackageList[0].shoppingGoodsList = [];
 							aa[0].shoppingpackageList[0].shoppingGoodsList = listData1;

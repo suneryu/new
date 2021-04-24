@@ -51,7 +51,7 @@
 													<div 
 														style='font-size: 12px;'>
 														<span style='color: #000000;' >{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
-														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1 && itemList.contractType == 39'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 													</div>
 													<view class="list-right-container" v-if="itemList.contractType != 41">
 														<div class="list-add">
@@ -79,7 +79,7 @@
 						</div>
 						<div class='goodsPrice'>
 							<div class='goodsPrice-item'>
-								<span>商品金额：</span>
+								<span>商品总额：</span>
 								<span>{{ unitPrice.obpay }}{{itemList.contractType == 39?itemList.contractInmoney:itemList.contractMoney}}{{ unitPrice.mapay }}</span>
 							</div>
 							<div class='goodsPrice-item'>
@@ -87,7 +87,7 @@
 								<span>{{ unitPrice.obpay }}{{itemList.freight == null?0:itemList.freight}}{{ unitPrice.mapay }}</span>
 							</div>
 							<div class='goodsPrice-item'>
-								<span>组合优惠：</span>
+								<span>权益优惠：</span>
 								<!-- <span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span> -->
 								<span>{{ unitPrice.obpay }}{{discountMoney}}{{ unitPrice.mapay }}</span>
 							</div>
@@ -234,7 +234,7 @@
 						this.discountMoney = 0
 						res.goodsList.forEach(item=>{
 							item.itemChecked = false
-							if(item.goodsClass==1){
+							if(item.goodsClass==1 && res.contractType == 39){
 								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 							}
 						})
