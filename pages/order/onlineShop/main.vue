@@ -27,7 +27,7 @@
 						<h2>{{ goods.goodsName }}</h2>
 						<h3>{{ goods.skuName }}</h3>
 						<h4>
-							<h3 v-if="userinfoType=='2' && goodsClass != '1'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
+							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="goodsClass==1 && userinfoType=='2' && checkModifyAudit == '3' ">
 								<span class="originalPrice1">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }} </span>
 								<span style='margin-left: 4px;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ goods.pricesetCGprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
