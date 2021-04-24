@@ -9,6 +9,7 @@
 					</div> -->
 					
 					<div class="t-box-flex1 text-center font-12" @click="Service">
+					
 						<i class="iconfont">&#xe6b3;</i>
 						<p>客服</p>
 					</div>
@@ -31,15 +32,22 @@
 		<div class="ceng" v-show="showhiden"></div>
 		<!-- 客服 -->
 		<div class="customer-service" :style="{bottom:botser}">
-			<ul v-for="(item,index) in sevTelList" :key="index">
-				<li class="tel">
-					<p>
-						{{item.ocsOcserviceReDomain.ocserviceName}}:
-						<span>{{item.ocsOcserviceReDomain.ocserviceRemark}}</span>
-					</p>
+			<ul>
+				<li>
+					<button open-type="contact" class="detail--purchase--warp--kfBtn onlineBtn" v-if='showhiden'>客服</button>
 				</li>
+				<!-- <ul v-for="(item,index) in sevTelList" :key="index">
+					<li class="tel">
+						<p>
+							{{item.ocsOcserviceReDomain.ocserviceName}}:
+							<span>{{item.ocsOcserviceReDomain.ocserviceRemark}}</span>
+						</p>
+					</li>
+					
+				</ul> -->
 				<li @click="close">取消</li>
 			</ul>
+			
 		</div>
 	</div>
 </template>
