@@ -980,13 +980,14 @@
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);
 								if(this.goodsClass == '2'){ //耗材订单
-									   let options = {
-											url: 'pay/payhaocai',
-											query: {
-												// userPhone: this.userPhone || this.inputUserPhone 
-											}
-									   };
-									   this.navigateTo(options);
+									  //  let options = {
+											// url: 'pay/payhaocai',
+											// query: {
+											// 	// userPhone: this.userPhone || this.inputUserPhone 
+											// }
+									  //  };
+									   // this.navigateTo(options);
+									   this.$qj.router.replace('pay/payhaocai');
 									
 								}
 								if(this.goodsClass == '1'){ //零配件

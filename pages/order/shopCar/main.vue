@@ -1181,13 +1181,14 @@
 								console.log(this.orderDomainStr,'---orderDomainStr----');
 								console.log(this.orderDomainStr[0].goodsClass,'---this.orderDomainStr[0].goodsClass----');
 								if(this.orderDomainStr[0].goodsClass == '2'){ //耗材订单
-									   let options = {
-											url: 'pay/payhaocai',
-											query: {
-												// userPhone: this.userPhone || this.inputUserPhone 
-											}
-									   };
-									   this.navigateTo(options);
+									  //  let options = {
+											// url: 'pay/payhaocai',
+											// query: {
+											// 	// userPhone: this.userPhone || this.inputUserPhone 
+											// }
+									  //  };
+									   // this.navigateTo(options);
+									   this.$qj.router.replace('pay/payhaocai');
 									
 								}
 								if(this.orderDomainStr[0].goodsClass == '1'){ //零配件
