@@ -29,7 +29,8 @@
 				<h6>支持png、jpg格式的图片</h6>
 				<div>
 				   注意：
-				   <span style="color:red" @click="downLodeFile">点击下载授权书模板</span>，填写后加盖公章拍照上传
+				   <!-- <span style="color:red" @click="downLodeFile">点击下载授权书模板</span>，填写后加盖公章拍照上传 -->
+				   <span style="color:red" @click="savePhoto">点击下载授权书模板</span>，填写后加盖公章拍照上传
 				</div>
 				<img :src="memoauthFileurl" @click="Business" />
 			</view>
@@ -100,6 +101,7 @@
 
 				imgBusiness: '',
 				memoauthFileurl: `${this.$qj.domain}/paas/shop/2020063000000001/2021-03-29/eff2403e1bfa4cb88135fb8e6b64e676.jpg`,
+				aaaa: `${this.$qj.domain}/paas/shop/2020063000000001/2021-03-29/eff2403e1bfa4cb88135fb8e6b64e676.jpg`,
 				imgBusinessHttp: '',
 				pageState: 0,
 				// userinfoType:2,
@@ -151,8 +153,10 @@
 				this.imgBusiness = this.$qj.domain + this.registerParams.imgBusiness;
 				this.imgBusinessHttp = this.registerParams.imgBusiness;
 				
-				if(this.registerParams.memoauthFileurl){
+				if(this.registerParams.memoauthFileurl !='1'){
 					this.memoauthFileurl = this.$qj.domain + this.registerParams.memoauthFileurl;
+				}else{
+					this.memoauthFileurl  = this.aaaa
 				}
 			}
 			console.log('this.userPhone111111----',this.userPhone)
@@ -172,6 +176,46 @@
 			this.getAuthState()
 		},
 		methods: {
+			savePhoto() {
+				let data = this.$domain + '/sqs.png';
+				console.log('data', data)
+				const _this = this;
+				wx.getImageInfo({
+					src: data,
+					success: function(res) {
+						wx.saveImageToPhotosAlbum({
+							filePath: res.path,
+							success(result) {
+			
+								// _this.setData({ show: false });
+								wx.showToast({
+									title: '保存成功',
+									icon: 'success',
+									duration: 2000
+								})
+							},
+							fail(err) {
+								if (err.errMsg === "saveImageToPhotosAlbum:fail auth deny") {
+									wx.openSetting({
+										success(settingdata) {
+											if (settingdata.authSetting[
+													'scope.writePhotosAlbum']) {
+												_this.savePhoto()
+											} else {
+												wx.showToast({
+													title: '获取权限失败,无法保存图片',
+													icon: 'success',
+													duration: 2000
+												})
+											}
+										}
+									})
+								}
+							}
+						})
+					}
+				})
+			},
 			navigateBack() {
 				this.$qj.router.back();
 			},
@@ -191,7 +235,7 @@
 			},
 			downLodeFile(){
 				uni.downloadFile({
-				  url: this.$domain +'/20210419-%E5%BE%AE%E4%BF%A1%E6%8E%88%E6%9D%83%E4%B9%A6.docx', //仅为示例，并非真实的资源
+				  url: this.$domain + '/paas/shop/2020063000000001/2021-03-25/277c0621c99a4e5a8fb96bbf360a5f01.png', //仅为示例，并非真实的资源
 				  success (res) {
 					  console.log(res,'-----')
 				    // 只要服务器有响应数据，就会把响应内容写入文件并进入 success 回调，业务需要自行判断是否下载到了想要的内容
