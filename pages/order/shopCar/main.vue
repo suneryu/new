@@ -27,7 +27,7 @@
 						<h2>{{ goods.goodsName }}</h2>
 						<h3>{{ goods.skuName }}</h3>
 						<h4>
-							{{ unitPrice.obpay }}{{goods.goodsClass=='1'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):goods.pricesetNprice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goods.goodsClass=='1' && checkModifyAudit == '3'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):goods.pricesetNprice }}{{ unitPrice.mapay }}
 							<span>×{{ goods.goodsCamount }}</span>
 						</h4>
 					</div>
@@ -317,6 +317,7 @@
 				temp: '',
 				contractTemPmode:'',
 				userinfoOcode:1,
+				checkModifyAudit:"",  // 是否授权
 				goodsClass:''  //商品类型
 			};
 		},
@@ -331,7 +332,7 @@
 			this.secondaryColor = `#${this.$qj.storage.get('secondaryColor')}` || this.baseColor;
 			this.getQY()
 			this.query = this.$state.order;
-	
+			this.searchStatus()
 			
 		},
 		computed: {
@@ -381,6 +382,27 @@
 			}
 		},
 		methods: {
+			// 查询 认证授权 状态
+			searchStatus() {
+				let that = this
+				let paramsStatus = {}
+				paramsStatus.userCode = $storage.get('loginInfor').userInfoCode
+				that.$qj
+					.http(that.$qj.domain)
+					.get(userapplyStateAndAuth, paramsStatus)
+					.then(res => {
+						console.log("认证授权状态4444444，",res)
+						// that.channelCode = res.userinfoChannelcode
+						// that.partnerType = res.partnerType
+						console.log(that.partnerType,'that.partnerType')
+						if (res.checkModifyAudit == '3') {
+							that.checkModifyAudit = "3"
+						}
+					// 初始化订单数据
+						that.initOrderData(that.temp);
+						this.initPayMethods();
+					});
+			},
 			//查询权益
 			getQY(){
 				this.$qj
