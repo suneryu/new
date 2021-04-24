@@ -290,7 +290,7 @@
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			this.secondaryColor = `#${this.$qj.storage.get('secondaryColor')}` || this.baseColor;
-			this.initPayMethods();
+			// this.initPayMethods();
 			this.query = this.$state.order;
 			// this.searchStatus()
 			// this.accountsSumPrice()
@@ -351,7 +351,7 @@
 			searchStatus() {
 				let that = this
 				let paramsStatus = {}
-				paramsStatus.userCode = this.userInfoCode
+				paramsStatus.userCode = $storage.get('loginInfor').userInfoCode
 				this.$qj
 					.http(this.$qj.domain)
 					.get(userapplyStateAndAuth, paramsStatus)
@@ -583,8 +583,10 @@
 				this.$qj
 					.http(this.$qj.domain)
 					.post(getContractByContractBillcode, options).then(res => {
+						this.goodsClass = res.goodsClass
 						this.shoppingItems = []
 						this.discountMoney = 0
+						this.initPayMethods();
 						res.goodsList.forEach(item=>{
 							if(item.goodsClass==1 && res.contractType == 39){
 								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
