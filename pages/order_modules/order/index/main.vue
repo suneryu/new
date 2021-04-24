@@ -214,6 +214,7 @@ export default {
 				this.current = Number(dataState);
 			}
 			console.log(this.dataState,'-----状态')
+			console.log(this.current,'-----呜呜呜呜态')
 			
 			let params = {
 				page: this.page,
@@ -235,6 +236,8 @@ export default {
 				delete params.dataStateBuy;
 				delete params.contractAppraise;
 			}
+			
+			console.log('hahahh ,',this.dataState)
 			if( this.dataState ==0 ){
 				delete params.dataState;
 					params.dataState == 1;
@@ -246,7 +249,10 @@ export default {
 					if( this.dataState == -1 ){
 							delete params.dataState;
 						}
-						
+						if(params.dataStatestr == 2 ){
+							delete params.dataState;
+							params.dataState = 1;
+						}
 			this.$qj
 				.http(this.$qj.domain)
 				.get(myOrder.queryContractPage, params)

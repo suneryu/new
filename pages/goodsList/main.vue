@@ -272,6 +272,8 @@
 						if(this.userinfoOcode == null || this.userinfoOcode ==''){
 							this.userinfoOcode = 1
 						}
+						this.initSearchParams();
+						this.commonMounted();
 					})
 			},
 			// 查询 认证授权 状态
@@ -289,8 +291,7 @@
 							that.checkModifyAudit = "3"
 						}
 						this.getQY();
-					this.initSearchParams();
-					this.commonMounted();
+					
 					});
 			},
 
