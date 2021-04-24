@@ -50,8 +50,8 @@
 												<div class="list-count">
 													<div 
 														style='font-size: 12px;'>
-														<span
-															style='color: #000000;'>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
+														<span style='color: #000000;' >{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1'> 采购价：{{ unitPrice.obpay }}{{ (item.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 													</div>
 													<view class="list-right-container" v-if="itemList.contractType != 41">
 														<div class="list-add">
@@ -89,7 +89,7 @@
 							<div class='goodsPrice-item'>
 								<span>组合优惠：</span>
 								<!-- <span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span> -->
-								<span>{{ unitPrice.obpay }}0{{ unitPrice.mapay }}</span>
+								<span>{{ unitPrice.obpay }}{{discountMoney}}{{ unitPrice.mapay }}</span>
 							</div>
 						</div>
 					</li>
@@ -98,7 +98,7 @@
 			<div class='totalPrice'>
 				<div style='width: 70%;float: left;padding: 20rpx;box-sizing: border-box;'>应付金额：
 					<!-- <span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice}}{{ unitPrice.mapay }}</span> -->
-					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{totalPrice}}{{ unitPrice.mapay }}</span>
+					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{(totalPrice-discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
 				</div>
 				<div class='goPay' @click='toSettle'>去结算</div>
 			</div>
@@ -159,7 +159,9 @@
 				checkModifyAudit: "",
 				userInfoCode: "",
 				dataLength: "",
-				contractBillcode: ''
+				contractBillcode: '',
+				discountMoney:0,
+				
 
 			};
 		},
@@ -175,7 +177,8 @@
 			// this.commonMounted(true, true);
 		},
 		onLoad(options) {
-			this.getContract(options.code)
+			// this.getContract(options.code)
+			this.contractBillcode = options.code
 		},
 		mounted() {
 			this.userinfoType = $storage.get('loginInfor').userinfoType;
@@ -201,6 +204,7 @@
 						if (this.userinfoOcode == null || this.userinfoOcode == '') {
 							this.userinfoOcode = 1
 						}
+						this.getContract(this.contractBillcode)
 					})
 			},
 			// 查询 认证授权 状态
@@ -227,12 +231,17 @@
 					.post(getContractByContractBillcode, {
 						contractBillcode: code
 					}).then(res => {
+						this.discountMoney = 0
 						res.goodsList.forEach(item=>{
 							item.itemChecked = false
+							if(item.goodsClass==1){
+								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+							}
 						})
+						this.discountMoney = this.discountMoney.toFixed(2)
 						this.listItems = []
 						this.listItems.push(res)
-						this.totalPrice = res.dataBmoney
+						this.totalPrice = res.contractInmoney
 					})
 			},
 

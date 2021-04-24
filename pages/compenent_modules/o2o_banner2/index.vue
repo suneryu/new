@@ -53,7 +53,7 @@ import {
 	queryNewUserinfoPageByDealerqt
 	} from '@/api/interfaceHDB.js';
 export default {
-  props: ['skuList'],
+  props: ['skuList','goodsClass'],
   data() {
     return {
       goodsinfor: '',
@@ -67,7 +67,7 @@ export default {
 	  userInfoCode:"",
 	  userinfoOcode: 1, //权益值
 	  userPhone:"" ,  //手机号
-	 goodsClass:''
+	 // goodsClass:''
     }
   },
   updated() {
@@ -105,7 +105,6 @@ export default {
   },
   onLoad(options) {
   // onLoad() {
-	console.log("详情页加载的数据，",options)
     Object.assign(this.$data, this.$options.data()) //初始化数据
     let pages = getCurrentPages()
     let prevpage = pages[0]
@@ -123,7 +122,7 @@ export default {
 	 console.log(this.userPhone,'this.userPhone')
 	 console.log(this.userInfoCode,'this.userInfoCode')
 	 console.log(this.userinfoType,'this.userinfoType')
-	 this.goodsClass = $storage.get("goodsClass")
+	 // this.goodsClass = $storage.get("goodsClass")
 	 console.log('当前商品类型---',this.goodsClass)
   },
   mounted() {

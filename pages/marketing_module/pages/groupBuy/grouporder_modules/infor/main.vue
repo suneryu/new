@@ -115,7 +115,7 @@
     <div class="orderDetail-info">
       <p>订单编号：{{items.contractBillcode}}</p>
       <p>下单时间：{{gmtCreate}}</p>
-      <p>支付方式：在线支付</p>
+      <p>支付方式：{{items.contractPmode == '0' ? '在线支付' : items.contractPmode=='1'?'线下支付':'信用支付'}}</p>
       <!-- <p>支付时间：2018-10-9  00:10:20</p> -->
       <!-- <p>配送方式：圆通快递</p> -->
       <!-- <p>发票类型：不开发票</p> -->
@@ -123,8 +123,12 @@
     <div class="orderDetail-price">
       <p>
         商品总额
-        <span>{{unitPrice.obpay}}{{items.dataBmoney}}{{unitPrice.mapay}}</span>
+        <span>{{unitPrice.obpay}}{{items.contractInmoney}}{{unitPrice.mapay}}</span>
       </p>
+	  <p>
+	    优惠总额
+	    <span>{{unitPrice.obpay}}{{items.goodsPmoney}}{{unitPrice.mapay}}</span>
+	  </p>
       <p>
         运费
         <span>{{unitPrice.obpay}}{{items.goodsLogmoney}}{{unitPrice.mapay}}</span>

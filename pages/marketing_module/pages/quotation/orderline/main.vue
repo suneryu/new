@@ -29,7 +29,8 @@
 						<h4>
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
-								<span style='margin-left: 4px;' :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#000000' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1'>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 							</div>
 							<span>×{{ goods.goodsNum }}</span>
 						</h4>
@@ -90,13 +91,13 @@
 			<div class='goodsPrice-item'>
 				<span>组合优惠：</span>
 				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
-				<span>{{ unitPrice.obpay }}0{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{discountMoney}}{{ unitPrice.mapay }}</span>
 			</div>
 		</div>
 		<div class="accounts-sum">
 			<p>
 				应付金额:
-				<i>{{ unitPrice.obpay }}{{ allPrice }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{ (allPrice-discountMoney).toFixed(2) }}{{ unitPrice.mapay }}</i>
 				<!-- <i>{{ unitPrice.obpay }}{{ Number(userinfoOcode)*Number(allPrice)  }}{{ unitPrice.mapay }}</i> -->
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
@@ -256,7 +257,8 @@
 				userinfoOcode: 1, //权益值
 				userPhone:"" ,  //手机号
 				pricesetCGprice:'', //采购价格
-				partnerType:0   //信用额度
+				partnerType:0,   //信用额度
+				discountMoney:0,
 			};
 		},
 		onLoad(options) {
@@ -582,8 +584,15 @@
 					.http(this.$qj.domain)
 					.post(getContractByContractBillcode, options).then(res => {
 						this.shoppingItems = []
+						this.discountMoney = 0
+						res.goodsList.forEach(item=>{
+							if(item.goodsClass==1){
+								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+							}
+						})
+						this.discountMoney = this.discountMoney.toFixed(2)
 						this.shoppingItems.push(res)
-						this.allPrice = res.dataBmoney
+						this.allPrice = res.contractInmoney
 						this.freight = res.freight == null ?0:res.freight
 						this.goodsClass = res.goodsClass
 					})
@@ -845,8 +854,12 @@
 							if (res.dataObj.contractBillcode) {
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);
-								this.$qj.router.replace('pay/paySelect');
-								
+								// this.$qj.router.replace('pay/paySelect');
+								if(this.contractPmode == '0'){ // 线上
+									this.$qj.router.replace('pay/paySelect');
+								}else{
+									this.$qj.router.replace('order_modules/order/index');
+								}
 								// if(this.goodsClass == '2'){ //耗材订单
 								// 	   let options = {
 								// 			url: 'pay/payhaocai',

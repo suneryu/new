@@ -536,6 +536,7 @@
 					this.goodsClass = res.goodsClass
 					this.goodsnum = res.goodsMinnum
 					this.goodsCode = res.goodsCode;
+					this.goodsPrice = res.pricesetNprice
 					this.ginfoCode = res.ginfoCode && res.ginfoCode;
 					//拼团请求快速成团接口
 					if (res.goodsType == '25') {
@@ -605,7 +606,8 @@
 					}
 					this.specsList = this.skuList.skuName && this.skuList.skuName.split('/');
 					this.skuId = this.skuList && this.skuList.skuId;
-					this.goodsPrice = this.skuList.pricesetNprice && (this.skuList.pricesetNprice * 1).toFixed(2);
+					// this.goodsPrice = this.skuList.pricesetNprice && (this.skuList.pricesetNprice * 1).toFixed(2);
+					console.log(this.skuList.pricesetNprice,66666666666)
 					this.goodsInforbox = res;
 					this.goodsRemark = res.goodsRemark;
 					this.pntreeCode = res.pntreeCode;
