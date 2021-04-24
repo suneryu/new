@@ -34,7 +34,7 @@
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
-		  <p class="price1"  v-else>
+		  <p class="price1"   v-if=" pricesetNprice && pricesetNprice != 'NaN' && userinfoType == '2' && checkModifyAudit !='3'">
 		    商品价：{{ unitPrice.obpay }}
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
