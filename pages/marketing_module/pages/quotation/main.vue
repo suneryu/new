@@ -141,7 +141,7 @@ export default {
 			let params = {
 				code: item
 			}
-			$router.replace("marketing_module/pages/quotation/quotationDetail",params)
+			$router.push("marketing_module/pages/quotation/quotationDetail",params)
 		},
 		getNavBarHeight(h) {
 			this.topDistance = h;

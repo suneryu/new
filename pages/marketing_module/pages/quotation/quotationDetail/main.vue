@@ -402,7 +402,7 @@
 					contractBillcode:this.contractBillcode
 				}
 				this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', params).then(res=>{
-					$router.push("marketing_module/pages/quotation/orderline",params)
+					$router.replace("marketing_module/pages/quotation/orderline",params)
 				})
 			}
 		}
