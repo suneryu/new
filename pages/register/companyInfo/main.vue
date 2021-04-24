@@ -333,6 +333,7 @@
 							this.userInfoCode = res.userinfoCode;
 							this.userinfoId = res.userinfoId
 							this.memoauthFileurl = this.$qj.domain + res.userinfoCert1Url
+							// this.memoauthFileurl = this.$qj.domain + res.userinfoCert1Url
 
 							this.registerParams = {
 								userinfoCompname: res.userinfoCompname,
