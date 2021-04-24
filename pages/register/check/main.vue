@@ -153,7 +153,8 @@
 				this.imgBusiness = this.$qj.domain + this.registerParams.imgBusiness;
 				this.imgBusinessHttp = this.registerParams.imgBusiness;
 				
-				if(this.registerParams.memoauthFileurl !='1'){
+				console.log('this.registerParams.memoauthFileurl',this.registerParams.memoauthFileurl)
+				if(this.registerParams.memoauthFileurl != null && this.registerParams.memoauthFileurl !='1'){
 					this.memoauthFileurl = this.$qj.domain + this.registerParams.memoauthFileurl;
 				}else{
 					this.memoauthFileurl  = this.aaaa
@@ -257,6 +258,11 @@
 					this.$qj.message.alert('企业已授权，请不要重复提交');
 					return;
 				}
+				if(this.checkModifyAudit == 6){
+					this.$qj.message.alert('授权申请中，请不要重复提交');
+					return;
+				}
+				
 
 				if (!this.imgBusinessHttp) {
 					this.$qj.message.alert('请上传授权书');
