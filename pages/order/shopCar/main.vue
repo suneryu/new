@@ -742,7 +742,7 @@
 									this.shoppingItems.map((v, k) => {
 										v.shoppingpackageList.map(vk => {
 											vk.shoppingGoodsList.map((val, index) => {
-												this.shoppingCountPrice += (val.goodsClass=='1'?(val.pricesetNprice*this.userinfoOcode).toFixed(2):val.pricesetNprice) * val.goodsCamount;
+												this.shoppingCountPrice += (val.goodsClass=='1' && this.checkModifyAudit == 3?(val.pricesetNprice*this.userinfoOcode).toFixed(2):val.pricesetNprice) * val.goodsCamount;
 											});
 										});
 										this.shoppingCountPrice = this.shoppingCountPrice;
