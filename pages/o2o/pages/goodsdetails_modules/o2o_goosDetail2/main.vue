@@ -431,7 +431,7 @@
 			// 查询 认证授权 状态
 			searchStatus() {
 				let paramsStatus = {}
-				paramsStatus.userCode = this.userInfoCode
+				paramsStatus.userCode = $storage.get('loginInfor').userInfoCode
 				this.$qj
 					.http(this.$qj.domain)
 					.get(userapplyStateAndAuth, paramsStatus)
