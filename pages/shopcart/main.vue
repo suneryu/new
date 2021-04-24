@@ -11,7 +11,7 @@
 			</view>
 			<!-- 循环遍历类购物车中商品类型 -->
 			<div v-if="listItems.length > 0">
-				<div v-for='(sanci,index1) in listItems'>
+				<div v-for='(sanci,index1) in listItems' :key="index1">
 					<ul :class="{addmargin:index1 === dataLength}">
 						<li v-for="(listItem, listIndex) in listItems[index1]" :key="listIndex">
 							<div v-for="(list, liIndex) in listItem.shoppingpackageList" :key="liIndex">
