@@ -73,7 +73,7 @@
 							<span v-if="getgoodtypes == '24'">团购价</span>
 							<span v-if="getgoodtypes == '25'">拼团价</span>
 							<span v-if="getgoodtypes == '26'">秒杀价</span>
-							{{ unitPrice.obpay }}{{goodsClass==1?(Number(goodsPrice)*Number(userinfoOcode)).toFixed(2):goodsPrice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goodsClass==1 && checkModifyAudit == 3?(Number(goodsPrice)*Number(userinfoOcode)).toFixed(2):goodsPrice }}{{ unitPrice.mapay }}
 						</h3>
 						已选择:
 						<span id="goodsSku">{{ specsList }}</span>
@@ -125,6 +125,7 @@
 		formatTimes,
 		formatPhone
 	} from '@/utils/prototype/date.js';
+	import { userapplyStateAndAuth } from '@/api/interface.js';
 	// import { base64src } from "@/utils/base64src.js";
 	import {
 		$storage,
@@ -227,7 +228,8 @@
 				contractProperty:'',
 				userInfoCode:'',
 				warehouseName:'',
-				userinfoOcode:1
+				userinfoOcode:1,
+				checkModifyAudit:1
 
 			};
 		},
@@ -377,6 +379,7 @@
 			this.baseColor = '#' + this.$state.baseColor;
 			this.getStore()
 			this.getQY()
+			this.searchStatus()
 		},
 		onShareAppMessage: function(res) {
 			let that = this;
@@ -424,6 +427,21 @@
 								this.userinfoOcode = 1;
 							}
 					})
+			},
+			// 查询 认证授权 状态
+			searchStatus() {
+				let paramsStatus = {}
+				paramsStatus.userCode = this.userInfoCode
+				this.$qj
+					.http(this.$qj.domain)
+					.get(userapplyStateAndAuth, paramsStatus)
+					.then(res => {
+						console.log("认证授权状态，",res)
+						if (res.checkModifyAudit == '3') {
+							this.checkModifyAudit = "3"
+						}
+			
+					});
 			},
 			navigateTo(options) {
 				this.$qj.router.push(options.url, options.query ? options.query : '');

@@ -65,7 +65,7 @@
 				</div>
 				<div class="accounts-info-money">
 					共{{ shoppingItem.goodsNum }}件，小计：
-					<span :style="{ color: baseColor }" v-if="shoppingItem.goodsMoney">{{ unitPrice.obpay }}{{ shoppingItem.contractInmoney }}{{ unitPrice.mapay }}</span>
+					<span :style="{ color: baseColor }" v-if="shoppingItem.goodsMoney">{{ unitPrice.obpay }}{{shoppingItem.contractType == 39 ?shoppingItem.contractInmoney:shoppingItem.contractMoney }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
@@ -592,7 +592,7 @@
 						})
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.shoppingItems.push(res)
-						this.allPrice = res.contractInmoney
+						this.allPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
 						this.freight = res.freight == null ?0:res.freight
 						this.goodsClass = res.goodsClass
 					})

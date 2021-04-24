@@ -9,7 +9,7 @@
 						<div class="list-r">
 							<div class="list-con">
 								<p>{{ items.goodsName }}</p>
-								<div>{{ unitPrice.obpay }}{{ items.pricesetNprice }}{{ unitPrice.mapay }}</div>
+								<div>{{ unitPrice.obpay }}{{ items.pricesetNprice}}{{ unitPrice.mapay }}</div>
 							</div>
 							<h3>{{ items.skuName }}</h3>
 							<div class="list-add">
@@ -115,7 +115,8 @@ export default {
 			afterArray: ['仅退款', '退货退款'],
 			userImgurl: require('../../../../static/img/mine/default_header.png'),
 			menuJspath: '', //退货详情列表
-			aaa:''
+			aaa:'',
+			userinfoOcode:1
 		};
 	},
 	components: {
@@ -145,6 +146,7 @@ export default {
 		}
 	},
 	mounted() {
+		this.getQY()
 		this.baseColor = '#' + this.$state.baseColor;
 		this.$state.orderMenu.map(v => {
 			if (v.menuAction == 'refundInfor') {
@@ -152,7 +154,7 @@ export default {
 			}
 		});
 		this.array = [];
-		// this.items = this.aaa
+		// this.items = this.aaa'o'
 		this.items = this.$root.$mp.query;
 		this.sumCont = this.items.goodsCamount;
 		if (this.items.dataState == '3' || this.items.dataState == '4') {
@@ -160,6 +162,7 @@ export default {
 		} else {
 			this.refundType = 'B01';
 		}
+		this.items.goodsClass==1? Number(this.items.pricesetNprice)**Number(this.userinfoOcode) : 
 		this.pricesetNprice = this.items.pricesetNprice * this.items.goodsCamount;
 		this.beforePrice = this.items.pricesetNprice * this.items.goodsCamount;
 		this.newPrice = this.items.pricesetNprice * this.items.goodsCamount;
@@ -175,6 +178,21 @@ export default {
 		}
 	},
 	methods: {
+		//查询权益
+		getQY() {
+			this.$qj
+				.http(this.$qj.domain)
+				.get(queryNewUserinfoPageByDealerqt, {
+					userinfoPhone: $storage.get('loginInfor').userPhone
+				})
+				.then(res => {
+					console.log('权益值', res.rows[0].userinfoOcode)
+					this.userinfoOcode = res.rows[0].userinfoOcode
+					if (this.userinfoOcode == null || this.userinfoOcode == '') {
+						this.userinfoOcode = 1
+					}
+				})
+		},
 		bindPickerChange(e) {
 			this.pickerValue = this.array[Number(e.target.value)];
 		},

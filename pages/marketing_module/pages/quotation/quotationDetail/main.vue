@@ -51,7 +51,7 @@
 													<div 
 														style='font-size: 12px;'>
 														<span style='color: #000000;' >{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
-														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1'> 采购价：{{ unitPrice.obpay }}{{ (item.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 													</div>
 													<view class="list-right-container" v-if="itemList.contractType != 41">
 														<div class="list-add">
@@ -80,7 +80,7 @@
 						<div class='goodsPrice'>
 							<div class='goodsPrice-item'>
 								<span>商品金额：</span>
-								<span>{{ unitPrice.obpay }}{{itemList.contractInmoney}}{{ unitPrice.mapay }}</span>
+								<span>{{ unitPrice.obpay }}{{itemList.contractType == 39?itemList.contractInmoney:itemList.contractMoney}}{{ unitPrice.mapay }}</span>
 							</div>
 							<div class='goodsPrice-item'>
 								<span>运费：</span>
@@ -241,7 +241,7 @@
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.listItems = []
 						this.listItems.push(res)
-						this.totalPrice = res.contractInmoney
+						this.totalPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
 					})
 			},
 
