@@ -51,7 +51,7 @@
 													<div 
 														style='font-size: 12px;'>
 														<span style='color: #000000;' >{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
-														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1 && itemList.contractType == 39'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1 && itemList.contractType == 39 && checkModifyAudit == 3'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 													</div>
 													<view class="list-right-container" v-if="itemList.contractType != 41">
 														<div class="list-add">
@@ -111,7 +111,8 @@
 		getContractByContractBillcode,
 		updateOcContractGoodsGoodNum,
 		deleteOcContractGoods,
-		cancelContractForAt
+		cancelContractForAt,
+		userapplyStateAndAuth
 	} from '@/api/interface.js';
 	import {
 		queryNewUserinfoPageByDealerqt,
@@ -204,7 +205,7 @@
 						if (this.userinfoOcode == null || this.userinfoOcode == '') {
 							this.userinfoOcode = 1
 						}
-						this.getContract(this.contractBillcode)
+						this.searchStatus()
 					})
 			},
 			// 查询 认证授权 状态
@@ -220,6 +221,7 @@
 						if (res.checkModifyAudit == '3') {
 							that.checkModifyAudit = "3"
 						}
+						this.getContract(this.contractBillcode)
 
 					});
 			},
@@ -234,7 +236,7 @@
 						this.discountMoney = 0
 						res.goodsList.forEach(item=>{
 							item.itemChecked = false
-							if(item.goodsClass==1 && res.contractType == 39){
+							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3){
 								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 							}
 						})
