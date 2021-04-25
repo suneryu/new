@@ -477,7 +477,7 @@
 			/**
 			 * 初始化和钱有关的变量
 			 */
-			initPriceData() {
+			initPriceData() { 
 				// 初始化涉及到钱的变量，防止页面从后台到前台的时候在原有基础上再次计算
 				this.totalDiscountPrice = 0;
 				this.shoppingCountPrice = 0;
@@ -853,25 +853,31 @@
 							if (res.errorCode == 'nologin') {
 								return;
 							}
+							//更新订单状态
+							this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
+							})
 							if (res.dataObj.contractBillcode) {
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);
 								// this.$qj.router.replace('pay/paySelect');
-								if(this.contractPmode == '0'){ // 线上
-									this.$qj.router.replace('pay/paySelect');
-								}else{
-									this.$qj.router.replace('order_modules/order/index');
-								}
-								// if(this.goodsClass == '2'){ //耗材订单
-								// 	   let options = {
-								// 			url: 'pay/payhaocai',
-								// 			query: {
-								// 				// userPhone: this.userPhone || this.inputUserPhone 
-								// 			}
-								// 	   };
-								// 	   this.navigateTo(options);
+								
+								if(this.goodsClass == '2'){ //耗材订单
+								console.log(111111)
+									   let options = {
+											url: 'pay/payhaocai',
+											query: {
+												// userPhone: this.userPhone || this.inputUserPhone 
+											}
+									   };
+									   this.$qj.router.replace('pay/payhaocai');
 									
-								// }
+								}else{
+									if(this.contractPmode == '0'){ // 线上
+										this.$qj.router.replace('pay/paySelect');
+									}else{
+										this.$qj.router.replace('order_modules/order/index');
+									}
+								}
 								// if(this.goodsClass == '1'){ //零配件
 								// if(this.contractPmode == '0'){ // 线上
 								

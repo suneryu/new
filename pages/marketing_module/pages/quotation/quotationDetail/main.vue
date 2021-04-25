@@ -401,9 +401,9 @@
 				let params = {
 					contractBillcode:this.contractBillcode
 				}
-				this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', params).then(res=>{
+				// this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', params).then(res=>{
 					$router.replace("marketing_module/pages/quotation/orderline",params)
-				})
+				// })
 			}
 		}
 	};
