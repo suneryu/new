@@ -744,6 +744,7 @@
 									}
 								})
 								.then(() => {
+									this.shoppingCountPrice = 0
 									this.shoppingItems.map((v, k) => {
 										v.shoppingpackageList.map(vk => {
 											vk.shoppingGoodsList.map((val, index) => {
