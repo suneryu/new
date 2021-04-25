@@ -258,7 +258,9 @@
 				userPhone:"" ,  //手机号
 				pricesetCGprice:'', //采购价格
 				partnerType:0,   //信用额度
-				discountMoney:0,
+				discountMoney:0, // 权益优惠
+				discountMoneyBak:0, // 确认单权益优惠
+				
 			};
 		},
 		onLoad(options) {
@@ -591,6 +593,9 @@
 							if(item.goodsClass==1 && res.contractType == 39){
 								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 							}
+							if(item.goodsClass==1 && res.contractType == 41){
+								this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+							}
 						})
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.shoppingItems.push(res)
@@ -854,8 +859,29 @@
 								return;
 							}
 							//更新订单状态
+							let changeTotalMoney = 0
 							this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
 							})
+							//确认单改价
+							if(this.shoppingItems[0].contractType == 41){
+								this.$qj.http(this.$qj.domain).post('/web/oc/contract/syncContractState.json', {contractBillcode:res.dataObj.contractBillcode}).then(res=>{
+								if(res.success){
+									changeTotalMoney = Number(res.dataObj.dataBmoney) - Number(this.shoppingItems[0].contractInmoney) + Number(this.discountMoneyBak)
+									let json = {
+										dataBmoney: (changeTotalMoney +Number(this.allPrice)).toFixed(2),
+										contractMoney: (changeTotalMoney +Number(this.allPrice)).toFixed(2),
+										goodsMoney: (changeTotalMoney +Number(this.allPrice)).toFixed(2),
+										contractBillcode: res.dataObj.contractBillcode,
+									}
+									//调价接口
+									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+										
+									})
+								}
+							})
+							}
+							
+							
 							if (res.dataObj.contractBillcode) {
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);
