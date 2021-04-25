@@ -34,7 +34,17 @@
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
-		  <p class="price1"   v-if=" pricesetNprice && pricesetNprice != 'NaN' && userinfoType == '2' && checkModifyAudit !='3'">
+		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit !='3' && goodsClass=='1'">
+		    商品价：{{ unitPrice.obpay }}
+		    <span>{{ pricesetNprice }}</span>
+		    {{ unitPrice.mapay }}
+		  </p>
+		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit !='3' && goodsClass!='1'">
+		    商品价：{{ unitPrice.obpay }}
+		    <span>{{ pricesetNprice }}</span>
+		    {{ unitPrice.mapay }}
+		  </p>
+		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit =='3' && goodsClass!='1'">
 		    商品价：{{ unitPrice.obpay }}
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
@@ -121,6 +131,7 @@ export default {
       backgroundColor: '#' + this.$state.baseColor,
       backgroundColor: '#07913B'
     })
+	
   },
   created(){
 	 this.userinfoType = $storage.get('loginInfor').userinfoType;
@@ -131,6 +142,8 @@ export default {
 	 console.log(this.userinfoType,'this.userinfoType')
 	 // this.goodsClass = $storage.get("goodsClass")
 	 console.log('当前商品类型---',this.goodsClass)
+	 this.getQY();
+	 this.searchStatus();
   },
   mounted() {
 	 
@@ -150,8 +163,7 @@ export default {
 	}
 	 
 	console.log(this.userPhone,'手机号=---')
-	this.getQY();
-	this.searchStatus();
+	
 	if(this.userinfoType == '2' && this.checkModifyAudit == '3'){
 		this.price = Number(this.pricesetNprice) * this.userinfoOcode
 	}
@@ -162,7 +174,7 @@ export default {
 	  	this.$qj
 	  		.http(this.$qj.domain)
 	  		.get(queryNewUserinfoPageByDealerqt, {
-	  			userinfoPhone: this.userPhone
+	  			userinfoPhone: $storage.get('loginInfor').userPhone
 	  		})
 	  		.then(res => {
 				console.log("-----",res)
@@ -177,7 +189,7 @@ export default {
 	  // 查询 认证授权 状态
 	  searchStatus() {
 	  	let paramsStatus = {}
-	  	paramsStatus.userCode = this.userInfoCode
+	  	paramsStatus.userCode = $storage.get('loginInfor').userInfoCode
 	  	this.$qj
 	  		.http(this.$qj.domain)
 	  		.get(userapplyStateAndAuth, paramsStatus)
