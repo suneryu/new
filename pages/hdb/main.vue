@@ -92,6 +92,19 @@
 				</li>
 			</ul>
 		</div>
+		<div class="user-list">
+			<ul>
+				<li >
+					<div class="user-list-item" @click="getPrivacy(2)">
+						<div>
+							<p>新增地址</p>
+						</div>
+						<p class='lookDetail'>查看详情</p>
+						<i class="iconfont fr">&#xe61d;</i>
+					</div>
+				</li>
+			</ul>
+		</div>
 		<vueTabBar :selectNavIndex="selectNavIndex" :baseColor="baseColor" :footerMenu="footerMenu" />
 	</div>
 </template>
@@ -324,6 +337,12 @@ export default {
 			if(data == 1){
 				console.log("跳转至关于海德堡详情页")
 				$router.push("hdb/personCenter/aboutHdb");
+			}
+			if(data == 2){
+				console.log("跳转至新增地址详情页")
+				this.$qj.router.push('user_modules/address/manage', {
+				     json: 1
+				    });
 			}
 			
 		},
