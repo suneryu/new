@@ -35,8 +35,8 @@
 								<div class="list-count">
 									<div :style="{ color: '#d66377'}"
 										style='font-size: 14px;'>
-										<!-- <span>{{ item.pricesetNprice }}元</span> -->
-										<span>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
+										<span>{{ item.pricesetNprice }}元</span>
+										<!-- <span>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span> -->
 										<!-- <span style='margin-left: 5px;'
 											v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span> -->
 									</div>

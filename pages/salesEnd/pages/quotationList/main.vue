@@ -146,7 +146,7 @@ export default {
 					page: this.page,
 					rows: this.rows,
 					childFlag: true,
-					contractType: '39,40',
+					contractType: '39,41',
 					// memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
 				};
 				if(this.dataState != ''){
@@ -155,7 +155,8 @@ export default {
 			
 				this.$qj
 					.http(this.$qj.domain)
-					.get(queryContractPageC, params)
+					// .get(queryContractPageC, params)
+					.get('/web/oc/contract/queryContractPagePlat.json', params)
 					.then(res => {
 						// console.log(res,111111111111111111111)
 						// this.orderList = res.list

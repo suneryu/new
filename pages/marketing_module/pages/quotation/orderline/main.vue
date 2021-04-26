@@ -868,9 +868,9 @@
 								if(res.success){
 									changeTotalMoney = Number(res.dataObj.dataBmoney) - Number(this.shoppingItems[0].contractInmoney) + Number(this.discountMoneyBak)
 									let json = {
-										dataBmoney: (changeTotalMoney +Number(this.allPrice)).toFixed(2),
-										contractMoney: (changeTotalMoney +Number(this.allPrice)).toFixed(2),
-										goodsMoney: (changeTotalMoney +Number(this.allPrice)).toFixed(2),
+										dataBmoney: (changeTotalMoney + Number(this.allPrice)).toFixed(2),
+										contractMoney: (changeTotalMoney + Number(this.allPrice)).toFixed(2),
+										goodsMoney: (changeTotalMoney + Number(this.allPrice)).toFixed(2),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口
