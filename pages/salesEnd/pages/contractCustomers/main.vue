@@ -17,7 +17,7 @@
 						<div style="width: 80%; font-size: 17px; color: #004178;">{{item.userinfoCompname}}</div>
 						<div style="width: 20%; position: relative;">
 							<i class="iconfont" v-if="item.userinfoType == 2"
-								style="font-size: 12px;color: #03BF16;top: -6px;position: absolute;right: -5px;z-index: 999;">&#x3bf16;</i>
+								style="font-size: 12px;color: #03BF16;top: -6px;position: absolute;right: -5px;z-index: 9;">&#x3bf16;</i>
 							<button class="buttonClass" v-if="item.userinfoType == 2">企业</button>
 							<button class="buttonClass" v-else="item.userinfoType == 1">个人</button>
 						</div>
@@ -76,17 +76,20 @@
 		mounted() {
 			this.getdata()
 		},
-		// onUnload() {
-		// 	clearInterval(this.timer)
-		// },
-		// onShow() {
-		// 	console.log("home-监听页面显示");
-		// 	//执行频率：game（20ms/次）、ui（60ms/次）、normal（200ms/次）
-		// 	this.timer = setInterval(function() {
-		// 		uni.hideKeyboard(); //隐藏软键盘
-		// 		// plus.key.hideSoftKeybord();
-		// 	}, 60);
-		// },
+		onUnload() {
+			clearInterval(this.timer)
+		},
+		onHide() {
+			clearInterval(this.timer)
+		},
+		onShow() {
+			console.log("home-监听页面显示");
+			//执行频率：game（20ms/次）、ui（60ms/次）、normal（200ms/次）
+			this.timer = setInterval(function() {
+				uni.hideKeyboard(); //隐藏软键盘
+				// plus.key.hideSoftKeybord();
+			}, 60);
+		},
 		watch: {
 			show(value) {
 				if (value == false) {
