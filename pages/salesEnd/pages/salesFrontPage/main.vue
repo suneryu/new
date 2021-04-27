@@ -58,8 +58,26 @@
 		<div class="creatButton"
 			style="display: flex; justify-content: space-between; margin: 40rpx 20rpx 10rpx 20rpx;">
 			<button @click="add">创建报价单</button>
-			<button>邀请签约洽谈</button>
+			<button @click="invitation">邀请签约洽谈</button>
 		</div>
+		<div class="hd"  v-if='closeShow'>
+			<div class="handleClose">
+				<view class="qr-code">
+					<view class="box">
+						<canvas canvas-id='canvas-demo' class='demo' style="width:100%;height:60vh" @click="saveimg"></canvas>
+					</view>
+					<div class='img_box'>
+						<i class="cancel iconfont icon-shanchu2" @click="cancelCode" style="color: #ffffff;margin-top: -100rpx;font-size: 24px;"></i>
+					</div>
+				</view>
+				<div class="creatButton" style="display: flex; justify-content: center; margin: 40rpx 20rpx 10rpx 20rpx; position: absolute;
+				bottom: 0">
+					<button @click="handleClose1">关闭</button>
+				</div>
+			</div>
+		</div>
+		
+		
 	</div>
 </template>
 <script>
@@ -73,6 +91,7 @@
 	import vueTabBar from './vueTabBarHDB.vue';
 	import {
 		queryGroupBuyerPageByAG,
+		getWxMiniQRCode
 	} from '@/api/interfaceHDB.js';
 	import {
 		clearTimeout,
@@ -81,6 +100,7 @@
 	export default {
 		data() {
 			return {
+				closeShow:false,
 				tabName:["待确认","已完成","已取消"],
 				show: false,
 				selectNavIndex: 3,
@@ -107,7 +127,8 @@
 				columnApplicationIndex: [],
 				// 用户等级
 				userLevel: '',
-				userinfoType: "" //用户类型
+				userinfoType: "", //用户类型
+				miniQRCode:''
 			};
 		},
 		onLoad() {
@@ -161,6 +182,34 @@
 			vueTabBar
 		},
 		methods: {
+			handleClose1(){
+				this.closeShow = false;
+			},
+			// 邀请洽谈二维码
+			invitation(){
+				this.closeShow = true
+				let params = {
+				
+				};
+				
+					params.page = 'pages/goodsList/main';
+					params.scene = `c=${'18326154207'}`;
+					params.type = 'c';
+					// params.auto_color = "0";
+					// params.is_hyaline = "0"
+				
+				this.getErWeiMa(params)
+			},
+			getErWeiMa(params) {
+				http.post(getWxMiniQRCode, params).then(res => {
+					console.log('图片编码----',res)
+					if (res.success) {
+						this.miniQRCode = 'data:image/png;base64,' + res.dataObj.dataObj.toString('base64');
+						console.log('66666666-',this.miniQRCode)
+						// this.getImg()
+					}
+				});
+			},
 			add() {
 			   $router.push("salesEnd/pages/contractCustomers",)
 			},
@@ -168,72 +217,7 @@
 				console.log("我的客户")
 				$router.push("salesEnd/pages/myClients")
 			},
-			// myInfo(data) {
-			// 	if (data == 0) {
-			// 		console.log("跳转至我的发票")
-			// 		$router.push("hdb/personCenter/myInvoice");
-			// 	}
-
-			// 	if (data == 1) {
-			// 		console.log("跳转至用户协议")
-			// 		$router.push("hdb/personCenter/userAgreement");
-			// 	}
-
-			// 	if (data == 2) {
-
-			// 		if (this.userinfoType == '1') {
-			// 			uni.showModal({
-			// 				title: '提示',
-			// 				content: '您还不是企业用户，请先去认证',
-			// 				confirmColor: '#' + $storage.get('baseColor'),
-			// 				success(res) {
-			// 					let pages = getCurrentPages()
-			// 					if (res.confirm) {
-			// 						let currentPage = pages[pages.length - 1]
-			// 						let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
-			// 						$router.push('register/b2bRegisterCom')
-			// 					} else if (res.cancel) {
-			// 						if (pages.length > 1) {
-			// 							$router.back()
-			// 						}
-			// 					}
-			// 				}
-			// 			})
-			// 		} else {
-			// 			console.log("跳转至企业信息")
-			// 			$router.push("register/companyInfo");
-			// 		}
-
-
-			// 	}
-
-			// 	if (data == 3) {
-			// 		uni.showModal({
-			// 			title: '提示',
-			// 			content: '积分商城暂未开放！',
-			// 			confirmColor: '#' + $storage.get('baseColor'),
-			// 			success(res) {
-			// 				let pages = getCurrentPages()
-			// 				if (res.confirm) {
-			// 					// let currentPage = pages[pages.length - 1]
-			// 					// let redirectUrl = currentPage.route.replace('pages/', '').replace('/main', '')
-			// 					// $router.push('authorization')
-			// 				} else if (res.cancel) {
-
-			// 				}
-			// 			}
-			// 		})
-			// 		// console.log("跳转至积分商城")
-			// 		// $router.push("user_modules/user/pointsMall");
-
-			// 	}
-
-			// 	if (data == 4) {
-			// 		console.log("跳转至合约商城购物车")
-			// 		$router.push("hdb/personCenter/contractCar");
-			// 	}
-
-			// },
+	
 
 			getPrivacy(data) {
 				if (data == 0) {
@@ -546,5 +530,44 @@
 		color: #FFFFFF;
 		width: 45%;
 		background-color: #004178;
+	}
+	
+	.hd{
+		    position: absolute;
+		    /* z-index: 999; */
+		    top: 0;
+		    left: 0;
+		    bottom: 0;
+		    right: 0;
+		    margin: auto;
+		    width: 100%;
+		    height: 100%;
+		    background:rgba(0,0,0, .5);
+	}
+	.handleClose {
+		position: absolute;
+		z-index: 999;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		margin: auto;
+		width: 90%;
+		height: 65%;
+		background-color: #FFFFFF;
+		border-radius: 30rpx;
+	
+		div {
+			width: 93%;
+			margin: 30rpx 0 0 0;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+		}
+	
+		input {
+			width: 65%;
+			border: 1px solid;
+		}
 	}
 </style>
