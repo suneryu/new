@@ -27,7 +27,8 @@
 						<img :src="item.dataPic || userImgurl" />
 						<div class="list-box">	
 							<p>{{ item.goodsName }}</p>
-							<h5 :style="{ color: '#8d7c7a',textAlign:'left',fontSize:'12px',minHeight:'60rpx' }">{{ item.skuName }}</h5>
+							<h5 :style="{ color: '#8d7c7a',textAlign:'left',fontSize:'12px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }">{{ item.skuName }}</h5>
+							<h5 :style="{ color: '#8d7c7a',textAlign:'left',fontSize:'12px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }">{{ item.skuNo }}</h5>
 							<!-- <h3 :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h3> -->
 							<div style="margin: 10rpx 0 0 0;display: flex;height: 30rpx;justify-content: space-between;flex-wrap: nowrap;" >
 								<span class="originalPrice11">原价:{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
@@ -928,7 +929,8 @@
 								-webkit-line-clamp: 2;
 								overflow: hidden;
 								text-overflow: ellipsis;
-								margin: 10rpx;
+								margin-bottom: 10rpx;
+								white-space:nowrap;
 								// height: 70rpx;
 								line-height: 35rpx;
 							}

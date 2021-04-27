@@ -256,7 +256,7 @@
 			
 			$storage.set("goodsClass",options.goodsClass)
 			let that = this;
-			console.log('this.options...',that.$options)
+			console.log('this.options...',options)
 			console.log('this.goodsClass-------',options.goodsClass)
 			that.goodsClass = options.goodsClass
 			that.userInfor = $storage.get('loginInfor');

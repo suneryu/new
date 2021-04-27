@@ -379,6 +379,7 @@ export default {
 							});
 							listBak.push(aa)
 						})
+						
 						if (listBak.filter(val => val[0].rowsCheck === 0).length === listBak.length) {
 							this.countChecked = true;
 						} else {

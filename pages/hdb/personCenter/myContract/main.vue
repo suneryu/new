@@ -305,6 +305,7 @@ export default {
       $router.push("hdb/contractGoodsList", {
         scontractCode: items.scontractCode,
         scontractName: items.scontractName,
+		contractProperty:items.scontractId
       });
     },
     //查询合同附件的接口

@@ -33,6 +33,7 @@
 						<img :src="item.dataPic || userImgurl" />
 						<div class="list-box">
 							<p>{{ item.goodsName }}</p>
+							<p>{{ item.goodsNo }}</p>
 							<p v-if="userinfoType =='1' " class="noPrice">认证为企业用户可查看价格</p>
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="item.goodsClass != '1' && userinfoType=='2' && checkModifyAudit == '3' ">
@@ -976,7 +977,7 @@
 
 						.list-box {
 							padding: 0 30rpx;
-							height: 67px;
+							height: 150rpx;
 
 							h3 {
 								font-size: 32rpx;
@@ -989,7 +990,8 @@
 								-webkit-line-clamp: 2;
 								overflow: hidden;
 								text-overflow: ellipsis;
-								margin: 26rpx;
+								margin: 10rpx;
+								white-space: nowrap;
 								// height: 70rpx;
 								line-height: 35rpx;
 							}
