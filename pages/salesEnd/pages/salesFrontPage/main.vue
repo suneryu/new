@@ -22,7 +22,7 @@
 		</div>
 		<div class="user-order-title">
 			<span>我的预约合同</span>
-			<div @click="statusOrder">
+			<div @click="">
 				查看全部
 				<i class="iconfont">&#xe61d;</i>
 			</div>

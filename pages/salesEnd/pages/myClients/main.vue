@@ -9,40 +9,42 @@
 					clearabled="true" v-model="areaCode"></u-search>
 			</div>
 		</div>
-		<div v-for="(item,index) in company" :key="index">
-			<div style="height: 82px;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
-				<div style="display: flex;">
-					<div style="width: 80%; font-size: 17px; color: #004178;">{{item.userinfoCompname}}</div>
-					<div style="width: 20%; position: relative;">
-						<i class="iconfont" v-if="item.userinfoType == 2"
-							style="font-size: 12px;color: #03BF16;top: -6px;position: absolute;right: -5px;z-index: 999;">&#x3bf16;</i>
-						<button class="buttonClass" v-if="item.userinfoType == 2">企业</button>
-						<button class="buttonClass" v-else="item.userinfoType == 1">个人</button>
+		<div v-if="company.length > 0">
+			<div v-for="(item,index) in company" :key="index">
+				<div style="height: 82px;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
+					<div style="display: flex;">
+						<div style="width: 80%; font-size: 17px; color: #004178;">{{item.userinfoCompname}}</div>
+						<div style="width: 20%; position: relative;">
+							<i class="iconfont" v-if="item.userinfoType == 2"
+								style="font-size: 12px;color: #03BF16;top: -6px;position: absolute;right: -5px;z-index: 999;">&#x3bf16;</i>
+							<button class="buttonClass" v-if="item.userinfoType == 2">企业</button>
+							<button class="buttonClass" v-else="item.userinfoType == 1">个人</button>
+						</div>
 					</div>
-				</div>
-				<div style="display: flex; margin: 5px 0;">
-					<div style="width: 80%; font-size: 12px;">企业编码：
-						<span>{{item.companyCode}}</span>
+					<div style="display: flex; margin: 5px 0;">
+						<div style="width: 80%; font-size: 12px;">企业编码：
+							<span>{{item.companyCode}}</span>
+						</div>
+						<div style="width: 20%; font-size: 12px;text-align: right;">
+							<div class="authorization" style="color: #4CD964;"
+								v-if="item.userinfoType == 2 && item.checkModifyAudit == 3">已授权</div>
+							<div class="authorization" style="color: red;" v-else>未授权</div>
+						</div>
 					</div>
-					<div style="width: 20%; font-size: 12px;text-align: right;">
-						<div class="authorization" style="color: #4CD964;"
-							v-if="item.userinfoType == 2 && item.checkModifyAudit == 3">已授权</div>
-						<div class="authorization" style="color: red;"
-							v-else>未授权</div>
-					</div>
-				</div>
-				<div style="display: flex;font-size: 12px;margin: 10px 0;">
-					<div style="width: 40%;">联系人：
-						<span>{{item.userinfoCon}}</span>
-					</div>
-					<div style="width: 50%;font-size: 12px;">
-						<div class="phone">电话：
-							<span>{{item.userinfoPhone}}</span>
+					<div style="display: flex;font-size: 12px;margin: 10px 0;">
+						<div style="width: 40%;">联系人：
+							<span>{{item.userinfoCon}}</span>
+						</div>
+						<div style="width: 50%;font-size: 12px;">
+							<div class="phone">电话：
+								<span>{{item.userinfoPhone}}</span>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div class="goodsList-nulls" v-else><img :src="nullImg" /></div>
 	</div>
 
 </template>
@@ -66,7 +68,8 @@
 			return {
 				show: false,
 				company: [],
-				areaCode: ''
+				areaCode: '',
+				nullImg: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/noSearchResult.png',
 			}
 		},
 		mounted() {
@@ -130,6 +133,18 @@
 
 <style lang="less" scoped>
 	@import '@/node_modules/qj-mini-pages/libs/css/common.less';
+
+	.goodsList-nulls {
+		width: 100%;
+		margin-top: 200rpx;
+		text-align: center;
+
+		img {
+			width: 402rpx;
+			height: 337rpx;
+			margin: 0 auto;
+		}
+	}
 
 	.search-box {
 		background-color: #ffffff;
