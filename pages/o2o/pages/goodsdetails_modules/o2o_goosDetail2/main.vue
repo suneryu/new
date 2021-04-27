@@ -229,7 +229,8 @@
 				userInfoCode:'',
 				warehouseName:'',
 				userinfoOcode:1,
-				checkModifyAudit:1
+				checkModifyAudit:1,
+				goodsTopnum:'0'  //是否加倍 1是加倍
 
 			};
 		},
@@ -550,6 +551,7 @@
 					console.log(res.goodsType, 'res.goodsType------------');
 					console.log(res, 'res------------');
 					$storage.set('goodsType', res.goodsType);
+					this.goodsTopnum = res.goodsTopnum
 					this.goodsMinnum = res.goodsMinnum
 					this.goodsClass = res.goodsClass
 					this.goodsnum = res.goodsMinnum
@@ -704,16 +706,26 @@
 			//商品数量--
 			goodsReduce() {
 				if(this.goodsnum > this.goodsMinnum){
-					this.goodsnum--;
+					if(this.goodsTopnum  == 1 ){
+						this.goodsnum = this.goodsnum - this.goodsMinnum ;
+					}else{
+						this.goodsnum--;
+					}
+					
 					if (this.goodsnum < 1) {
 						this.goodsnum = 1;
 					}
 				}
 				
 			},
-			//商品数量++
+			//商品数量++ 判断是否加倍
 			goodsAdd() {
-				this.goodsnum++;
+				if(this.goodsTopnum  == 1 ){
+					this.goodsnum = this.goodsnum + this.goodsMinnum ;
+				}else{
+					this.goodsnum++
+				}
+				
 			},
 			//选择规格(n:第一层，index：第二层)
 			changespecList(n, inde, names) {

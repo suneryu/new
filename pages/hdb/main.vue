@@ -97,7 +97,7 @@
 				<li >
 					<div class="user-list-item" @click="getPrivacy(2)">
 						<div>
-							<p>新增地址</p>
+							<p>我的地址</p>
 						</div>
 						<p class='lookDetail'>查看详情</p>
 						<i class="iconfont fr">&#xe61d;</i>

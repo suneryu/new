@@ -145,7 +145,7 @@
 				items: [],
 				total: 0,
 				page: 1,
-				rows: 10,
+				rows: 20,
 				current: 0,
 				colorCurrent: null,
 				brandCode: '',
