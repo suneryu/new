@@ -18,7 +18,7 @@
 				</li>
 			</ul>
 		</div>
-		<div style='border: 1px solid red;margin-top: 55px;'>
+		<div style='margin-top: 55px;'>
 			
 			<div v-for='items in contractData'>
 				<div style='width: 100%;height: 150px;padding: 0 8px 0 8px;border-top: 10rpx solid #fafafa;border-bottom: 10rpx solid #fafafa;'>
@@ -51,7 +51,7 @@
 							<div style='height: 25px;width: 50%;display: flex;padding: 0 10px 0 10px;'>
 								<button class="buttonClass" @click="contactPerson(items,'2')" v-if='items.dataState == 1'>已接洽</button>
 								<button class="buttonClass" @click="contactPerson(items,'1')" v-if='items.dataState == 0'>立即接洽</button>
-								<button :class="[items.dataState !=2 ? 'buttonClass':'buttonClass1']" @click="salesperson(items)" v-if='items.dataState != 0'>查看联系方式</button>
+								<button :class="[items.dataState !=2 ? 'buttonClass':'buttonClass1']" @click="salesperson(items)" v-if='items.dataState != 2'>查看联系方式</button>
 							</div>
 						</div>
 					</div>
@@ -178,8 +178,7 @@
 					scontractId: data.scontractId,
 					contractInvstate:2,
 					dataState: state,
-					rows: 10,
-					page: this.page,
+					
 							// goodsSupplierName:this.info.userPhone
 				};
 				http.get(talkOverWithSell, parmas)
@@ -535,7 +534,7 @@
 		.htImage{
 			text-align: center;
 			width: 88%;
-			height: 570px;
+			height: 520px;
 			margin: 0 auto;
 			border:1px solid #fff;
 			position: absolute;
@@ -613,7 +612,7 @@
 		    color: rgba(153, 153, 153, 0.619607843137255);
 	}
 	.buttonClass{
-			width: 80%;
+			width: 50%;
 		    height: 30rpx;
 		    line-height: 30rpx;
 		    color: #fff;
