@@ -49,7 +49,7 @@
 									<div :style="{ color: item.dataState !== 0 ? '#d66377' : '#d66377' }"
 										style='font-size: 14px;'>
 										<span v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice }} 元</span>
-										<span v-if='checkModifyAudit != "3" && scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
+										<span v-if='((checkModifyAudit == "3" && item.goodsClass !="1")|| (checkModifyAudit != "3" && item.goodsClass =="1")|| (checkModifyAudit != "3" && item.goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
 										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetMakeprice }} 元</span>
 									</div>
 									<view class="list-right-container">

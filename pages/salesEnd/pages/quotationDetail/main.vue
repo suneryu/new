@@ -36,7 +36,7 @@
 									<div :style="{ color: '#d66377'}"
 										style='font-size: 14px;'>
 										<span v-if='goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice }} 元</span>
-										<span v-if='checkModifyAudit != "3" && scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
+										<span v-if='((checkModifyAudit == "3" && goodsClass !="1")|| (checkModifyAudit != "3" && goodsClass =="1")|| (checkModifyAudit != "3" && goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
 										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetMakeprice }} 元</span>
 									</div>
 									<view class="list-right-container">
@@ -256,7 +256,7 @@
 							orderDomainStr:JSON.stringify(orderDomainStr),
 							memberBcode: this.userInfoCode
 						}
-						this.$qj.http(this.$qj.domain).get('/web/oc/empcontract/saveContract.json', params).then(res=>{
+						this.$qj.http(this.$qj.domain).post('/web/oc/empcontract/saveContract.json', params).then(res=>{
 							if(res.success){
 								// this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
 									$router.replace('salesEnd/pages/quotationList')
