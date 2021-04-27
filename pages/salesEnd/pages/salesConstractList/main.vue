@@ -1,14 +1,24 @@
 <template>
 	
-	<div  class="homepage-content" >
+	<div  class="orderList" >
 
-		<div style="display: flex;background-color: #fff;">
+	<!-- 	<div style="display: flex;background-color: #fff;">
 			<div class='constractName0' @click='parts("0")' :style="{ color: fontColor1 }">全部</div>
 			<div class='constractName1' @click='parts("1")' :style="{ color: fontColor2 }">待接洽</div>
 			<div class='constractName2' @click='parts("2")'  :style="{ color: fontColor3 }">接洽中</div>
 			<div class='constractName2' @click='parts("3")'  :style="{ color: fontColor4 }">已完成</div>
+		</div> -->
+		<div class="orderList-tit" v-bind:style="{ top: topDistance + 'px' }">
+			<ul>
+				<li v-for="(item, index) in items" :key="index" @click="orderTitle(item, index)">
+					<div :class="current === index ? 'active' : ''" :style="{ color: current === index ? '#004178' : '' }">
+						{{ item }}
+						<span :style="{ background: '#004178' }"></span>
+					</div>
+				</li>
+			</ul>
 		</div>
-		<div>
+		<div style='border: 1px solid red;margin-top: 55px;'>
 			
 			<div v-for='items in contractData'>
 				<div style='width: 100%;height: 150px;padding: 0 8px 0 8px;border-top: 10rpx solid #fafafa;border-bottom: 10rpx solid #fafafa;'>
@@ -18,8 +28,8 @@
 							<div style='color: #169BD5;'>企业预约时间：<span>{{items.goodsPmbillno}}</span></div>
 						</div>
 						<div style='width:20%;line-height: 40px;text-align: center;color: red;' v-if='items.dataState == 0'>待接洽</div>
-						<div style='width:20%;line-height: 40px;text-align: center;color: #169BD5;' v-if='items.dataState == 1'>待接洽</div>
-						<div style='width:20%;line-height: 40px;text-align: center;' v-if='items.dataState == 2'>待接洽</div>
+						<div style='width:20%;line-height: 40px;text-align: center;color: #169BD5;' v-if='items.dataState == 1'>接洽中</div>
+						<div style='width:20%;line-height: 40px;text-align: center;' v-if='items.dataState == 2'>已接洽</div>
 					</div>
 					<div style='width: 100%;height: 100px;border-bottom: 1rpx solid #E0E0E0;'>
 						<div style='height: 25px;width: 100%;font-size: 14px; sans-serif;font-weight: 400;font-style: normal;line-height: 25px;display: flex;'>
@@ -37,10 +47,11 @@
 							<div  class='lookconstr' style='height: 25px;width: 20%;text-align: center;'><u style='text-decoration:underline' @click='preview(items)'>合同预览</u></div>
 						</div>
 						<div style='height: 25px;width: 100%;display: flex;'>
-							<div style='height: 25px;width: 75%;font-size: 12px;line-height: 25px;'>企业编号：<span>{{items.contractInvoice}}</span></div>
-							<div style='height: 25px;width: 25%;'>
-								<button class="buttonClass" @click="contactPerson(items)" v-if='items.dataState == 0'>立即接洽</button>
-								<button class="buttonClass" @click="salesperson(items)" v-if='items.dataState != 0'>查看联系方式</button>
+							<div style='height: 25px;width: 50%;font-size: 12px;line-height: 25px;'>企业编号：<span>{{items.contractInvoice}}</span></div>
+							<div style='height: 25px;width: 50%;display: flex;padding: 0 10px 0 10px;'>
+								<button class="buttonClass" @click="contactPerson(items,'2')" v-if='items.dataState == 1'>已接洽</button>
+								<button class="buttonClass" @click="contactPerson(items,'1')" v-if='items.dataState == 0'>立即接洽</button>
+								<button :class="[items.dataState !=2 ? 'buttonClass':'buttonClass1']" @click="salesperson(items)" v-if='items.dataState != 0'>查看联系方式</button>
 							</div>
 						</div>
 					</div>
@@ -55,7 +66,7 @@
 		   <img class="htImg" :src="img + fileUrl" @click='savePhoto(img + fileUrl)'/>
 			<div style='font-size: 16px;font-weight: 900;color: #fff;'>点击图片进行下载</div>
 		   </view>
-		  </view>
+		 </view>
 
 	</div>
 
@@ -73,11 +84,14 @@
 		getHomePage,
 		queryScontractPageNew,
 		queryBuyerScontractPage,
-		queryScontractFilePage
+		queryScontractFilePage,
+		talkOverWithSell
 	} from '@/api/interfaceHDB.js';
 	export default {
 		data() {
 			return {
+				current:0,				
+				items: ['全部', '待接洽','接洽中', '已完成'],
 				now: new Date().getTime(),
 				fileUrl:"",  // 图片的url
 				htImg:false,  //图片点击展示
@@ -152,9 +166,34 @@
 		  this.loadMore(this.contractData[0].memberGcode);
 		},
 		methods: {
-			contactPerson(data){
+			orderTitle(item, index) {
+				console.log('传来的---0',item,'====',index)
+				this.current = index;
+				this.$qj.state.set('orderTabIndex', index);
+				},
+			contactPerson(data,state){
 				//更新合同状态将待接洽换成已接洽
 				console.log('立即接洽，',data)
+				let parmas = {
+					scontractId: data.scontractId,
+					contractInvstate:2,
+					dataState: state,
+					rows: 10,
+					page: this.page,
+							// goodsSupplierName:this.info.userPhone
+				};
+				http.get(talkOverWithSell, parmas)
+					.then(res => {
+						console.log("更改预约合同结果....",res)	
+						
+					// res.rows.forEach(element => {	
+					// 			element.date1 = this.format(element.contractEffectivedate)
+					// 			element.date2 = this.format(element.contractDepositdate)
+					// 		this.contractData.push(element)
+					// 	// this.contractData = res.rows;
+					// });
+						
+					});
 			},
 			salesperson(data) {
 				let showHtml = ""
@@ -428,6 +467,7 @@
 </script>
 
 <style lang="less" scoped>
+	@import '@/node_modules/qj-mini-pages/libs/css/common.less';
 	.popup {
 	  position: fixed;
 	  left: 0;
@@ -581,11 +621,12 @@
 			font-size: 12px;
 	}
 	.buttonClass1{
-			width: 80%;
+			width: 50%;
+			margin-left: 50%;
 		    height: 30rpx;
 		    line-height: 30rpx;
 		    color: #fff;
-		    background-color: #4F4F4F;
+		    background-color: #004178;
 			font-size: 12px;
 	}
 	.entryName{
@@ -700,5 +741,166 @@
 			}
 		}
 		
-	
+	.orderList {
+		width: 100%;
+		&-save {
+			position: fixed;
+			z-index: 9999;
+			height: 90rpx;
+			width: 70rpx;
+			line-height: 90rpx;
+			text-align: right;
+			right: 30rpx;
+			top: 0;
+			font-size: @big-title;
+		}
+		&-tit {
+			width: 100%;
+			position: fixed;
+			// top: 90rpx;
+			left: 0;
+			z-index: 999;
+			background: @white-color;
+			padding-top: 10rpx;
+			ul {
+				display: flex;
+				justify-content: space-between;
+				padding: @padding-30;
+				height: 90rpx;
+				li {
+					height: 90rpx;
+					div {
+						width: 100%;
+						height: 100%;
+						line-height: 90rpx;
+						display: inline-block;
+						position: relative;
+						font-size: 28rpx;
+						color: @color-333;
+					}
+					.active {
+						span {
+							position: absolute;
+							height: 3rpx;
+							width: 100%;
+							bottom: 0;
+							left: 0;
+						}
+					}
+				}
+			}
+		}
+		&-info {
+			margin-top: 100rpx;
+			ol {
+				li {
+					border-bottom: 20rpx solid #fafafa;
+					padding: @padding-30;
+					background: @white-color;
+					&:first-child {
+						border-top: 20rpx solid #fafafa;
+					}
+					&:last-child {
+						border-bottom: 0;
+					}
+					.order-item {
+						.order-status {
+							height: 79rpx;
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							border-bottom: 1rpx solid #f6f6f8;
+							> div {
+								font-size: @big-title;
+							}
+							.order-info {
+								display: flex;
+								align-items: center;
+								.order-tag {
+									font-size: 20rpx;
+									border-radius: 18rpx;
+									border-width: 1rpx;
+									border-style: solid;
+									width: 105rpx;
+									height: 34rpx;
+									line-height: 34rpx;
+									text-align: center;
+									margin-right: 14rpx;
+								}
+							}
+						}
+						.order-msg {
+							padding: 15rpx 0 48rpx 0;
+							border-bottom: 1rpx solid #f6f6f8;
+							display: flex;
+							justify-content: space-between;
+							img {
+								width: 130rpx;
+								height: 130rpx;
+								margin-right: @margin-right;
+							}
+							> div {
+								display: flex;
+								justify-content: space-between;
+								p {
+									font-size: @big-title;
+									color: @color-333;
+									margin: 12rpx 0 25rpx 0;
+								}
+								.currentP {
+									width: 380rpx;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									white-space: nowrap;
+								}
+								h6 {
+									font-size: 24rpx;
+									color: @color-999;
+								}
+							}
+						}
+						.order-btn {
+							height: 88rpx;
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							.left {
+								display: flex;
+								align-items: center;
+								i {
+									margin-left: 10rpx;
+								}
+							}
+							.right {
+								display: flex;
+								align-items: center;
+								.btn {
+									display: inline-block;
+									border: 1rpx solid #d4d4d4;
+									line-height: 46rpx;
+									border-radius: 26rpx;
+									padding: 0 20rpx;
+									font-size: 22rpx;
+									color: @color-666;
+									margin-right: @margin-right;
+									&:last-child {
+										margin-right: 0;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		&-nulls {
+			height: calc(100% - 202rpx);
+			text-align: center;
+			img {
+				width: 424rpx;
+				height: 311rpx;
+				margin: 380rpx auto 0;
+			}
+		}
+	}
 </style>

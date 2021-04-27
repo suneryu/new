@@ -924,6 +924,24 @@
 			"root": "pages/hdb",
 			"name": "hdb",
 			"pages": [
+				//备件专区
+				{
+					"path": "goodsListLPJ/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "备件专区"
+					}
+				},
+				//耗材专区
+				{
+					"path": "goodsListHC/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "耗材专区"
+					}
+				},
 				//促销专区
 				{
 					"path": "promotionZone/main",
