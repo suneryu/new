@@ -6,7 +6,11 @@
         <div class="orderDetail-box-tit-l" v-if="items.dataState==1 && items.dataStatestr == '1'">
           <i class="iconfont">&#xe675;</i>等待付款
         </div>
-		<div class="orderDetail-box-tit-l" v-if="items.dataState == 1 && (items.dataStatestr == '2'||items.dataStatestr == '3')">
+		<div class="orderDetail-box-tit-l" v-if="items.dataState == 1 && items.dataStatestr == '2'">
+			<i class="iconfont">&#xe675;</i>
+			等待改价
+		</div>
+		<div class="orderDetail-box-tit-l" v-if="items.dataState == 1 && (items.dataStatestr == '4'||items.dataStatestr == '3')">
 			<i class="iconfont">&#xe675;</i>
 			等待审核
 		</div>
