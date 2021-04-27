@@ -34,7 +34,8 @@
 									<h6>{{ goods.skuName }}</h6>
 								</div>
 								<div style="text-align:right;">
-									<p style="width:160rpx;color: #ff557f;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>
+									<!-- <p style="width:160rpx;color: #ff557f;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p> -->
+									<p style="width:160rpx;color: #ff557f;">{{ goods.pricesetNprice }}</p>
 									<h6>x{{ goods.goodsNum }}</h6>
 									<!-- <button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button> -->
 								</div>

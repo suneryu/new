@@ -104,7 +104,7 @@
 			<qj-mini-last-page-line :lastPageLine="lastPageLine"></qj-mini-last-page-line>
 		</view>
 		<view style="width: 100%;height: 150rpx;bottom: 0;position: fixed;padding: 20rpx 20rpx 70rpx 20rpx;background: #fff;box-sizing: border-box;font-size: 16px;">
-			<div style='background-color: #409eff;color: #fff;text-align: center;padding: 20rpx;border-radius: 5px;' @click='createQuotation'>
+			<div style='background-color: #004178;color: #fff;text-align: center;padding: 20rpx;border-radius: 5px;' @click='createQuotation'>
 				<span type='primary'>创建报价单</span>
 			</div>
 		</view>
@@ -281,13 +281,13 @@
 			goToGoodsDetail() {},
 			//数量删减
 			subtract(item,index) {
-				if(item.goodsNum != null && item.goodsNum > 0){
-					item.goodsNum -= 1*item.goodsMinnum
+				if(item.goodsNum != null && item.goodsNum > item.goodsMinnum){
+					item.goodsNum -= 1
 				}
 			},
 			//数量增加
 			add(item,index) {
-				item.goodsNum += 1*item.goodsMinnum
+				item.goodsNum += 1
 			},
 			//查询权益
 			getQY() {
@@ -364,7 +364,6 @@
 							let batchCollectData = [];
 							// 获取用户维度起订量倍数
 							let skuMinSaleMultiple = [];
-							this.items = res.rows;
 							res.rows.map(v => {
 								if (!RegExp(/http/).test(v.dataPic)) {
 									v.dataPic = this.$domain + v.dataPic;
@@ -391,6 +390,7 @@
 									goodsNo: v.goodsNo
 								});
 							});
+							// this.items = res.rows;
 							if (this.page === 1) {
 								this.items = [];
 								this.items = res.rows;

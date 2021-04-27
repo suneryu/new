@@ -65,7 +65,7 @@
 			<div class="goodsList-nulls" v-else><img :src="nullImg" /></div>
 		</view>
 		<view style="width: 100%;height: 150rpx;bottom: 0;position: fixed;padding: 20rpx 20rpx 70rpx 20rpx;background: #fff;box-sizing: border-box;font-size: 16px;">
-			<div style='background-color: #409eff;color: #fff;text-align: center;padding: 20rpx;border-radius: 5px;' @click='createQuotation'>
+			<div style='background-color: #004178;color: #fff;text-align: center;padding: 20rpx;border-radius: 5px;' @click='createQuotation'>
 				<span type='primary'>推送报价单</span>
 			</div>
 		</view>
@@ -73,6 +73,9 @@
 </template>
 
 <script>
+	import {
+		updateShoppingGoodsNum,
+	} from '@/node_modules/qj-mini-pages/libs/api/interface.js';
 	import {
 		search,
 		queryBrandPageForC,
@@ -259,14 +262,117 @@
 			},
 			goToGoodsDetail() {},
 			//商品数量减少
-			subtract(item,index) {
-				if(item.goodsNum != null && item.goodsNum > item.goodsMinnum){
-					item.goodsNum -= 1*item.goodsMinnum
+			// subtract(item,index) {
+			// 	if(item.goodsNum != null && item.goodsNum > item.goodsMinnum){
+			// 		item.goodsNum -= 1*item.goodsMinnum
+			// 	}
+			// },
+			// //商品数量减少
+			// add(item,index) {
+			// 	item.goodsNum += 1*item.goodsMinnum
+			// },
+			//删除商品数量
+			//删除商品数量
+			subtract(item, index) {
+				let goodsCamount = item.goodsNum;
+				let params = {
+					shoppingGoodsId: item.shoppingGoodsId,
+					amount: goodsCamount,
+					goodWeight: 0,
+					memberBcode:this.userInfoCode
+				};
+				if (item.goodsMinnum && item.goodsMinnum > 0) {
+					if (item.goodsCamount <= item.goodsMinnum) {
+						this.$qj.message.alert('购买数量不能小于起订量');
+					} else if (item.goodsCamount > item.goodsMinnum && goodsCamount > 1) {
+						// 用户维度的起订量倍数，优先级最高
+						if (item.skuOneNum) {
+							goodsCamount = goodsCamount - item.goodsMinnum * item.skuOneNum;
+						} else {
+							if (item.goodsTopnum == 1) {
+								goodsCamount = goodsCamount - item.goodsMinnum;
+							} else {
+								goodsCamount--;
+							}
+						}
+			
+						params.amount = goodsCamount;
+						this.$qj
+							.http(this.$qj.domain)
+							.post('/web/oc/empshopping/updateShoppingGoodsNum.json', params)
+							.then(res => {
+								if (res && res.success) {
+									this.commonMounted();
+								} else {
+									if (res.errorCode == '-1') {
+										item.goodsNum = item.goodsSupplynum;
+										//购买商品数量不能超过商品库存
+									}
+								}
+							});
+					}
+				} else {
+					if (goodsCamount > 1) {
+						goodsCamount--;
+						params.amount = goodsCamount;
+						this.$qj
+							.http(this.$qj.domain)
+							.post('/web/oc/empshopping/updateShoppingGoodsNum.json', params)
+							.then(res => {
+								if (res && res.success) {
+									this.commonMounted();
+								} else {
+									if (res.errorCode == '-1') {
+										item.goodsNum = item.goodsSupplynum;
+										//购买商品数量不能超过商品库存
+									}
+								}
+							});
+					}
 				}
 			},
-			//商品数量减少
-			add(item,index) {
-				item.goodsNum += 1*item.goodsMinnum
+			add(item, index) {
+				let goodsCamount = item.goodsNum;
+				let params = {
+					shoppingGoodsId: item.shoppingGoodsId,
+					amount: goodsCamount,
+					goodWeight: 0,
+					memberBcode:this.userInfoCode,
+				};
+				// goodsTopnum
+				console.log(item);
+				if (item.goodsMinnum && item.goodsMinnum > 0) {
+					if (item.skuOneNum) {
+						goodsCamount = goodsCamount + item.goodsMinnum * item.skuOneNum;
+					} else {
+						if (item.goodsTopnum == 1) {
+							goodsCamount = goodsCamount + item.goodsMinnum;
+						} else {
+							goodsCamount++;
+						}
+					}
+
+					params.amount = goodsCamount;
+				} else {
+					if (goodsCamount < 1000) {
+						goodsCamount++;
+						params.amount = goodsCamount;
+					}
+				}
+				// item.goodsNum = goodsCamount;
+				this.$qj
+					.http(this.$qj.domain)
+					.post('/web/oc/empshopping/updateShoppingGoodsNum.json', params)
+					.then(res => {
+						console.log('购物车加商品--', res)
+						if (res && res.success) {
+							this.commonMounted();
+						} else {
+							if (res.errorCode == '-1') {
+								this.$qj.message.alert(res.msg);
+							}
+						}
+					});
 			},
 			//查询权益
 			getQY() {
