@@ -35,7 +35,7 @@
 								<div class="list-count">
 									<div :style="{ color: '#d66377'}"
 										style='font-size: 14px;'>
-										<span v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit != "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice }} 元</span>
+										<span v-if='goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice }} 元</span>
 										<span v-if='checkModifyAudit != "3" && scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
 										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetMakeprice }} 元</span>
 									</div>
@@ -170,6 +170,14 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			//获取详情
+			getGoodsDetial(skuCode){
+				this.$qj
+					.http(this.$qj.domain)
+					.post('/web/rs/resourceGoods/getResourceGoodsInfoBySkuCode.json', {skuCode}).then(res => {
+						this.goodsClass = res.goodsClass
+					})
+			},
 			//取消报价单
 			cancleList(){
 				let shoppingGoodsList =[]
@@ -450,6 +458,7 @@
 					// 获取用户维度起订量倍数
 					let skuMinSaleMultiple = [];
 					this.items = []
+					this.getGoodsDetial(res.list[0].shoppingpackageList[0].shoppingGoodsList[0].skuCode)
 					res.list.forEach(item=>{
 						item.shoppingpackageList.forEach(item1=>{
 							item1.shoppingGoodsList.forEach(v=>{
