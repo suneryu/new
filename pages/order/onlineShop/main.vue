@@ -589,13 +589,6 @@
 						contractPmode:'1'
 					}]
 					
-					if(this.partnerType == 1){
-						let type1={
-							ptfpmodeName: '信用额度支付',
-							contractPmode:'2'
-							}
-						this.payMethodsList.push(type1)
-					}
 
 				}
 				if (this.goodsClass == '3') { //纪念品订单
