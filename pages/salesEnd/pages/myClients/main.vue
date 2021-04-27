@@ -28,7 +28,7 @@
 						<div class="authorization" style="color: #4CD964;"
 							v-if="item.userinfoType == 2 && item.checkModifyAudit == 3">已授权</div>
 						<div class="authorization" style="color: red;"
-							v-if="item.userinfoType == 2 && item.checkModifyAudit !== 3">未授权</div>
+							v-else>未授权</div>
 					</div>
 				</div>
 				<div style="display: flex;font-size: 12px;margin: 10px 0;">

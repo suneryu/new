@@ -435,7 +435,8 @@
 					memberGcode: code,
 					contractInvstate: 0,
 					rows: 10,
-					page: this.page
+					page: this.page,
+					dataState:1
 				};
 				http.get(queryScontractPageNew, parmas)
 					.then(res => {
@@ -536,7 +537,8 @@
 					memberGcode: "2",
 					contractInvstate: 0,
 					rows: 10,
-					page: 1
+					page: 1,
+					dataState:1
 				}
 				http.get(queryScontractPageNew, parmas)
 					.then(res => {
@@ -605,7 +607,8 @@
 						memberGcode: "0",
 						contractInvstate: 0,
 						rows: 10,
-						page: 1
+						page: 1,
+						dataState:1
 					}
 					this.getData(parmas);
 					this.qyBut = true;
@@ -624,7 +627,8 @@
 						memberGcode: "1",
 						contractInvstate: 0,
 						rows: 10,
-						page: 1
+						page: 1,
+						dataState:1
 					}
 					this.getData(parmas);
 
@@ -646,7 +650,8 @@
 						memberGcode: "2",
 						contractInvstate: 0,
 						rows: 10,
-						page: 1
+						page: 1,
+						dataState:1
 					}
 					this.getData(parmas);
 					this.qyBut = false;

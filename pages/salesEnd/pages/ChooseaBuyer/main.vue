@@ -10,7 +10,7 @@
 		</div>
 		<div  v-if="Buyers.length > 0">
 			<div v-for="(item,index) in Buyers" :key="index" >
-				<div style="height: 115px;margin-bottom: 3px; border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
+				<div style="height: 120px;margin-bottom: 3px; border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
 				<div style="font-size: 12px">{{item.memberGname}}</div>
 				<div style="display: flex;">
 					<div style="width: 80%; font-size: 17px;">{{item.scontractName}}</div>

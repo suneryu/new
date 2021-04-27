@@ -118,13 +118,12 @@
                 style="height: 25px; width: 20%"
                 v-if="items.memberGcode == 0"
               >
-                <button
-                  class="buttonClass"
-                  @click="useContract(items)"
-                  v-if="now > items.contractValidate && items.dataState == 1"
-                >
-                  使用合同
-                </button>
+                <button class="buttonClass" @click="useContract(items)" v-if="now > items.contractValidate && items.dataState == 1" > 使用合同 </button>
+                <button class="buttonClass" v-if="items.dataState == 0" > 未开始 </button>
+                <button class="buttonClass" v-if="items.dataState == 2" > 已暂停 </button>
+                <button class="buttonClass" v-if="items.dataState == 3" > 已禁用 </button>
+                <button class="buttonClass" v-if="items.dataState == 4" > 已完成 </button>
+                <button class="buttonClass" v-if="items.dataState == 5" > 已关闭 </button>
                 <!-- <button class="buttonClass1" v-if='now < items.contractValidate'>待启用</button> -->
               </div>
               <!-- <div style='height: 25px;width: 20%;' v-if='items.memberGcode == 1'><button class="buttonClass">使用合同</button></div> -->
