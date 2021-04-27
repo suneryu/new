@@ -581,14 +581,22 @@
 			/**
 			 * 初始化订单数据
 			 */
+			getGoodsDetial(skuCode){
+				this.$qj
+					.http(this.$qj.domain)
+					.post('/web/rs/resourceGoods/getResourceGoodsInfoBySkuCode.json', {skuCode}).then(res => {
+						this.goodsClass = res.goodsClass
+						this.initPayMethods();
+					})
+			},
 			initOrderData(options) {
 				this.$qj
 					.http(this.$qj.domain)
 					.post(getContractByContractBillcode, options).then(res => {
-						this.goodsClass = res.goodsClass
+						// this.goodsClass = res.goodsClass
 						this.shoppingItems = []
 						this.discountMoney = 0
-						this.initPayMethods();
+						this.getGoodsDetial(res.goodsList[0].skuCode)
 						res.goodsList.forEach(item=>{
 							if(item.goodsClass==1 && res.contractType == 39){
 								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
@@ -601,7 +609,7 @@
 						this.shoppingItems.push(res)
 						this.allPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
 						this.freight = res.freight == null ?0:res.freight
-						this.goodsClass = res.goodsClass
+						// this.goodsClass = res.goodsClass
 					})
 			},
 

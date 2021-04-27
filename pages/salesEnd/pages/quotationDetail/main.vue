@@ -35,10 +35,9 @@
 								<div class="list-count">
 									<div :style="{ color: '#d66377'}"
 										style='font-size: 14px;'>
-										<span>{{ item.pricesetNprice }}元</span>
-										<!-- <span>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span> -->
-										<!-- <span style='margin-left: 5px;'
-											v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span> -->
+										<span v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit != "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice }} 元</span>
+										<span v-if='checkModifyAudit != "3" && scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
+										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetMakeprice }} 元</span>
 									</div>
 									<view class="list-right-container">
 										<div class="list-add">
@@ -141,7 +140,8 @@
 				userInfoCode: "",
 				rtagCode: "",
 				userInfoCode: "",
-				goodsClass: ""
+				goodsClass: "",
+				scontractCode:''
 			};
 		},
 		onShow() {
@@ -149,7 +149,7 @@
 		},
 		onLoad(options) {
 			this.userPhone = options.userPhone
-			
+			this.scontractCode = options.scontractCode
 		},
 		computed: {
 			unitPrice() {

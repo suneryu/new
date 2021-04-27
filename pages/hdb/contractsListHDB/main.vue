@@ -436,7 +436,7 @@
 					contractInvstate: 0,
 					rows: 10,
 					page: this.page,
-					dataState:1
+					dataState: 0
 				};
 				http.get(queryScontractPageNew, parmas)
 					.then(res => {
@@ -538,7 +538,7 @@
 					contractInvstate: 0,
 					rows: 10,
 					page: 1,
-					dataState:1
+					dataState: 0
 				}
 				http.get(queryScontractPageNew, parmas)
 					.then(res => {
@@ -608,7 +608,7 @@
 						contractInvstate: 0,
 						rows: 10,
 						page: 1,
-						dataState:1
+						dataState: 0
 					}
 					this.getData(parmas);
 					this.qyBut = true;
@@ -628,7 +628,7 @@
 						contractInvstate: 0,
 						rows: 10,
 						page: 1,
-						dataState:1
+						dataState: 0
 					}
 					this.getData(parmas);
 
@@ -651,7 +651,7 @@
 						contractInvstate: 0,
 						rows: 10,
 						page: 1,
-						dataState:1
+						dataState: 0
 					}
 					this.getData(parmas);
 					this.qyBut = false;

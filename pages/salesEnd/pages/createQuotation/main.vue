@@ -48,9 +48,9 @@
 								<div class="list-count">
 									<div :style="{ color: item.dataState !== 0 ? '#d66377' : '#d66377' }"
 										style='font-size: 14px;'>
-										<span>{{ item.pricesetNprice }} 元</span>
-										<!-- <span style='margin-left: 5px;'
-											v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span> -->
+										<span v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice }} 元</span>
+										<span v-if='checkModifyAudit != "3" && scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
+										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetMakeprice }} 元</span>
 									</div>
 									<view class="list-right-container">
 										<div class="list-add">
@@ -272,7 +272,7 @@
 			createQuotation(){
 				this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/queryShoppingPage.json',{memberBcode:this.userInfoCode,shoppingType: 5}).then(res => {
 					if(res.list && res.list.length>0){
-						$router.push('salesEnd/pages/quotationDetail',{userPhone:this.userPhone})
+						$router.push('salesEnd/pages/quotationDetail',{userPhone:this.userPhone,scontractCode:this.scontractCode})
 					}else{
 						this.$qj.message.alert('请先添加商品到购物车');
 					}
@@ -414,13 +414,7 @@
 								res.rows.map(v => {
 									if (!RegExp(/http/).test(v.dataPic)) {
 										v.dataPic = this.$domain + v.dataPic;
-									}
-									if (this.userinfoType == "2" && this.checkModifyAudit == "3") {
-										// 获取权益价格
-										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
-										console.log("获取权益的价格-------", v.pricesetMakeprice)
-									}
-						
+									}						
 									v.itemChecked = false;
 									v.skuId = v.goodsSpec5
 									 if (v.goodsMinnum) {
