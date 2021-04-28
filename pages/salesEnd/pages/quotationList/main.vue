@@ -41,6 +41,10 @@
 								</div>
 							</div>
 						</div>
+						<div style='display: flex;justify-content: space-between;height: 50rpx;align-items: center;color: #828282;'>
+							<span>咨询单总额</span>
+							<span style='color: #ff557f;'>{{order.dataBmoney}} 元</span>
+						</div>
 					</div>
 				</li>
 			</ol>
@@ -147,7 +151,7 @@ export default {
 					page: this.page,
 					rows: this.rows,
 					childFlag: true,
-					contractType: '39,41',
+					contractType: '39',
 					// memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
 				};
 				if(this.dataState != ''){

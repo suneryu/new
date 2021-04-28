@@ -34,9 +34,10 @@
 								</h3>
 								<div class="list-count">
 									<div :style="{ color: '#d66377'}"
-										style='font-size: 14px;'>
+										style='font-size: 14px;display: flex;flex-direction: column;'>
+										<span >{{ item.pricesetNprice }} 元</span>
 										<span v-if='goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ Number(item.pricesetMakeprice).toFixed(2) }} 元</span>
-										<span v-if='((checkModifyAudit == "3" && goodsClass !="1")|| (checkModifyAudit != "3" && goodsClass =="1")|| (checkModifyAudit != "3" && goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
+										<!-- <span v-if='((checkModifyAudit == "3" && goodsClass !="1")|| (checkModifyAudit != "3" && goodsClass =="1")|| (checkModifyAudit != "3" && goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span> -->
 										<span v-if='scontractCode != ""'>合同价：{{ item.goodsContract }} 元</span>
 									</div>
 									<view class="list-right-container">

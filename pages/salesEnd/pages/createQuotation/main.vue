@@ -41,15 +41,20 @@
 									@click.stop="goToGoodsDetail(item)">
 									{{ item.skuName }}
 								</h3>
+								<h3
+									@click.stop="goToGoodsDetail(item)">
+									{{ item.skuShowno }}
+								</h3>
 								<h3 
 									@click.stop="goToGoodsDetail(item)">
 									起订量：{{ item.goodsMinnum }}
 								</h3>
 								<div class="list-count">
 									<div :style="{ color: item.dataState !== 0 ? '#d66377' : '#d66377' }"
-										style='font-size: 14px;'>
+										style='font-size: 14px;display: flex;flex-direction: column;'>
+										<!-- <span v-if='((checkModifyAudit == "3" && item.goodsClass !="1")|| (checkModifyAudit != "3" && item.goodsClass =="1")|| (checkModifyAudit != "3" && item.goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span> -->
+										<span >{{ item.pricesetNprice }} 元</span>
 										<span v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice.toFixed(2) }} 元</span>
-										<span v-if='((checkModifyAudit == "3" && item.goodsClass !="1")|| (checkModifyAudit != "3" && item.goodsClass =="1")|| (checkModifyAudit != "3" && item.goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
 										<span v-if='scontractCode != ""'>合同价：{{ item.contractGoodsPrice }} 元</span>
 									</div>
 									<view class="list-right-container">
@@ -239,6 +244,7 @@
 			//查询商品
 			serarchGoods(value){
 				this.searchValue = value
+				this.params.likeGoodsName = this.searchValue
 				// if(value != ''){
 				// 	this.items = this.itemsBak.filter(item=>item.goodsName.indexOf(value) != -1)
 				// }else{
@@ -360,7 +366,6 @@
 					this.params.channelCode = 'tempChannelCode'
 					this.params.temp = this.channelCode
 					this.params.goodsOrigin = "13"
-					this.params.likeGoodsName = this.searchValue
 				}
 
 				// if (this.classtreeCode || classtreeCode) {
