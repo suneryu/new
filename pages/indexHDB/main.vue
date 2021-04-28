@@ -517,8 +517,8 @@
 							if (lo.code) {
 								let loginCode = lo.code;
 								that.$qj.storage.set('code', loginCode);
-								wx.getUserProfile({
-									// withCredentials: true,
+								wx.getUserInfo({
+									withCredentials: true,
 									lang: 'zh_CN',
 									success(res) {
 										console.log('销售端获取用户信息，，，，',res)
@@ -601,8 +601,8 @@
 							if (lo.code) {
 								let loginCode = lo.code;
 								that.$qj.storage.set('code', loginCode);
-								wx.getUserProfile({
-									// withCredentials: true,
+								wx.getUserInfo({
+									withCredentials: true,
 									lang: 'zh_CN',
 									success(res) {
 										if (res.errMsg == 'getUserInfo:ok') {
