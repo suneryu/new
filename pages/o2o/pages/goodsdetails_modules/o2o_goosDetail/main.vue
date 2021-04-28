@@ -145,8 +145,8 @@
 		addShoppingGoodsBySpec,
 		queryPromotionPageAssembleForPc,
 		getProappinfo,
-		queryEvaluateGoodsPagetrue
-		
+		queryEvaluateGoodsPagetrue,
+		queryToContract
 	} from '@/api/interface.js';
 	import commonHeader from '@/components/communal/commonHeader';
 	import Banner from '../../../../compenent_modules/o2o_banner/index';
@@ -739,9 +739,25 @@
 								skuId: that.skuId,
 								goodsNum: that.goodsnum
 							};
-							that.$router.replace('order/accounts', {
-								json: JSON.stringify(atr)
+							// 先调用查询接口
+							http.post(queryToContract, atr).then(st => {
+								console.log('res---p',st.length)
+								// if(!st.success){
+									
+								// 	return;
+								// }
+								if(st.length>0){
+									that.$router.replace('order/accounts', {
+										json: JSON.stringify(atr)
+									});
+								}else{
+									$message.alert(st.msg);
+								}
 							});
+							
+							
+							
+							
 						} else {
 							// $router.push('authorization', {
 							// 	redirectUrl: 'o2o/pages/goodsdetails_modules/o2o_goosDetail?skuCode=' + that.getJson
@@ -750,9 +766,24 @@
 								skuId: that.skuId,
 								goodsNum: that.goodsnum
 							};
-							that.$router.replace('order/accounts', {
-								json: JSON.stringify(atr)
+							// 先调用查询接口
+							http.post(queryToContract, atr).then(st => {
+								// console.log('res---p',st.success)
+								// if(!st.success){
+								// 	$message.alert(st.msg);
+								// 	return;
+								// }
+								if(st.length>0){
+									that.$router.replace('order/accounts', {
+										json: JSON.stringify(atr)
+									});
+								}else{
+									$message.alert(st.msg);
+								}
 							});
+							// that.$router.replace('order/accounts', {
+							// 	json: JSON.stringify(atr)
+							// });
 						}
 					},
 					fail: function(res) {
