@@ -191,7 +191,7 @@
 			console.log(this.$qj.storage.get('userdetailsInfo'))
 			this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
 			this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
-			
+			$storage.set('contractGoodsPrice','')
 			console.log(this.userinfoType)
 				this.searchStatus();
 				
@@ -199,7 +199,7 @@
 			this.batchGetSkuMinSaleMultiple();
 		},
 		onLoad(options) {
-	
+			
 			this.searchParams = options.searchParams;
 			this.goodsClass = options.goodsClass;
 			// if (options.json && JSON.parse(options.json).classtreeCode) {

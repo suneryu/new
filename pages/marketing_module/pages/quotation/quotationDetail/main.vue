@@ -82,10 +82,10 @@
 								<span>商品总额：</span>
 								<span>{{ unitPrice.obpay }}{{itemList.contractType == 39?itemList.contractInmoney:itemList.contractMoney}}{{ unitPrice.mapay }}</span>
 							</div>
-							<div class='goodsPrice-item'>
+							<!-- <div class='goodsPrice-item'>
 								<span>运费：</span>
 								<span>{{ unitPrice.obpay }}{{itemList.freight == null?0:itemList.freight}}{{ unitPrice.mapay }}</span>
-							</div>
+							</div> -->
 							<div class='goodsPrice-item'>
 								<span>权益优惠：</span>
 								<!-- <span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span> -->
@@ -452,7 +452,7 @@
 
 	.goodsPrice {
 		width: 100%;
-		height: 200rpx;
+		height: 120rpx;
 		display: flex;
 		background-color: #fff;
 		flex-direction: column;

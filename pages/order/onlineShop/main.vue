@@ -31,6 +31,7 @@
 							<div style="text-align: left;" v-if="goodsClass==1 && userinfoType=='2' && checkModifyAudit == '3' ">
 								<span class="originalPrice1">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }} </span>
 								<span style='margin-left: 4px;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ goods.pricesetCGprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
+								<!-- <span style='margin-left: 4px;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ goods.pricesetCGprice.toFixed(2) }}{{ unitPrice.mapay }}</span> -->
 							</div>
 							<span>×{{ goods.goodsCamount }}</span>
 						</h4>
@@ -970,6 +971,7 @@
 							if (res.errorCode == 'nologin') {
 								return;
 							}
+							$storage.set('contractGoodsPrice','')
 							if (res.dataObj.contractBillcode) {
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);

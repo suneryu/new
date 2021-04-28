@@ -35,7 +35,7 @@
 								<div class="list-count">
 									<div :style="{ color: '#d66377'}"
 										style='font-size: 14px;'>
-										<span v-if='goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice }} 元</span>
+										<span v-if='goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice.toFixed(2) }} 元</span>
 										<span v-if='((checkModifyAudit == "3" && goodsClass !="1")|| (checkModifyAudit != "3" && goodsClass =="1")|| (checkModifyAudit != "3" && goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
 										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetMakeprice }} 元</span>
 									</div>
@@ -57,11 +57,19 @@
 								<span style='font-style: 16px;color: #fff;' @click='deleteQuotation(item.shoppingGoodsId)'>删除</span>
 							</div>
 						</div>
-						
 					</li>
 				</ul>
+				<div class='customInfo'>
+					<span>订单总额</span>
+					<span>{{totalPrice.toFixed(2)}} 元</span>
+				</div>
+				<div class='customInfo'>
+					<span>客户</span>
+					<span>{{userPhone}}</span>
+				</div>
 			</div>
 			<div class="goodsList-nulls" v-else><img :src="nullImg" /></div>
+			
 		</view>
 		<view style="width: 100%;height: 150rpx;bottom: 0;position: fixed;padding: 20rpx 20rpx 70rpx 20rpx;background: #fff;box-sizing: border-box;font-size: 16px;">
 			<div style='background-color: #004178;color: #fff;text-align: center;padding: 20rpx;border-radius: 5px;' @click='createQuotation'>
@@ -141,7 +149,8 @@
 				rtagCode: "",
 				userInfoCode: "",
 				goodsClass: "",
-				scontractCode:''
+				scontractCode:'',
+				totalPrice:0
 			};
 		},
 		onShow() {
@@ -171,11 +180,46 @@
 		},
 		methods: {
 			//获取详情
-			getGoodsDetial(skuCode){
+			getGoodsDetial(skuCode,res){
+				let batchCollectData = [];
+				// 获取用户维度起订量倍数
+				let skuMinSaleMultiple = [];
+				this.items = []
+				this.totalPrice = 0
 				this.$qj
 					.http(this.$qj.domain)
-					.post('/web/rs/resourceGoods/getResourceGoodsInfoBySkuCode.json', {skuCode}).then(res => {
-						this.goodsClass = res.goodsClass
+					.post('/web/rs/resourceGoods/getResourceGoodsInfoBySkuCode.json', {skuCode}).then(res1 => {
+						this.goodsClass = res1.goodsClass
+						res.list.forEach(item=>{
+							item.shoppingpackageList.forEach(item1=>{
+								item1.shoppingGoodsList.forEach(v=>{
+									if (!RegExp(/http/).test(v.dataPic)) {
+										v.dataPic = this.$domain + v.dataPic;
+									}
+									v.goodsNum = v.goodsCamount
+									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1) {
+										// 获取权益价格
+										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
+										this.totalPrice += (v.pricesetMakeprice).toFixed(2) * v.goodsNum
+										console.log("获取权益的价格-------", v.pricesetMakeprice)
+									}else{
+										this.totalPrice +=  Number(v.pricesetNprice)* v.goodsNum
+									}
+														
+									v.itemChecked = false;
+									v.itemCheckedDelete = false;
+									batchCollectData.push({
+										collectType: '0',
+										collectOpcode: v.skuCode
+									});
+									skuMinSaleMultiple.push({
+										skuNo: v.skuNo,
+										goodsNo: v.goodsNo
+									});
+									this.items.push(v)
+								})
+							})
+						})
 					})
 			},
 			//取消报价单
@@ -217,7 +261,6 @@
 					this.userinfoType = res.list[0].userinfoType
 					this.userInfoCode = res.list[0].userinfoCode;
 					this.searchStatus();
-					this.getQY();
 				})
 			},
 			//推送报价单
@@ -390,6 +433,8 @@
 						userinfoPhone: this.userPhone
 					})
 					.then(res => {
+						this.initSearchParams();
+						this.commonMounted();
 						console.log('权益值', res.rows[0].userinfoOcode)
 						this.userinfoOcode = res.rows[0].userinfoOcode
 						if (this.userinfoOcode == null || this.userinfoOcode == '') {
@@ -410,8 +455,8 @@
 						if (res.checkModifyAudit == '3') {
 							that.checkModifyAudit = "3"
 						}
-						this.initSearchParams();
-						this.commonMounted();
+						this.getQY();
+						
 					});
 			},
 
@@ -458,34 +503,43 @@
 					// 获取用户维度起订量倍数
 					let skuMinSaleMultiple = [];
 					this.items = []
-					this.getGoodsDetial(res.list[0].shoppingpackageList[0].shoppingGoodsList[0].skuCode)
-					res.list.forEach(item=>{
-						item.shoppingpackageList.forEach(item1=>{
-							item1.shoppingGoodsList.forEach(v=>{
-								if (!RegExp(/http/).test(v.dataPic)) {
-									v.dataPic = this.$domain + v.dataPic;
-								}
-								if (this.userinfoType == "2" && this.checkModifyAudit == "3") {
-									// 获取权益价格
-									v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
-									console.log("获取权益的价格-------", v.pricesetMakeprice)
-								}
-													
-								v.itemChecked = false;
-								v.itemCheckedDelete = false;
-								v.goodsNum = v.goodsCamount
-								batchCollectData.push({
-									collectType: '0',
-									collectOpcode: v.skuCode
-								});
-								skuMinSaleMultiple.push({
-									skuNo: v.skuNo,
-									goodsNo: v.goodsNo
-								});
-								this.items.push(v)
+					this.totalPrice = 0
+					if(this.goodsClass == ''){
+						this.getGoodsDetial(res.list[0].shoppingpackageList[0].shoppingGoodsList[0].skuCode,res)
+					}else{
+						res.list.forEach(item=>{
+							item.shoppingpackageList.forEach(item1=>{
+								item1.shoppingGoodsList.forEach(v=>{
+									if (!RegExp(/http/).test(v.dataPic)) {
+										v.dataPic = this.$domain + v.dataPic;
+									}
+									v.goodsNum = v.goodsCamount
+									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1) {
+										// 获取权益价格
+										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
+										this.totalPrice += (v.pricesetMakeprice).toFixed(2) * v.goodsNum
+										console.log("获取权益的价格-------", v.pricesetMakeprice)
+									}else{
+										this.totalPrice +=  Number(v.pricesetNprice)* v.goodsNum
+									}
+														
+									v.itemChecked = false;
+									v.itemCheckedDelete = false;
+									batchCollectData.push({
+										collectType: '0',
+										collectOpcode: v.skuCode
+									});
+									skuMinSaleMultiple.push({
+										skuNo: v.skuNo,
+										goodsNo: v.goodsNo
+									});
+									this.items.push(v)
+								})
 							})
 						})
-					})
+					}
+					
+					
 					
 					this.total = res.total;			
 				})
@@ -661,10 +715,23 @@
 		}
 	}
 }
+	.customInfo{
+		width: 100%;
+		height: 80rpx;
+		display: flex;
+		justify-content: space-between;
+		background-color: #fff;
+		font-size: 16px;
+		align-items: center;
+		margin-top: 20rpx;
+		font-family: 微软雅黑;
+		padding: 0px 25rpx;
+		box-sizing: border-box;
+		color: #a2a2a2;
+	}
 	.goodsList {
 		width: 100%;
 		background: #fafafa;
-
 		&-save {
 			position: fixed;
 			z-index: 9999;

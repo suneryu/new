@@ -1190,6 +1190,7 @@
 						.post(saveContract, params)
 						.then(res => {
 							this.$state.set('contractBillcode', res.dataObj.contractBillcode);
+							$storage.set('contractGoodsPrice','')
 							console.log(res, 'fygryefgre7gtrt')
 							if (res.errorCode == 'nologin') {
 								return;

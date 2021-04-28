@@ -34,26 +34,31 @@
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
-		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit !='3' && goodsClass=='1'">
+		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit !='3' && goodsClass=='1' && contractGoodsPrice == ''">
 		    商品价：{{ unitPrice.obpay }}
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
-		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit !='3' && goodsClass!='1'">
+		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit !='3' && goodsClass!='1' && contractGoodsPrice == ''">
 		    商品价：{{ unitPrice.obpay }}
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
-		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit =='3' && goodsClass!='1'">
+		  <p class="price1"   v-if="userinfoType == '2' && checkModifyAudit =='3' && goodsClass!='1' && contractGoodsPrice == ''">
 		    商品价：{{ unitPrice.obpay }}
 		    <span>{{ pricesetNprice }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
 		  <!-- <h3 v-if="userinfoType=='2' && goodsClass != '1'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ pricesetNprice }}{{ unitPrice.mapay }}</h3> -->
 		  
-		  <p class="price" v-if="goodsClass == '1' && userinfoType == '2' && checkModifyAudit == '3'">
+		  <p class="price" v-if="goodsClass == '1' && userinfoType == '2' && checkModifyAudit == '3' && contractGoodsPrice == ''">
 		    采购价：{{ unitPrice.obpay }}
 		    <span>{{ price.toFixed(2) }}</span>
+		    {{ unitPrice.mapay }}
+		  </p>
+		  <p class="price" v-if="contractGoodsPrice != ''">
+		    合同价：{{ unitPrice.obpay }}
+		    <span>{{ contractGoodsPrice.toFixed(2) }}</span>
 		    {{ unitPrice.mapay }}
 		  </p>
 	  </div>
@@ -77,6 +82,7 @@ export default {
       rsSkuDomainList: [],
       Hei: 0,
       price: '',
+	  contractGoodsPrice:'',
 	  pricesetNprice :"",
 	  skuList:"",
 	  userinfoType:"",   //个人类型
@@ -145,8 +151,15 @@ export default {
 	 this.getQY();
 	 this.searchStatus();
   },
+  onUnload() {
+	  console.log('onUnload监听页面卸载');
+  	$storage.set('contractGoodsPrice','')
+  },
+  onHide(){
+	  $storage.set('contractGoodsPrice','')
+  },
   mounted() {
-	 
+	 this.contractGoodsPrice = $storage.get('contractGoodsPrice') || ''
 	  // console.log(options, '111111111')
 	  console.log(this.$qj.storage.get('userInfo'))
 	

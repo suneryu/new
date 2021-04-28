@@ -23,7 +23,7 @@
 		<div class="goodsList-list" v-if="items.length > 0">
 			<ul>
 				<li v-for="(item, index) in items" :key="index">
-					<div @click="goodsDetail(item.goodsClass,item.skuCode)">
+					<div @click="goodsDetail(item.goodsClass,item.skuCode,item.contractGoodsPrice)">
 						<img :src="item.dataPic || userImgurl" />
 						<div class="list-box">	
 							<p>{{ item.goodsName }}</p>
@@ -31,8 +31,8 @@
 							<h5 :style="{ color: '#8d7c7a',textAlign:'left',fontSize:'12px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap' }">{{ item.skuNo }}</h5>
 							<!-- <h3 :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h3> -->
 							<div style="margin: 10rpx 0 0 0;display: flex;height: 30rpx;justify-content: space-between;flex-wrap: nowrap;" >
-								<span class="originalPrice11">原价:{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
-								<span class="originalPrice11" :style="{ color: '#d66377' }">合同价:{{ unitPrice.obpay }}{{  item.pricesetNprice }}{{ unitPrice.mapay }} </span>
+								<span class="originalPrice11" style='text-align: left;'>原价:{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
+								<span class="originalPrice11" :style="{ color: '#d66377' }">合同价:{{ unitPrice.obpay }}{{  item.contractGoodsPrice }}{{ unitPrice.mapay }} </span>
 							</div>
 						</div>
 					</div>
@@ -505,7 +505,7 @@
 					this.lastPageLine = true;
 				}
 			},
-			goodsDetail(goodsClass,skuCode) {
+			goodsDetail(goodsClass,skuCode,contractGoodsPrice) {
 				// let att = this.$qj.businessDomain + '/paas/shop/' + this.$qj.storage.get('hrefs') + skuCode + '.html';
 				// let options = {
 				// 	url: 'web',
@@ -520,8 +520,10 @@
 					skuCode: skuCode,
 					isContract:true,
 					contractProperty:this.scontractId,
-					warehouseName:this.warehouseName
+					warehouseName:this.warehouseName,
+					contractGoodsPrice:contractGoodsPrice
 				};
+				$storage.set('contractGoodsPrice',contractGoodsPrice)
 				this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
 			},
 

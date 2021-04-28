@@ -93,6 +93,16 @@
 									<input type="text" placeholder="最高价" v-model="maxPrice" />
 								</div>
 							</div>
+							<div class="price-box" >
+								<p style='margin-bottom: 10rpx;'>商品分类</p>
+								<div class="t-bob1" style='display: flex;justify-content: flex-start;'>
+									<div class="leftBox" v-for="(list, listIndex) in ['全部','零配件','耗材']" :key="listIndex"
+										@click="goodsClassStr1(list, listIndex)" style='width: 120rpx;'>
+										<p :style="{ color: colorCurrent1 == listIndex ? '#004178' : '' }">{{ list }}
+										</p>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="bottomBox">
 							<p v-bind:style="{ backgroundColor: baseColor }" @click="reverseClick">重置</p>
@@ -146,6 +156,7 @@
 				rows: 10,
 				current: 0,
 				colorCurrent: null,
+				colorCurrent1: null,
 				brandCode: '',
 
 				labelCurrent: null,
@@ -182,7 +193,8 @@
 				userInfoCode: "",
 				goodsClass: "",
 				scontractCode:'',
-				paramsBak:{}
+				paramsBak:{},
+				goodsClassStr:''
 			};
 		},
 		onShow() {
@@ -449,11 +461,21 @@
 				this.colorCurrent = index;
 				this.brandCode = list.brandCode;
 			},
+			goodsClassStr1(list,listIndex){
+				this.colorCurrent1 = listIndex;
+				if(list == '全部'){
+					this.params.goodsClassStr = ''
+				}else{
+					this.params.goodsClassStr = listIndex
+				}
+			},
 			//重置
 			reverseClick() {
 				this.maxPrice = null;
 				this.minPrice = null;
 				this.colorCurrent = null;
+				this.params.goodsClassStr = '';
+				this.colorCurrent1 = null;
 			},
 			//保存
 			saveClick() {

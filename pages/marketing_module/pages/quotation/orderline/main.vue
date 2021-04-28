@@ -84,10 +84,10 @@
 				<span>商品金额：</span>
 				<span>{{ unitPrice.obpay }}{{allPrice}}{{ unitPrice.mapay }}</span>
 			</div>
-			<div class='goodsPrice-item'>
+			<!-- <div class='goodsPrice-item'>
 				<span>运费：</span>
 				<span>{{ unitPrice.obpay }}{{freight}}{{ unitPrice.mapay }}</span>
-			</div>
+			</div> -->
 			<div class='goodsPrice-item'>
 				<span>权益优惠：</span>
 				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->

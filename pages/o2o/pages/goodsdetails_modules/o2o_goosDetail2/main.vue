@@ -73,7 +73,7 @@
 							<span v-if="getgoodtypes == '24'">团购价</span>
 							<span v-if="getgoodtypes == '25'">拼团价</span>
 							<span v-if="getgoodtypes == '26'">秒杀价</span>
-							{{ unitPrice.obpay }}{{goodsClass==1 && checkModifyAudit == 3?(Number(goodsPrice)*Number(userinfoOcode)).toFixed(2):goodsPrice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goodsClass==1 && checkModifyAudit == 3 && contractGoodsPrice == ''?(Number(goodsPrice)*Number(userinfoOcode)).toFixed(2):contractGoodsPrice != ''?contractGoodsPrice:goodsPrice }}{{ unitPrice.mapay }}
 						</h3>
 						已选择:
 						<span id="goodsSku">{{ specsList }}</span>
@@ -230,6 +230,7 @@
 				warehouseName:'',
 				userinfoOcode:1,
 				checkModifyAudit:1,
+				contractGoodsPrice:'',
 				goodsTopnum:'0'  //是否加倍 1是加倍
 
 			};
@@ -266,6 +267,7 @@
 				that.isContract = true
 				that.contractProperty = options.contractProperty
 				that.warehouseName = options.warehouseName
+				that.contractGoodsPrice = options.contractGoodsPrice
 			}
 			let pages = getCurrentPages();
 			let prevpage = pages[0];
@@ -365,6 +367,10 @@
 			wx.hideShareMenu()
 			
 				
+		},
+		onUnload() {
+			  console.log('onUnload监听页面卸载');
+			$storage.set('contractGoodsPrice','')
 		},
 		computed: {
 			unitPrice() {
@@ -769,7 +775,8 @@
 					shoppingType:"6",
 					// channelCode:this.userInfor.channelCode,
 					warehouseCode: this.contractProperty,
-					warehouseName: this.warehouseName
+					warehouseName: this.warehouseName,
+					goodsContract:$storage.get('contractGoodsPrice')
 				}]
 				let params = {
 					memberBcode:$storage.get('loginInfor').userInfoCode,

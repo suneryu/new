@@ -51,7 +51,7 @@
 										</h3>
 										<div class="list-count">
 											<div :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }" style='font-size: 12px;'>
-												<span style='color: #000000;'>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
+												<span style='color: #000000;'>{{ unitPrice.obpay }}{{ item.goodsContract }}{{ unitPrice.mapay }}</span>
 												<!-- <span style='margin-left: 5px;' v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>采购价：{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span> -->
 											</div>
 											<view class="list-right-container">
