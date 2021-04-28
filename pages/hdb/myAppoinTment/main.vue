@@ -4,7 +4,7 @@
 			<div class="search-box">
 				<div class="box-center" style="display: flex;">
 					<div style="width: 65%;">预约编号：
-						<span>{{item.scontractCode}}</span>
+						<span>{{item.scontractId}}</span>
 					</div>
 					<div style="width: 35%; text-align: right;">{{item.memberGname}}</div>
 				</div>
@@ -80,9 +80,9 @@
 		// },
 		methods: {
 			salesperson(item) {
-				let showHtml = item.contractUserurl+'\r\n' +item.scontractCode+'\r\n' + "企业联系人:"+item.mschannelName+'\r\n' + "电话:"+item.goodsPbillno
+				let showHtml ="姓名:"+item.contractType+'\r\n' + "电话:"+item.contractTypepro
 				wx.showModal({
-					title: "企业信息",
+					title: "销售员信息",
 					content: showHtml,
 					cancelText: '关闭',
 					confirmText: '一键拨号',
