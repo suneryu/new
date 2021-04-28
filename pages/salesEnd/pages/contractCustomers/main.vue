@@ -76,20 +76,20 @@
 		mounted() {
 			this.getdata()
 		},
-		onUnload() {
-			clearInterval(this.timer)
-		},
-		onHide() {
-			clearInterval(this.timer)
-		},
-		onShow() {
-			console.log("home-监听页面显示");
-			//执行频率：game（20ms/次）、ui（60ms/次）、normal（200ms/次）
-			this.timer = setInterval(function() {
-				uni.hideKeyboard(); //隐藏软键盘
-				// plus.key.hideSoftKeybord();
-			}, 60);
-		},
+		// onUnload() {
+		// 	clearInterval(this.timer)
+		// },
+		// onHide() {
+		// 	clearInterval(this.timer)
+		// },
+		// onShow() {
+		// 	console.log("home-监听页面显示");
+		// 	//执行频率：game（20ms/次）、ui（60ms/次）、normal（200ms/次）
+		// 	this.timer = setInterval(function() {
+		// 		uni.hideKeyboard(); //隐藏软键盘
+		// 		// plus.key.hideSoftKeybord();
+		// 	}, 60);
+		// },
 		watch: {
 			show(value) {
 				if (value == false) {
