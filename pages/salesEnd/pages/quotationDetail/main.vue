@@ -35,9 +35,9 @@
 								<div class="list-count">
 									<div :style="{ color: '#d66377'}"
 										style='font-size: 14px;'>
-										<span v-if='goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice.toFixed(2) }} 元</span>
+										<span v-if='goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ Number(item.pricesetMakeprice).toFixed(2) }} 元</span>
 										<span v-if='((checkModifyAudit == "3" && goodsClass !="1")|| (checkModifyAudit != "3" && goodsClass =="1")|| (checkModifyAudit != "3" && goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span>
-										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetMakeprice }} 元</span>
+										<span v-if='scontractCode != ""'>合同价：{{ item.goodsContract }} 元</span>
 									</div>
 									<view class="list-right-container">
 										<div class="list-add">
@@ -200,13 +200,17 @@
 									}
 									v.goodsNum = v.goodsCamount
 									v.goodsClass = this.goodsClass
-									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1) {
+									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1 && this.scontractCode == '') {
 										// 获取权益价格
 										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
 										this.totalPrice += (v.pricesetMakeprice).toFixed(2) * v.goodsNum
 										console.log("获取权益的价格-------", v.pricesetMakeprice)
 									}else{
-										this.totalPrice +=  Number(v.pricesetNprice)* v.goodsNum
+										if(this.scontractCode == ''){
+											this.totalPrice +=  Number(v.pricesetNprice)* v.goodsNum
+										}else{
+											this.totalPrice +=  Number(v.goodsContract)* v.goodsNum
+										}
 									}
 														
 									v.itemChecked = false;
@@ -520,13 +524,18 @@
 									}
 									v.goodsNum = v.goodsCamount
 									v.goodsClass = this.goodsClass
-									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1) {
+									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1 && this.scontractCode == '') {
 										// 获取权益价格
 										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
 										this.totalPrice += (v.pricesetMakeprice).toFixed(2) * v.goodsNum
 										console.log("获取权益的价格-------", v.pricesetMakeprice)
 									}else{
-										this.totalPrice +=  Number(v.pricesetNprice)* v.goodsNum
+										if(this.scontractCode == ''){
+											this.totalPrice +=  Number(v.pricesetNprice)* v.goodsNum
+										}else{
+											this.totalPrice +=  Number(v.goodsContract)* v.goodsNum
+										}
+										
 									}
 														
 									v.itemChecked = false;
