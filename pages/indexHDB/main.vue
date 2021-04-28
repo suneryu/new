@@ -369,7 +369,7 @@
 					if(res.errorCode == 'nologin'){
 						this.tapPopup();
 					}else {
-						if(res.userinfoQuality == "dealer"){
+						// if(res.userinfoQuality == "dealer"){
 							//查询用户类型，set缓存
 							this.getuserInfo()
 							
@@ -379,19 +379,19 @@
 								url: 'homepage'
 							}
 							this.redirectTo(options);
-						}else{
-							uni.showModal({
-									title: '提示',
-									content: '您不是用户资质，无法进入！',
-									confirmColor: '#' + $storage.get('baseColor'),
-									success(res) {
-										let pages = getCurrentPages()
-										if (res.confirm) {} else if (res.cancel) {
+						// }else{
+						// 	uni.showModal({
+						// 			title: '提示',
+						// 			content: '您不是用户资质，无法进入！',
+						// 			confirmColor: '#' + $storage.get('baseColor'),
+						// 			success(res) {
+						// 				let pages = getCurrentPages()
+						// 				if (res.confirm) {} else if (res.cancel) {
 								
-										}
-									}
-								})
-						}
+						// 				}
+						// 			}
+						// 		})
+						// }
 						
 						
 					}
@@ -472,7 +472,7 @@
 						}else{
 							uni.showModal({
 									title: '提示',
-									content: '您不是用户资质，无法进入！',
+									content: '您是销售员资质，无法企业认证！',
 									confirmColor: '#' + $storage.get('baseColor'),
 									success(res) {
 										let pages = getCurrentPages()

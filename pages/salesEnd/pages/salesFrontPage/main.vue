@@ -91,7 +91,8 @@
 	import vueTabBar from './vueTabBarHDB.vue';
 	import {
 		queryGroupBuyerPageByAG,
-		getWxMiniQRCode
+		getWxMiniQRCode,
+		getPersonal
 	} from '@/api/interfaceHDB.js';
 	import {
 		clearTimeout,

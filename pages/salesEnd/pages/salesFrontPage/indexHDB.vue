@@ -21,7 +21,7 @@
 		<div class="hd" v-if="handleClose">
 			<div class="handleClose">
 				<div style='display: flex; justify-content: space-between;margin: 10px 10px;width: 95%;'>
-					<span>1</span>
+					<!-- <span>1</span> -->
 					<span>员工信息</span>
 				</div>
 				<div
@@ -93,7 +93,7 @@
 		loginMicroMessenger,
 		loginMiniProgram,
 		warrantyLogin,
-		getPersonal,
+		// getPersonal,
 		getUserservice,
 		queryScontractPageC,
 		getUpmupointsPageByPC,
@@ -122,12 +122,7 @@
 			};
 		},
 		mounted() {
-			http.get(queryUserinfoPageBySales, {
-				// userinfoPhone: 18154177826,
-				userinfoPhone: $storage.get('userPhone')
-			}).then(res => {
-				this.infoPage = res.list[0]
-			});
+			
 			console.log('$storage.get()', $storage.get('loginInfor'))
 			console.log('$storage.get(userInfoCode)', $storage.get('loginInfor').userInfoCode)
 
@@ -152,7 +147,12 @@
 
 			this.getUpmupointsPageByPC();
 			this.queryCollectPage();
-
+				http.get(queryUserinfoPageBySales, {
+				// userinfoPhone: 18154177826,
+				userinfoPhone: $storage.get('loginInfor').userPhone
+			}).then(res => {
+				this.infoPage = res.list[0]
+			});
 			// this.getUpmupointsPageByPC();
 		},
 
