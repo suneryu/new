@@ -33,7 +33,7 @@
 				<div style='width: 100%;height: 62px;'>
 					<image :src="fapiap1" style="width: 50px;" mode="widthFix"></image>
 				</div>
-				<span>带接洽</span>
+				<span>待接洽</span>
 			</div>
 			<div class="showCla" @click="myInfo(2)">
 				<div style='width: 100%;height: 62px;'>
