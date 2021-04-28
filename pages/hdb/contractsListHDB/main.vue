@@ -331,6 +331,7 @@
 			//点击预约
 			talkOrder(item) {
 				console.log('合同信息---',item)
+				console.log(this.areaCode,1111)
 				if (this.showArea) {
 					if (this.city == '') {
 						uni.showModal({
@@ -340,6 +341,7 @@
 							success(res) {}
 						})
 					} else {
+						let that =this
 						uni.showModal({
 							title: '提示',
 							content: '服务预约确认！',
@@ -350,7 +352,7 @@
 										scontractCode:item.scontractCode,
 										// scontractCode:'2020030300000016',
 										userinfoPhone:$storage.get('loginInfor').userPhone,
-										areaCode:this.areaCode
+										areaCode:that.areaCode
 									}
 									http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
 									.then(res1=>{
