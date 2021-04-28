@@ -136,7 +136,7 @@
             </div>
             <div
               class="lessMoney"
-              style="text-decoration: underline; width: 55%; text-align: right"
+              style="text-decoration: underline; width: 35%; text-align: right"
               v-if="items.memberGcode == 0"
               @click="order(items.scontractObillcode)"
             >
@@ -549,7 +549,7 @@ button {
   z-index: 20000;
 }
 .lessMoney {
-  width: 20%;
+  width: 30%;
   height: 20px;
   line-height: 20px;
   font-family: "PingFangSC-Regular", "PingFang SC", sans-serif;
