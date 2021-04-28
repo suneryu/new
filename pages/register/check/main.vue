@@ -254,6 +254,7 @@
 			},
 
 			register() {
+				console.log('oooooo=',this.checkModifyAudit)
 				if(this.checkModifyAudit == 3){
 					this.$qj.message.alert('企业已授权，请不要重复提交');
 					return;

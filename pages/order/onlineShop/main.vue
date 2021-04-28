@@ -553,9 +553,6 @@
 				}, {
 					ptfpmodeName: '线下',
 					contractPmode:'1'
-				}, {
-					ptfpmodeName: '信用额度支付',
-					contractPmode:'2'
 				}]
 				if (this.goodsClass == '1') { //零配件
 					// 价格  线上 线下 信用额度
