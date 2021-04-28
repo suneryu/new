@@ -22,26 +22,26 @@
 		</div>
 		<div class="user-order-title">
 			<span>我的预约合同</span>
-			<div @click="">
+			<div @click="myInfo(0)">
 				查看全部
 				<i class="iconfont">&#xe61d;</i>
 			</div>
 		</div>
 		<!-- 我的发票，用户协议， 企业信息 -->
 		<div class="showCla1">
-			<div class="showCla" @click="myInfo(0)">
+			<div class="showCla" @click="myInfo(1)">
 				<div style='width: 100%;height: 62px;'>
 					<image :src="fapiap1" style="width: 50px;" mode="widthFix"></image>
 				</div>
 				<span>带接洽</span>
 			</div>
-			<div class="showCla" @click="myInfo(1)">
+			<div class="showCla" @click="myInfo(2)">
 				<div style='width: 100%;height: 62px;'>
 					<image :src="yhxy1" style="width: 50px;" mode="widthFix"></image>
 				</div>
 				<span>接洽中</span>
 			</div>
-			<div class="showCla" @click="myInfo(2)">
+			<div class="showCla" @click="myInfo(3)">
 				<div style='width: 100%;height: 62px;'>
 					<image :src="qyinfo1" style="width: 50px;" mode="widthFix"></image>
 				</div>
@@ -182,6 +182,21 @@
 			vueTabBar
 		},
 		methods: {
+			// 跳转到我的预约里面
+			myInfo(data){
+				console.log('datappppp-',data)
+				let params={
+						info:data
+					}
+				
+					 
+				
+				console.log(params,'params---')
+				this.$qj.router.push("salesEnd/pages/salesConstractList", params)	
+				
+		
+				
+			},
 			handleClose1(){
 				this.closeShow = false;
 			},

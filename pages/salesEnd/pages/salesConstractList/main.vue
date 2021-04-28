@@ -10,7 +10,7 @@
 		</div> -->
 		<div class="orderList-tit" v-bind:style="{ top: topDistance + 'px' }">
 			<ul>
-				<li v-for="(item, index) in items" :key="index" @click="orderTitle(item, index)">
+				<li v-for="(item, index) in items" :key="index" @click="parts(item, index)">
 					<div :class="current === index ? 'active' : ''" :style="{ color: current === index ? '#004178' : '' }">
 						{{ item }}
 						<span :style="{ background: '#004178' }"></span>
@@ -49,8 +49,8 @@
 						<div style='height: 25px;width: 100%;display: flex;'>
 							<div style='height: 25px;width: 50%;font-size: 12px;line-height: 25px;'>企业编号：<span>{{items.contractInvoice}}</span></div>
 							<div style='height: 25px;width: 50%;display: flex;padding: 0 10px 0 10px;'>
-								<button class="buttonClass" @click="contactPerson(items,'2')" v-if='items.dataState == 1'>已接洽</button>
-								<button class="buttonClass" @click="contactPerson(items,'1')" v-if='items.dataState == 0'>立即接洽</button>
+								<button class="buttonClass" @click="contactPerson(items,'2','1')" v-if='items.dataState == 1'>已接洽</button>
+								<button class="buttonClass" @click="contactPerson(items,'1','0')" v-if='items.dataState == 0'>立即接洽</button>
 								<button :class="[items.dataState !=2 ? 'buttonClass':'buttonClass1']" @click="salesperson(items)" v-if='items.dataState != 2'>查看联系方式</button>
 							</div>
 						</div>
@@ -129,11 +129,41 @@
 				page:1,
 				info:{},  //登录人信息
 				userPhone : "",  //当前登录人的手机号
-				userinfoType:""  // 用户类型
+				userinfoType:"",  // 用户类型
+				xihx:''
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			console.log(options,'---ppp---ppp--')
+			this.userinfoType= $storage.get('loginInfor').userinfoType
+			console.log($storage.get('loginInfor'),"$storage.get('loginInfor')")
+			console.log($storage.get('loginInfor').userPhone,"$storage.get('loginInfor').userPhone")
+			this.info = $storage.get('loginInfor');
 			
+			console.log("userPhone",this.info.userPhone)
+			
+			let parmas = {
+				contractInvstate:2,
+				rows: 10,
+				page: 1,
+				contractTypepro:$storage.get('loginInfor').userPhone
+				// goodsSupplierName:this.info.userPhone
+			};
+			let that = this
+			this.current = Number(options.info)
+			// this.$qj.state.set('orderTabIndex', options.info);
+			
+			if(options.info == 1 ){
+				parmas.dataState = 0
+			}
+			if(options.info == 2 ){
+				parmas.dataState = 1
+			}
+			if(options.info == 3 ){
+				parmas.dataState = 2
+			}
+			this.getData(parmas);
+			// this.parts(data,options.info)
 			this.baseColor = `#${$storage.get('baseColor')}`;
 			wx.setNavigationBarTitle({
 				title: "预约任务列表"
@@ -145,20 +175,21 @@
 			});
 		},
 		created(){
-			this.userinfoType= $storage.get('loginInfor').userinfoType
-			console.log($storage.get('loginInfor'),"$storage.get('loginInfor')")
-			console.log($storage.get('loginInfor').userPhone,"$storage.get('loginInfor').userPhone")
-			this.info = $storage.get('loginInfor');
+		
+			// this.userinfoType= $storage.get('loginInfor').userinfoType
+			// console.log($storage.get('loginInfor'),"$storage.get('loginInfor')")
+			// console.log($storage.get('loginInfor').userPhone,"$storage.get('loginInfor').userPhone")
+			// this.info = $storage.get('loginInfor');
 			
-			console.log("userPhone",this.info.userPhone)
-			let parmas = {
-				contractInvstate:2,
-				rows: 10,
-				page: 1,
-				goodsPbillno:'18326154207'
-				// goodsSupplierName:this.info.userPhone
-			};
-			this.getData(parmas);
+			// console.log("userPhone",this.info.userPhone)
+			// let parmas = {
+			// 	contractInvstate:2,
+			// 	rows: 10,
+			// 	page: 1,
+			// 	contractTypepro:'17835757271'
+			// 	// goodsSupplierName:this.info.userPhone
+			// };
+			// this.getData(parmas);
 		},
 		onReachBottom() {
 		  // 到这底部在这里需要做什么事情
@@ -166,54 +197,62 @@
 		  this.loadMore(this.contractData[0].memberGcode);
 		},
 		methods: {
-			orderTitle(item, index) {
-				console.log('传来的---0',item,'====',index)
-				this.current = index;
-				this.$qj.state.set('orderTabIndex', index);
-				},
-			contactPerson(data,state){
+			
+			contactPerson(data,state,oldState){
 				//更新合同状态将待接洽换成已接洽
 				console.log('立即接洽，',data)
 				let parmas = {
 					scontractId: data.scontractId,
 					contractInvstate:2,
 					dataState: state,
-					
-							// goodsSupplierName:this.info.userPhone
+					oldDataState: oldState,
+					// goodsSupplierName:this.info.userPhone
 				};
 				http.get(talkOverWithSell, parmas)
 					.then(res => {
 						console.log("更改预约合同结果....",res)	
 						
-					// res.rows.forEach(element => {	
-					// 			element.date1 = this.format(element.contractEffectivedate)
-					// 			element.date2 = this.format(element.contractDepositdate)
-					// 		this.contractData.push(element)
-					// 	// this.contractData = res.rows;
-					// });
+						let parmas = {
+							contractInvstate:2,
+							rows: 10,
+							page: 1,
+							contractTypepro:$storage.get('loginInfor').userPhone
+							// goodsSupplierName:this.info.userPhone
+						};
+						if(this.current == 1 ){
+							parmas.dataState = 0
+						}
+						if(this.current == 2 ){
+							parmas.dataState = 1
+						}
+						if(this.current == 3 ){
+							parmas.dataState = 2
+						}
+						this.getData(parmas);
 						
 					});
 			},
 			salesperson(data) {
+				console.log('查看联系方式--',data)
 				let showHtml = ""
 				wx.showModal({
 					title: "企业信息",
-					content: '上海测试有限公司 企业编码\r\n企业联系人：123\r\n电话：123',
+					content: data.contractUserurl + '企业编码:'+data.contractInvoice+'\r\n企业联系人：'+data.mschannelName+	'\r\n电话：'+data.goodsPbillno,
 					cancelText: '关闭',
 					confirmText:'一键拨号',
 					success: res => {
 						if (res.confirm) {
-							this.gocall()
+							this.gocall(data.goodsPbillno)
 						}
 					}
 				});
 			},
-			gocall() {
+			gocall(phoneNumber) {
 				console.log(1111)
 				uni.makePhoneCall({
 			
 					// 手机号
-					phoneNumber: '18154177826',
+					phoneNumber: phoneNumber,
 			
 					// 成功回调
 					success: (res) => {
@@ -342,79 +381,71 @@
 		},
 	
 			//根据合同类型查询合同数据
-			parts(data){
+			parts(data,index){
+			
+					console.log('传来的---0',data,'====',index)
+					this.current = index;
+					this.$qj.state.set('orderTabIndex', index);
+					
 				console.log(data,'data')
-				if(data=='0'){
-					console.log('零配件预付款合同')
-					this.fontColor1="#004178";  //字体颜色
-					this.fontColor2="#000000"; //字体颜色
-					this.fontColor3="#000000";   //字体颜色
-					this.fontColor4="#000000";   //字体颜色
-					//合同查询接口  web/sp/scontract/queryScontractPageNew.json? memberGcode=2-1,2-2&contractInvstate=0
+				if(index=='0'){
+					console.log('全部')
+				
 					
 					this.page=1; //第一次展示的十条数据
 					//合同查询接口  web/sp/scontract/queryScontractPageNew.json? memberGcode=2-1,2-2&contractInvstate=0
 					let parmas = {
-						memberGcode: "0",
 						contractInvstate:2,
 						rows: 10,
 						page: 1,
-						goodsSupplierName:this.info.userPhone
+						contractTypepro:$storage.get('loginInfor').userPhone
+						// goodsSupplierName:this.info.userPhone
 					}
-					// this.getData(parmas);
+					this.getData(parmas);
 				}
-				if(data=='1'){
-					console.log('固定价格合同')
-					this.fontColor1="#000000";  //字体颜色
-					this.fontColor2="#004178"; //字体颜色
-					this.fontColor3="#000000";   //字体颜色
-					this.fontColor4="#000000";   //字体颜色
-				
+				if(index=='1'){
+					console.log('待接洽')
+					
 					this.page=1; //第一次展示的十条数据
 					//合同查询接口  web/sp/scontract/queryScontractPageNew.json? memberGcode=2-1,2-2&contractInvstate=0
 					let parmas = {
-						memberGcode: "1",
 						contractInvstate:2,
 						rows: 10,
 						page: 1,
-						goodsSupplierName:this.info.userPhone
+						dataState:0,
+						contractTypepro:$storage.get('loginInfor').userPhone
+						// goodsSupplierName:this.info.userPhone
 					}
-					// this.getData(parmas);
+					this.getData(parmas);
 					
 				}
-				if(data=='2'){
-					console.log('线下销售合同')
-					this.fontColor1="#000000";  //字体颜色
-					this.fontColor2="#000000"; //字体颜色
-					this.fontColor4="#000000"; //字体颜色
-					this.fontColor3="#004178";   //字体颜色
+				if(index=='2'){
+					console.log('接洽中')
 					
 					let parmas = {
-						memberGcode: "2",
 						contractInvstate:2,
 						rows: 10,
 						page: 1,
-						goodsSupplierName:this.info.userPhone
+						dataState:1,
+						contractTypepro:$storage.get('loginInfor').userPhone
+						// goodsSupplierName:this.info.userPhone
 					}
-					// this.getData(parmas);
+					this.getData(parmas);
 					
 				}
 				
-				if(data=='3'){
-					console.log('线下销售合同')
-					this.fontColor1="#000000";  //字体颜色
-					this.fontColor2="#000000"; //字体颜色
-					this.fontColor3="#000000";   //字体颜色
-					this.fontColor4="#004178";   //字体颜色
-					
+				if(index=='3'){
+					console.log('已接洽')
+				
 					let parmas = {
-						memberGcode: "2",
 						contractInvstate:2,
 						rows: 10,
 						page: 1,
-						goodsSupplierName:this.info.userPhone
+						dataState:2,
+						contractTypepro:$storage.get('loginInfor').userPhone
+						// goodsSupplierName:this.info.userPhone
 					}
-					// this.getData(parmas);
+					this.getData(parmas);
 					
 				}
 				
