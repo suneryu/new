@@ -191,12 +191,15 @@
 					.post('/web/rs/resourceGoods/getResourceGoodsInfoBySkuCode.json', {skuCode}).then(res1 => {
 						this.goodsClass = res1.goodsClass
 						res.list.forEach(item=>{
+							item.goodsClass = this.goodsClass
 							item.shoppingpackageList.forEach(item1=>{
+								item1.goodsClass = this.goodsClass
 								item1.shoppingGoodsList.forEach(v=>{
 									if (!RegExp(/http/).test(v.dataPic)) {
 										v.dataPic = this.$domain + v.dataPic;
 									}
 									v.goodsNum = v.goodsCamount
+									v.goodsClass = this.goodsClass
 									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1) {
 										// 获取权益价格
 										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
@@ -508,12 +511,15 @@
 						this.getGoodsDetial(res.list[0].shoppingpackageList[0].shoppingGoodsList[0].skuCode,res)
 					}else{
 						res.list.forEach(item=>{
+							item.goodsClass = this.goodsClass
 							item.shoppingpackageList.forEach(item1=>{
+								item1.goodsClass = this.goodsClass
 								item1.shoppingGoodsList.forEach(v=>{
 									if (!RegExp(/http/).test(v.dataPic)) {
 										v.dataPic = this.$domain + v.dataPic;
 									}
 									v.goodsNum = v.goodsCamount
+									v.goodsClass = this.goodsClass
 									if (this.userinfoType == "2" && this.checkModifyAudit == "3" && this.goodsClass == 1) {
 										// 获取权益价格
 										v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
