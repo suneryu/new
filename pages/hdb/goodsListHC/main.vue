@@ -36,7 +36,7 @@
 							<p>{{ item.goodsNo }}</p>
 							<p v-if="userinfoType =='1' " class="noPrice">认证为企业用户可查看价格</p>
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h3>
-							<div style="text-align: left;" v-if="item.goodsClass != '1' && userinfoType=='2' && checkModifyAudit == '3' ">
+							<div style="text-align: center;" v-if="item.goodsClass != '1' && userinfoType=='2' && checkModifyAudit == '3' ">
 								<span class="originalPrice11">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
 							</div>
 							<div style="text-align: left;" v-if="item.goodsClass == '1' && userinfoType=='2' && checkModifyAudit == '3' ">
