@@ -31,19 +31,19 @@
 		<div class="showCla1">
 			<div class="showCla" @click="myInfo(1)">
 				<div style='width: 100%;height: 62px;'>
-					<image :src="fapiap1" style="width: 50px;" mode="widthFix"></image>
+					<image :src="djq" style="width: 50px;" mode="widthFix"></image>
 				</div>
 				<span>待接洽</span>
 			</div>
 			<div class="showCla" @click="myInfo(2)">
 				<div style='width: 100%;height: 62px;'>
-					<image :src="yhxy1" style="width: 50px;" mode="widthFix"></image>
+					<image :src="jqz" style="width: 50px;" mode="widthFix"></image>
 				</div>
 				<span>接洽中</span>
 			</div>
 			<div class="showCla" @click="myInfo(3)">
 				<div style='width: 100%;height: 62px;'>
-					<image :src="qyinfo1" style="width: 50px;" mode="widthFix"></image>
+					<image :src="ywc" style="width: 50px;" mode="widthFix"></image>
 				</div>
 				<span>已完成</span>
 			</div>
@@ -110,9 +110,9 @@
 				state: 'wx',
 				grant_type: '',
 				domains: this.$domain,
-				fapiap1: '', //发票
-				yhxy1: "", // 用户协议
-				qyinfo1: "", //企业信息
+				djq: '', //待接洽
+				jqz: "", // 接洽中
+				ywc: "", //已完成
 				jfsc1: "", //积分商城
 				hyscCar1: "", //合约商城购物车
 				baseColor: '',
@@ -157,11 +157,10 @@
 			}
 		},
 		created() {
-			this.yhxy1 = this.$domain + '/paas/shop/2020063000000001/2021-03-23/5f8e628099264f9b838b8588c6d15c87.png';
-			this.jfsc1 = this.$domain + '/paas/shop/2020063000000001/2021-03-25/728f2dd8ba6c4d6e8a9df37ca7a51de0.png';
-			this.fapiap1 = this.$domain + '/paas/shop/2020063000000001/2021-03-25/27251fe8602b4926b15f39e52f91f11a.png';
-			this.hyscCar1 = this.$domain + '/paas/shop/2020063000000001/2021-03-25/277c0621c99a4e5a8fb96bbf360a5f01.png';
-			this.qyinfo1 = this.$domain + '/paas/shop/2020063000000001/2021-03-25/b430fdd00a2947ed8ea99e4f11b9c9d1.png';
+			this.djq = this.$domain + '/paas/shop/2020063000000001/2021-04-28/5bd23eec2edc494588836f7820eb2412.png';
+			this.jqz = this.$domain + '/paas/shop/2020063000000001/2021-04-29/7cad91913672419fb074e90f1fcbda7f.png';
+			this.ywc = this.$domain + '/paas/shop/2020063000000001/2021-04-29/6094f8a21b8645ebbd683ec22071959c.png';
+
 			// =this.$domain + '/paas/shop/2020063000000001/2021-03-25/27251fe8602b4926b15f39e52f91f11a.png'
 			// console.log('这里是个人中心')
 			// this.aaa();

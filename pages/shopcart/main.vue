@@ -428,8 +428,7 @@
 									if (v.shoppingpackageList) {
 										v.shoppingpackageList.map(val => {
 
-											val.titChecked =
-											1; //先设置没有全选，判断shoppingGoodsList下的shoppingGoodsCheck是不是都为0，是的话就全选按钮生效
+											val.titChecked =1; //先设置没有全选，判断shoppingGoodsList下的shoppingGoodsCheck是不是都为0，是的话就全选按钮生效
 											if (val.shoppingGoodsList.filter(vm => vm
 													.shoppingGoodsCheck === 0).length === val
 												.shoppingGoodsList.length) {
@@ -654,6 +653,7 @@
 				list.shoppingGoodsList.map(v => {
 					ids.push(v.shoppingGoodsId);
 				});
+				console.log('rrrrr',list.shoppingCode)
 				let params = {
 					shoppingCode: list.shoppingCode,
 					checkState: list.titChecked === 0 ? 1 : 0,
@@ -686,6 +686,7 @@
 					.http(this.$qj.domain)
 					.post(updateShoppingGoodsCheckState, params)
 					.then(res => {
+						console.log('购物车选单个商品',res)
 						if (res && res.success) {
 							this.commonMounted();
 						}

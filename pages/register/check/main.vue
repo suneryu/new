@@ -154,7 +154,7 @@
 				this.imgBusinessHttp = this.registerParams.imgBusiness;
 				
 				console.log('this.registerParams.memoauthFileurl',this.registerParams.memoauthFileurl)
-				if(this.registerParams.memoauthFileurl != null && this.registerParams.memoauthFileurl !='1'){
+				if(this.registerParams.memoauthFileurl != null && this.registerParams.memoauthFileurl !='1' && this.registerParams.memoauthFileurl != ''){
 					this.memoauthFileurl = this.$qj.domain + this.registerParams.memoauthFileurl;
 				}else{
 					this.memoauthFileurl  = this.aaaa
