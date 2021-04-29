@@ -65,6 +65,10 @@
 					<span>{{totalPrice.toFixed(2)}} 元</span>
 				</div>
 				<div class='customInfo'>
+					<span>公司名称</span>
+					<span>{{companyName}}</span>
+				</div>
+				<div class='customInfo'>
 					<span>客户</span>
 					<span>{{userPhone}}</span>
 				</div>
@@ -151,7 +155,8 @@
 				userInfoCode: "",
 				goodsClass: "",
 				scontractCode:'',
-				totalPrice:0
+				totalPrice:0,
+				companyName:''
 			};
 		},
 		onShow() {
@@ -268,6 +273,7 @@
 				}).then(res => {
 					this.userinfoType = res.list[0].userinfoType
 					this.userInfoCode = res.list[0].userinfoCode;
+					this.companyName = res.list[0].userinfoCompname
 					this.searchStatus();
 				})
 			},
@@ -1056,7 +1062,7 @@
 
 		&-nulls {
 			width: 100%;
-			margin-top: 400rpx;
+			padding-top: 400rpx;
 			text-align: center;
 
 			img {

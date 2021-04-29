@@ -362,7 +362,7 @@
 												duration: 2000,
 												icon: "error",
 												success(data) {
-													this.getShow()
+													that.getShow()
 												}
 											});
 										}else{

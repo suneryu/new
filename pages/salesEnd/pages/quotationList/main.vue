@@ -43,7 +43,7 @@
 						</div>
 						<div style='display: flex;justify-content: space-between;height: 50rpx;align-items: center;color: #828282;'>
 							<span>咨询单总额</span>
-							<span style='color: #ff557f;'>{{order.dataBmoney}} 元</span>
+							<span style='color: #ff557f;'>{{order.contractInmoney}} 元</span>
 						</div>
 					</div>
 				</li>
@@ -126,7 +126,8 @@ export default {
 		this.page = 1;
 	},
 	mounted() {
-		this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
+		// this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
+		this.baseColor = '#004178'
 		this.searchPath = this.$state.orderSearch;
 	},
 	onShow() {
@@ -449,7 +450,7 @@ export default {
 				}
 				.active {
 					span {
-						// position: absolute;
+						position: absolute;
 						height: 3rpx;
 						width: 100%;
 						bottom: 0;

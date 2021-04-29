@@ -91,13 +91,13 @@
 			<div class='goodsPrice-item'>
 				<span>权益优惠：</span>
 				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
-				<span>{{ unitPrice.obpay }}{{discountMoney}}{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{(allPrice-discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
 			</div>
 		</div>
 		<div class="accounts-sum">
 			<p>
 				应付金额:
-				<i>{{ unitPrice.obpay }}{{ (allPrice-discountMoney).toFixed(2) }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{ Number(discountMoney).toFixed(2) }}{{ unitPrice.mapay }}</i>
 				<!-- <i>{{ unitPrice.obpay }}{{ Number(userinfoOcode)*Number(allPrice)  }}{{ unitPrice.mapay }}</i> -->
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
@@ -260,6 +260,7 @@
 				partnerType:0,   //信用额度
 				discountMoney:0, // 权益优惠
 				discountMoneyBak:0, // 确认单权益优惠
+				shoppingGoodsIdStr:[]
 				
 			};
 		},
@@ -280,8 +281,8 @@
 			
 			// 初始化价格数据
 			this.initPriceData();
-			// 初始化地址数据
-			this.initAddressData();
+			// // 初始化地址数据
+			// this.initAddressData();
 			
 		},
 		created(){
@@ -349,6 +350,16 @@
 			}
 		},
 		methods: {
+			//查询运费
+			getFreightFare(){
+				this.$qj.http(this.$qj.domain).get('/web/oc/contract/calculateFreightFare.json', {
+					areaCode: this.addressList.areaCode,
+					shoppingGoodsIdStr: this.shoppingGoodsIdStr.toString()
+				})
+				.then(res=>{
+					
+				})
+			},
 			// 查询 认证授权 状态
 			searchStatus() {
 				let that = this
@@ -365,6 +376,8 @@
 						if (res.checkModifyAudit == '3') {
 							this.checkModifyAudit = "3"
 						}
+					// 初始化地址数据
+					this.initAddressData();
 					// 初始化订单数据
 						this.initOrderData(this.temp);
 					});
@@ -593,20 +606,27 @@
 						// this.goodsClass = res.goodsClass
 						this.shoppingItems = []
 						this.discountMoney = 0
+						this.shoppingGoodsIdStr = []
 						this.getGoodsDetial(res.goodsList[0].skuCode)
 						res.goodsList.forEach(item=>{
-							if(item.goodsClass==1 && res.contractType == 39){
-								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3){
+								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
+							}else{
+								this.discountMoney += item.pricesetNprice*item.goodsNum
 							}
-							if(item.goodsClass==1 && res.contractType == 41){
+							
+							if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){
 								this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 							}
+							this.shoppingGoodsIdStr.push(item.contractGoodsId)
 						})
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.shoppingItems.push(res)
 						this.allPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
 						this.freight = res.freight == null ?0:res.freight
 						// this.goodsClass = res.goodsClass
+						this.getFreightFare()
 					})
 			},
 

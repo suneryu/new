@@ -45,7 +45,7 @@
 									<!-- <p style="width:160rpx;" v-if='order.goodsClass == "1"'>{{ unitPrice.obpay }}{{ (Number(goods.pricesetNprice) * userinfoOcode).toFixed(2)}}{{ unitPrice.mapay }}</p> -->
 									<h6>x{{ goods.goodsNum }}</h6>
 									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if=" order.dataState == 1 && order.dataStatestr == 3  && order.contractPmode =='0'">
-										<div style='border-radius: 26rpx;border: 1rpx solid #d4d4d4;text-align: center;' @click="refund(goods,order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
+										<div style='border-radius: 26rpx;border: 1rpx solid #d4d4d4;text-align: center;' @click.stop="refund(goods,order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
 									</div>
 								</div>
 							</div>
@@ -57,21 +57,21 @@
 								<i :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ order.dataBmoney }}{{ unitPrice.mapay }}</i>
 							</div>
 							<div class="right" v-if="order.dataState == 1 && (order.dataStatestr == 2 )&& order.pricesetCurrency != 2">
-								<div class="btn" @click="cancelOrder(order)">取消订单</div>
+								<div class="btn" @click.stop="cancelOrder(order)">取消订单</div>
 								<!-- <div class="btn" @click="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">立即支付</div> -->
 							</div>
 							<div class="right" v-if="order.dataState == 1  && order.dataStatestr == 1 && order.pricesetCurrency != 2">
-								<div class="btn" @click="cancelOrder(order)">取消订单</div>
-								<div class="btn" @click="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">去支付</div>
+								<div class="btn" @click.stop="cancelOrder(order)">取消订单</div>
+								<div class="btn" @click.stop="pay(order)" :style="{ borderColor: baseColor, color: baseColor }">去支付</div>
 							</div>
 						
 							<div class="right" v-else-if="order.dataState == 3">
-								<div class="btn" @click="queryExpressInfo(order)">查看物流</div>
-								<div v-if="order.contractPmode != 3" class="btn" @click="confirmReceive(order)" :style="{ borderColor: baseColor, color: baseColor }">确认收货</div>
+								<div class="btn" @click.stop="queryExpressInfo(order)">查看物流</div>
+								<div v-if="order.contractPmode != 3" class="btn" @click.stop="confirmReceive(order)" :style="{ borderColor: baseColor, color: baseColor }">确认收货</div>
 							</div>
 							<div class="right" v-else-if="order.dataState == 4">
 								<div v-if="order.contractAppraise == 1"><!-- <span>已评价</span> --></div>
-								<div class="btn" v-else @click="evaluate(order.goodsList)" :style="{ borderColor: baseColor, color: baseColor }">去评价</div>
+								<div class="btn" v-else @click.stop="evaluate(order.goodsList)" :style="{ borderColor: baseColor, color: baseColor }">去评价</div>
 							</div>
 							<!-- <div class="right" v-else-if="(order.dataState == 2 && order.pricesetCurrency != 2) || (order.dataState == 1 && order.dataStatestr == 3)">
 								

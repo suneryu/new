@@ -89,7 +89,7 @@
 							<div class='goodsPrice-item'>
 								<span>权益优惠：</span>
 								<!-- <span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span> -->
-								<span>{{ unitPrice.obpay }}{{discountMoney}}{{ unitPrice.mapay }}</span>
+								<span>{{ unitPrice.obpay }}{{(totalPrice - discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
 							</div>
 						</div>
 					</li>
@@ -98,7 +98,7 @@
 			<div class='totalPrice'>
 				<div style='width: 70%;float: left;padding: 20rpx;box-sizing: border-box;'>应付金额：
 					<!-- <span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice}}{{ unitPrice.mapay }}</span> -->
-					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{(totalPrice-discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
+					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
 				</div>
 				<div class='goPay' @click='toSettle'>去结算</div>
 			</div>
@@ -237,7 +237,10 @@
 						res.goodsList.forEach(item=>{
 							item.itemChecked = false
 							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3){
-								this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
+							}else{
+								this.discountMoney += item.pricesetNprice*item.goodsNum
 							}
 						})
 						this.discountMoney = this.discountMoney.toFixed(2)
