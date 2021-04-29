@@ -25,7 +25,7 @@
 					<div style="display: flex;font-size: 12px;margin: 10px 0;">
 						<div style="width: 100%;">合同签订时间：
 							<span>{{item.goodsPmbillno}}</span>
-							<button class="buttonClass" @click="salesperson(item)" v-if="item.dataState != 0">联系销售员</button>
+							<button class="buttonClass" @click="salesperson(item)" v-if="item.dataState  != 0">联系销售员</button>
 						</div>
 					</div>
 					<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;">
@@ -36,7 +36,7 @@
 				</div>
 			</div>
 		</div>
-		<view class="popup" v-show="htImg">
+		<view class="popup" v-show="htImg"> 
 			<view class="htImage">
 				<div style='text-align: right;font-size: 18px; color: azure;font-weight: 800;'><span
 						@click='htImg = false'>关闭</span></div>
@@ -99,7 +99,7 @@
 				uni.makePhoneCall({
 
 					// 手机号
-					phoneNumber: item.goodsPbillno,
+					phoneNumber: item.contractTypepro,
 
 					// 成功回调
 					success: (res) => {
