@@ -125,12 +125,12 @@
 							<view class="total-price">
 								总计：
 								<i :style="{ color: baseColor }"
-									v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
-								<i :style="{ color: baseColor }" v-if="totalPrice && totalPointPrice">+</i>
-								<i :style="{ color: baseColor }"
+									>{{ unitPrice.obpay }}{{ totalPointPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
+								<!-- <i :style="{ color: baseColor }" v-if="totalPrice && totalPointPrice">+</i> -->
+								<!-- <i :style="{ color: baseColor }"
 									v-if="totalPrice > 0">{{ unitPrice.obpay }}{{ totalPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
 								<i :style="{ color: baseColor }"
-									v-if="totalPrice == 0 && totalPointPrice == 0">{{ unitPrice.obpay }}0.00{{ unitPrice.mapay }}</i>
+									v-if="totalPrice == 0 && totalPointPrice == 0">{{ unitPrice.obpay }}0.00{{ unitPrice.mapay }}</i> -->
 							</view>
 							<view class="total-weight" v-if="totalGoodsWeight && totalGoodsWeight > 0">
 								总重：
@@ -428,18 +428,14 @@
 									if (v.shoppingpackageList) {
 										v.shoppingpackageList.map(val => {
 
-											val.titChecked =1; //先设置没有全选，判断shoppingGoodsList下的shoppingGoodsCheck是不是都为0，是的话就全选按钮生效
-											if (val.shoppingGoodsList.filter(vm => vm
-													.shoppingGoodsCheck === 0).length === val
-												.shoppingGoodsList.length) {
+											val.titChecked = 1; //先设置没有全选，判断shoppingGoodsList下的shoppingGoodsCheck是不是都为0，是的话就全选按钮生效
+											if (val.shoppingGoodsList.filter(vm => vm.shoppingGoodsCheck === 0).length === val.shoppingGoodsList.length) {
 												//vm.shoppingGoodsCheck   没选的情况下为1   
 												val.titChecked = 0; //商品全选状态0是全选
 											}
 											val.shoppingGoodsList.map(vk => {
 												if (vk.goodsClass == '1') {
-													vk.pricesetNprice1 = (Number(vk
-															.pricesetNprice) * this
-														.userinfoOcode).toFixed(2)
+													vk.pricesetNprice1 = (Number(vk.pricesetNprice) * this.userinfoOcode).toFixed(2)
 												}
 
 
@@ -451,23 +447,17 @@
 													0) {
 													this.checkSkuMultipleData.forEach(
 														item => {
-															if (item.skuNo == vk
-																.skuNo) {
-																vk.skuOneNum = item
-																	.skuOneNum;
+															if (item.skuNo == vk.skuNo) {
+																vk.skuOneNum = item.skuOneNum;
 															}
 														});
 												}
 												if (this.batchCollectData.length > 0) {
 													this.batchCollectData.forEach(
 														item => {
-															if (item
-																.collectOpcode ==
-																vk.skuCode) {
-																vk.collectObj =
-																	item;
-																vk.isCollect =
-																true;
+															if (item.collectOpcode ==vk.skuCode) {
+																vk.collectObj =item;
+																vk.isCollect =true;
 															}
 														});
 												}
@@ -484,20 +474,39 @@
 										}
 									}
 								});
-								if (shopCartData.filter(val => val.rowsCheck === 0).length === shopCartData
-									.length) {
-									this.countChecked = true;
-								} else {
-									this.countChecked = false;
-								}
+								// if (shopCartData.filter(val => val.rowsCheck === 0).length === this.typeList.length) {
+								// 	this.countChecked = true;
+								// } else {
+								// 	this.countChecked = false;
+								// }
 								// this.listItems = shopCartData;
 								this.listItems.push(shopCartData);
-								console.log("查询商品后的listItems----", this.listItems)
 							});
-							this.$forceUpdate();
+							console.log("查询商品后的listItems----",this.listItems )
+							//判断是否全选
+							if (this.listItems.filter(val => val[0].rowsCheck === 0).length === this.listItems.length) {
+								this.countChecked = true;
+							} else {
+								this.countChecked = false;
+							}
 							let totalPrice = 0;
-							let totalPointPrice = 0;
+							 this.totalPointPrice = 0;
 							let productPresentPriceAll = 0;
+							//计算总价
+							this.listItems.forEach(item=>{
+								item[0].shoppingpackageList[0].shoppingGoodsList.forEach(v=>{
+									if(v.shoppingGoodsCheck == 0){
+										if(v.pricesetNprice1 != undefined){
+										this.totalPointPrice += Number(v.pricesetNprice1)
+									}else{
+										this.totalPointPrice += Number(v.pricesetNprice)
+									}
+								}
+								})	
+							})
+							this.totalPrice = this.totalPointPrice
+							this.$forceUpdate();
+							
 							// 商品选择操作数组
 							this.shopIdAttr = [];
 							// 批量check商品收藏状态操作数组
@@ -510,12 +519,10 @@
 							let checkSkuMultipleArr = [];
 							// 获取当前零配件商品权益的价格 1-权益值
 							let qyNumber = 0;
-							if (aa[0].shoppingpackageList[0].shoppingGoodsList.length > 0 && this.userinfoType ==
-								"2" && this.checkModifyAudit == "3") {
+							if (aa[0].shoppingpackageList[0].shoppingGoodsList.length > 0 && this.userinfoType =="2" && this.checkModifyAudit == "3") {
 								console.log('zhaodaole----', aa[0].shoppingpackageList[0].shoppingGoodsList)
 								aa[0].shoppingpackageList[0].shoppingGoodsList.map(price => {
-									qyNumber += price.pricesetNprice * (1 - this.userinfoOcode) * price
-										.goodsCamount
+									qyNumber += price.pricesetNprice * (1 - this.userinfoOcode) * price.goodsCamount
 								})
 							}
 
@@ -530,18 +537,16 @@
 											contractGoodsList: []
 										};
 										console.log(val.disMoney, 'val.disMoney------')
-										productPresentPriceAll += Number(val.disMoney);
-										this.productPresentPriceAll = productPresentPriceAll;
-										totalPointPrice += Number(val.sumMoney);
-										totalPrice += Number(val.pricesetRefrice);
-										this.totalPointPrice = totalPointPrice -
-										productPresentPriceAll;
-										this.totalPointPrice = this.totalPointPrice - qyNumber;
-										this.totalPrice = totalPrice;
+										// productPresentPriceAll += (Number(val.disMoney || 0));
+										// this.productPresentPriceAll = productPresentPriceAll;
+										// totalPointPrice += Number(val.sumMoney);
+										// totalPrice += Number(val.pricesetRefrice);
+										// this.totalPointPrice = totalPointPrice - productPresentPriceAll;
+										// this.totalPointPrice = this.totalPointPrice - qyNumber;
+										// this.totalPrice = totalPrice;
 										val.shoppingGoodsList.map(vk => {
 											if (vk.shoppingGoodsCheck === 0) {
-												checkStSaleminnumObj.packageList[index]
-													.contractGoodsList.push(vk);
+												checkStSaleminnumObj.packageList[index].contractGoodsList.push(vk);
 											}
 											this.shopIdAttr.push(vk.shoppingGoodsId);
 											console.log(isCheckCollect, '---isCheckCollect')
@@ -653,7 +658,6 @@
 				list.shoppingGoodsList.map(v => {
 					ids.push(v.shoppingGoodsId);
 				});
-				console.log('rrrrr',list.shoppingCode)
 				let params = {
 					shoppingCode: list.shoppingCode,
 					checkState: list.titChecked === 0 ? 1 : 0,
@@ -686,7 +690,6 @@
 					.http(this.$qj.domain)
 					.post(updateShoppingGoodsCheckState, params)
 					.then(res => {
-						console.log('购物车选单个商品',res)
 						if (res && res.success) {
 							this.commonMounted();
 						}
