@@ -34,16 +34,16 @@
 			<div v-for='(items,index) in contractData' :key="index">
 				<div style='height: 150rpx;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px;'>
 					<div style="display: flex;height: 40rpx">
-						<div class="entryName">{{items.scontractName}}</div>
+						<div class="entryName">{{!qyBut?items.scontractName:items.goodsName}}</div>
 						<div class='effctivTime'>
 							<div v-if='(item.memberGcode == "0" || item.memberGcode == "1")?true:false'>
 								有效期：<span>{{items.scontractNbcode}}</span></div>
 						</div>
-						<div class="contractType">{{items.memberGname}}</div>
+						<div class="contractType">{{!qyBut?items.memberGname:items.classtreeName}}</div>
 					</div>
-					<div class='miaoshu'>合同描述: <span>{{items.contractRemark}}</span></div>
+					<div class='miaoshu'>合同描述: <span>{{!qyBut?items.contractRemark:items.skuName}}</span></div>
 					<div class='money'>
-						<div v-if='qyBut && userinfoType != "1"'>合同金额:<span>￥{{items.goodsMoney}}</span></div>
+						<div v-if='qyBut && userinfoType != "1"'>合同金额:<span>￥{{!qyBut?items.goodsMoney:items.pricesetNprice}}</span></div>
 						<div v-if='qyBut && userinfoType == "1"'><span>认证为企业可查看金额</span></div>
 					</div>
 					<div style="display: flex;height: 50rpx">
@@ -52,21 +52,13 @@
 						<div class='lookconstr' style='width: 20%;'><u style='text-decoration:underline'
 								@click='preview(items)'>合同预览</u></div>
 						<div style='width: 20%;'>
-							<button class="buttonClass" v-if='qyBut' @click="talkOrAsk(items.scontractId)">签约</button>
+							<button class="buttonClass" v-if='qyBut' @click="talkOrAsk(items)">签约</button>
 							<button class="buttonClass" v-else @click="talkOrder(items)">预约</button>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class='chekboxType' v-if="selectValue" >
-				<!-- <checkbox-group bindchange="checkboxChange" class="checkDiv">
-			              <label class="weui-cell weui-check__label" wx:for="{{checkData}}" wx:key="{{checkData.value}}">
-			                <view class="weui-cell__hd">
-			                  <checkbox value="{{checkData.value}}" checked="{{checkData.checked}}"/>
-			                </view>
-			                <view class="weui-cell__bd">{{checkData.name}}</view>
-			              </label>
-			     </checkbox-group> -->
 				<div class="checkDiv" v-for='(item,index) in checkData' :key="index">
 					<checkbox style="transform:scale(0.9)" :checked="item.checked" @click="clickData(item)"></checkbox>
 					<span> {{item.lable}} </span>
@@ -97,7 +89,7 @@
 				<div style='font-size: 16px;font-weight: 900;color: #fff;'>点击图片进行下载</div>
 			</view>
 		</view>
-
+		<qj-mini-last-page-line :lastPageLine="lastPageLine"></qj-mini-last-page-line>
 	</div>
 
 </template>
@@ -122,11 +114,13 @@
 		data() {
 			return {
 				img: this.$imgDomain,
+				classtreeData:'0',
 				selectValue: false,
 				htImg: false,
 				imgDefalut: "icon-arrfill_l",
 				options: [], //多选选中的值
 				orderDisabled: true,
+				lastPageLine:false,
 				checkData: [{
 						lable: "培训",
 						value: "2-1",
@@ -174,7 +168,8 @@
 				fontColor1: "#004178", //字体颜色
 				fontColor2: "#000000", //字体颜色
 				fontColor3: "#000000", //字体颜色
-				searchValue:''
+				searchValue:'',
+				total:0
 			}
 		},
 		onLoad(options) {
@@ -202,18 +197,21 @@
 						}
 					})
 					this.getShow()
+					this.qyBut = false
 					this.iconShow1 = false
 					this.iconShow2 = true
 					this.selectValue = true
 				}
 			} else {
-					let parmas = {
-						memberGcode: "0",
-						contractInvstate: 0,
-						rows: 10,
-						page: 1
-					};
-					this.getData(parmas);
+					// let parmas = {
+					// 	memberGcode: "0",
+					// 	contractInvstate: 0,
+					// 	rows: 10,
+					// 	page: 1
+					// };
+					// this.getData(parmas);
+					this.parts('0')
+					// this.getDataBak()
 			
 			}
 
@@ -233,10 +231,21 @@
 			//合同搜索
 			serchContract(value){
 				this.searchValue = value
-				if(value != ''){
-					this.contractData = this.contractDataBak.filter(item=>item.scontractName.indexOf(value) != -1)
+				if(!this.qyBut ){
+					if(value != ''){
+						this.contractData = this.contractDataBak.filter(item=>item.scontractName.indexOf(value) != -1)
+					}else{
+						this.contractData = this.contractDataBak
+					}
 				}else{
-					this.contractData = this.contractDataBak
+					let parmas={
+						goodsType:'05',
+						rows: 10,
+						page: this.page,
+						likeGoodsName:value,
+						classtreeCode:this.classtreeData == '0'?'2021043000000019':'2021043000000018'
+					}
+					this.getData(parmas)
 				}
 			},
 			//保存图片
@@ -418,21 +427,30 @@
 				}
 			},
 			//点击签约
-			talkOrAsk(scontractId) {
+			talkOrAsk(items) {
 				if (this.userinfoType == "1") {
 					//个人用户
 					this.tankuang();
 				} else {
 					//获取签约时的信息
-					$router.push('hdb/orderHDB', {scontractId});
+						http.get('/web/oc/shopping/queryToContract.json', {
+							skuId:items.skuId,
+							goodsNum:1
+						})
+						.then(res => {
+							if (Array.isArray(res)) {
+								$router.push('hdb/orderHDB', {scontractId:items.skuId,goodsNum:items.goodsNum});
+							}else{
+								this.$qj.message.alert('合同信息有误，请联系商家')
+							}
+					})
+					// $router.push('hdb/orderHDB', {scontractId:items.skuId,goodsNum:items.goodsNum});
 				}
 
 			},
 			//懒加载的事件
 			loadMore(code) {
 				this.page++;
-				console.log("qqqqqqqqqqqqaaaaa", this.page)
-				console.log("qqqqqqqqqqqqaaaaa2", code)
 				let parmas = {
 					memberGcode: code,
 					contractInvstate: 0,
@@ -440,19 +458,22 @@
 					page: this.page,
 					dataState: 0
 				};
-				http.get(queryScontractPageNew, parmas)
-					.then(res => {
-						console.log("resData....", res)
-
-						res.rows.forEach(element => {
-							element.date1 = this.format(element.contractValidate)
-							element.date2 = this.format(element.contractPaydate)
-							this.contractData.push(element)
-							// this.contractData = res.rows;
-						});
-						this.contractDataBak = this.contractData
-
-					});
+				let parmas1 = {
+					goodsType:'05',
+					rows: 10,
+					page: this.page,
+					classtreeCode:this.classtreeData == '0'?'2021043000000019':'2021043000000018'
+				}
+				if(this.page <= Math.ceil(this.total / 10)){
+					if(!this.qyBut ){
+						this.getData(parmas);
+					}else{
+						this.getData(parmas1);
+					}
+				}else{
+					this.lastPageLine = true
+				}
+				
 			},
 			format(shijianchuo) {
 				//shijianchuo是整数，否则要parseInt转换
@@ -526,6 +547,7 @@
 			},
 			// 獲取拿到的線下合同類型
 			getShow() {
+				this.lastPageLine = false
 				let that = this;
 				that.options = [];
 				this.checkData.forEach(item => {
@@ -564,6 +586,7 @@
 								}
 
 							});
+							this.total = res.total
 						} else {
 							this.contractData = []
 						}
@@ -597,7 +620,10 @@
 			//根据合同类型查询合同数据
 			parts(data) {
 				console.log(data, 'data')
+				this.searchValue = ''
+				this.classtreeData=data
 				if (data == '0') {
+					this.qyBut = true;
 					console.log('零配件预付款合同')
 					this.page = 1; //第一次展示的十条数据
 					this.fontColor1 = "#004178"; //字体颜色
@@ -606,19 +632,19 @@
 					this.showArea = false;
 					//合同查询接口  web/sp/scontract/queryScontractPageNew.json? memberGcode=2-1,2-2&contractInvstate=0
 					let parmas = {
-						memberGcode: "0",
-						contractInvstate: 0,
+						goodsType:'05',
 						rows: 10,
 						page: 1,
-						dataState: 0
+						classtreeCode:'2021043000000019'
 					}
 					this.getData(parmas);
-					this.qyBut = true;
+					// this.getDataBak()
 
 
 
 				}
 				if (data == '1') {
+					this.qyBut = true;
 					this.showArea = false;
 					this.fontColor1 = "#000000"; //字体颜色
 					this.fontColor2 = "#004178"; //字体颜色
@@ -626,18 +652,18 @@
 					this.page = 1; //第一次展示的十条数据
 					console.log('固定价格合同')
 					let parmas = {
-						memberGcode: "1",
-						contractInvstate: 0,
+						goodsType:'05',
 						rows: 10,
 						page: 1,
-						dataState: 0
+						classtreeCode:'2021043000000018'
 					}
 					this.getData(parmas);
 
-					this.qyBut = true;
+					// this.qyBut = true;
 
 				}
 				if (data == '2') {
+					this.qyBut = false;
 					if (this.userinfoType == "1") {
 						//个人用户
 						this.showArea = true;
@@ -656,12 +682,14 @@
 						dataState: 0
 					}
 					this.getData(parmas);
-					this.qyBut = false;
 				}
 
 			},
 			getData(data) {
-				http.get(queryScontractPageNew, data)
+				this.lastPageLine = false
+				this.contractData = []
+				if(!this.qyBut){
+					http.get(queryScontractPageNew, data)
 					.then(res => {
 						console.log("resData....", res)
 						if (res.total > 0) {
@@ -671,14 +699,33 @@
 								if (element.memo == this.userinfoType) {
 									console.log(",,,", element.scontractFileUrl)
 								}
-								this.contractData = res.rows;
 							});
+							this.contractData = res.rows;
+							this.total = res.total
 						} else {
 							this.contractData = []
 						}
 
 					this.contractDataBak = this.contractData;
 					});
+				}else{
+					http.get('/web/es/searchengine/find.json',data)
+					.then(res=>{
+						if (res.total > 0) {
+							res.rows.forEach(element => {
+								element.date1 = element.gmtCreate.slice(0,10)
+								element.date2 = element.gmtCreate.slice(0,10)
+								// element.date1 = this.format(element.contractValidate)
+								// element.date2 = this.format(element.contractPaydate)
+							});
+							this.contractData = res.rows;
+							this.total = res.total
+						}else{
+							this.contractData = []
+						}
+					})
+				}
+				
 			},
 			search() {
 				uni.navigateTo({
