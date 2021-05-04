@@ -339,7 +339,7 @@ export default {
 			
 			if(data == 4){
 				console.log("跳转至合约商城购物车")
-				$router.push("hdb/personCenter/contractCar");
+				// $router.push("hdb/personCenter/contractCar");
 			}
 			
 		},
