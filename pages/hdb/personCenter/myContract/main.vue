@@ -8,7 +8,7 @@
 				<span class="iconfont icon-tishi"></span>
 			</div>
 		</div> -->
-    <div style="display: flex; background-color: #fff">
+    <div style="display: flex;background-color: #fff;position: fixed;width: 100%;z-index: 99;">
       <div
         class="constractName0"
         @click="parts('0')"
@@ -32,7 +32,7 @@
         线下销售合同
       </div>
     </div>
-    <div>
+    <div style = 'position: relative;margin-top: 40px;'>
       <div v-for="items in contractData">
         <div
           style="

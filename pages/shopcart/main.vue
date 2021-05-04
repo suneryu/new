@@ -399,7 +399,6 @@
 							}
 
 
-							// console.log(this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList,'this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList')
 							let bb = b
 							bb[0].shoppingpackageList[0].shoppingGoodsList = [];
 							bb[0].shoppingpackageList[0].shoppingGoodsList = listData2;
@@ -408,9 +407,6 @@
 								this.typeList.push(bb)
 							}
 
-							// this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList = listData1 ;
-							// console.log(this.typeList[1][0].shoppingpackageList[0].shoppingGoodsList,'this.typeList[1][0].shoppingpackageList[0].shoppingGoodsList')
-							// console.log(this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList,'this.typeList[0][0].shoppingpackageList[0].shoppingGoodsList')
 							let cc = c
 							cc[0].shoppingpackageList[0].shoppingGoodsList = [];
 							cc[0].shoppingpackageList[0].shoppingGoodsList = listData3;
@@ -421,7 +417,6 @@
 
 							console.log(this.typeList, '----this.typeList---')
 
-							console.log('qqqqqq', that.listItems)
 							this.typeList.map(shopCartData => {
 								// console.log(shopCartData,'shopCartData----')
 								shopCartData.map(v => {
@@ -437,7 +432,6 @@
 												if (vk.goodsClass == '1') {
 													vk.pricesetNprice1 = (Number(vk.pricesetNprice) * this.userinfoOcode).toFixed(2)
 												}
-
 
 												// 遍历所有商品图片
 												vk.dataPic = vk.dataPic;
@@ -497,9 +491,9 @@
 								item[0].shoppingpackageList[0].shoppingGoodsList.forEach(v=>{
 									if(v.shoppingGoodsCheck == 0){
 										if(v.pricesetNprice1 != undefined){
-										this.totalPointPrice += Number(v.pricesetNprice1)
+										this.totalPointPrice += Number(v.pricesetNprice1) * v.goodsCamount
 									}else{
-										this.totalPointPrice += Number(v.pricesetNprice)
+										this.totalPointPrice += Number(v.pricesetNprice) * v.goodsCamount
 									}
 								}
 								})	
