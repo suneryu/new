@@ -53,7 +53,7 @@
             "
           >
             <div style="width: 70%; line-height: 30px">
-              合同编号：<span>{{ items.scontractObillcode }}</span>
+              合同编号：<span>{{ items.giftCode }}</span>
             </div>
             <div style="width: 30%; line-height: 30px; text-align: center">
               {{ items.memberGname }}
@@ -69,7 +69,7 @@
             <div
               style="height: 25px;width: 100%;font-size: 14px; sans-serif;font-weight: 400;font-style: normal;line-height: 25px;"
             >
-              {{ items.scontractName }}
+              {{ items.giftName }}
             </div>
             <div
               style="
@@ -114,11 +114,13 @@
               >
                 合同有效时间：<span>{{ items.date1 }}~{{ items.date2 }}</span>
               </div>
+			                  <button class="buttonClass" @click="useContract(items)"> 使用合同 </button>
               <div
                 style="height: 25px; width: 20%"
                 v-if="items.memberGcode == 0"
               >
                 <button class="buttonClass" @click="useContract(items)" v-if="now > items.contractValidate && items.dataState == 1" > 使用合同 </button>
+
                 <button class="buttonClass" v-if="items.dataState == 0" > 未开始 </button>
                 <button class="buttonClass" v-if="items.dataState == 2" > 已暂停 </button>
                 <button class="buttonClass" v-if="items.dataState == 3" > 已禁用 </button>
@@ -180,6 +182,7 @@ import {
   queryScontractPageNew,
   queryBuyerScontractPage,
   queryScontractFilePage,
+  queryGiftPageToC2
 } from "@/api/interfaceHDB.js";
 export default {
   data() {
@@ -245,13 +248,29 @@ export default {
 
     console.log("userPhone", this.info.userPhone);
     let parmas = {
-      memberGcode: "0",
-      contractInvstate: 1,
+      // memberGcode: "0",
+      // contractInvstate: 1,
       rows: 10,
       page: 1,
-      goodsSupplierName: this.info.userPhone,
+      // goodsSupplierName: this.info.userPhone,
     };
-    this.getData(parmas);
+	http.get(queryGiftPageToC2, parmas).then((res) => {
+	  console.log("resData....", res);
+	  if (res.total > 0) {
+		  this.contractData = res.rows;
+	    // res.rows.forEach((element) => {
+	    //   element.date1 = this.format(element.contractEffectivedate);
+	    //   element.date2 = this.format(element.contractDepositdate);
+	    //   if (element.memo == this.userinfoType) {
+	    //     console.log(",,,", element.scontractFileUrl);
+	    //   }
+	    //   this.contractData = res.rows;
+	    // });
+	  } else {
+	    this.contractData = [];
+	  }
+	});
+    // this.getData(parmas);
   },
   onReachBottom() {
     // 到这底部在这里需要做什么事情

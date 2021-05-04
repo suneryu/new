@@ -18,7 +18,7 @@
 				<i class="iconfont icon-arrfill_l" v-if='iconShow1'></i>
 				<i class="iconfont icon-xialakuangjiantou" v-if='iconShow2'></i>
 			</div>
-		</div> 
+		</div>
 		<view class="address-choose" v-if='showArea'>
 			<view class="iconfont icon-shouhuodizhi"></view>
 			<view class="container" @click="chooseCity">
@@ -47,10 +47,8 @@
 						<div v-if='qyBut && userinfoType == "1"'><span>认证为企业可查看金额</span></div>
 					</div>
 					<div style="display: flex;height: 50rpx">
-						<div class='money' style='width: 60%;'><span v-if='qyBut'>合同签订时间:</span><span
-								v-else>合同预约时间:</span><span>{{items.date1}}~{{items.date2}}</span></div>
-						<div class='lookconstr' style='width: 20%;'><u style='text-decoration:underline'
-								@click='preview(items)'>合同预览</u></div>
+						<div class='money' style='width: 60%;'><span v-if='qyBut'>合同签订时间:</span><span v-else>合同预约时间:</span><span>{{items.date1}}~{{items.date2}}</span></div>
+						<div class='lookconstr' style='width: 20%;'><u style='text-decoration:underline' @click='preview(items)'>合同预览</u></div>
 						<div style='width: 20%;'>
 							<button class="buttonClass" v-if='qyBut' @click="talkOrAsk(items)">签约</button>
 							<button class="buttonClass" v-else @click="talkOrder(items)">预约</button>
@@ -58,7 +56,7 @@
 					</div>
 				</div>
 			</div>
-			<div class='chekboxType' v-if="selectValue" >
+			<div class='chekboxType' v-if="selectValue">
 				<div class="checkDiv" v-for='(item,index) in checkData' :key="index">
 					<checkbox style="transform:scale(0.9)" :checked="item.checked" @click="clickData(item)"></checkbox>
 					<span> {{item.lable}} </span>
@@ -83,8 +81,7 @@
 		<view class="popup" v-show="htImg">
 
 			<view class="htImage">
-				<div style='text-align: right;font-size: 18px; color: azure;font-weight: 800;'><span
-						@click='htImg = false'>关闭</span></div>
+				<div style='text-align: right;font-size: 18px; color: azure;font-weight: 800;'><span @click='htImg = false'>关闭</span></div>
 				<img class="htImg" mode='widthFix' :src="img + fileUrl" @click='savePhoto(img + fileUrl)' />
 				<div style='font-size: 16px;font-weight: 900;color: #fff;'>点击图片进行下载</div>
 			</view>
@@ -114,13 +111,13 @@
 		data() {
 			return {
 				img: this.$imgDomain,
-				classtreeData:'0',
+				classtreeData: '0',
 				selectValue: false,
 				htImg: false,
 				imgDefalut: "icon-arrfill_l",
 				options: [], //多选选中的值
 				orderDisabled: true,
-				lastPageLine:false,
+				lastPageLine: false,
 				checkData: [{
 						lable: "培训",
 						value: "2-1",
@@ -130,7 +127,7 @@
 						lable: "咨询",
 						value: "2-2",
 						checked: false
-					},{
+					}, {
 						lable: "服务/零备件合同",
 						value: "2-3",
 						checked: false
@@ -168,8 +165,9 @@
 				fontColor1: "#004178", //字体颜色
 				fontColor2: "#000000", //字体颜色
 				fontColor3: "#000000", //字体颜色
-				searchValue:'',
-				total:0
+				searchValue: '',
+				total: 0,
+				defaulePhone:''
 			}
 		},
 		onLoad(options) {
@@ -178,42 +176,40 @@
 			var windowWidth = wx.getSystemInfoSync().windowWidth
 			console.log("windowHeight。", windowHeight - 42)
 			this.heightA = (windowHeight - 42) + 'px';
-			if (options.id != undefined) {
-				if(options.contractName == undefined){
-					this.parts(options.id)
-				}else{
-					if (this.userinfoType == "1") {
-						//个人用户
-						this.showArea = true;
+			if (options.scene == undefined) {
+				if (options.id != undefined) {
+					if (options.contractName == undefined) {
+						this.parts(options.id)
 					} else {
-						this.showArea = true;
-					}
-					this.fontColor1 = "#000000"; //字体颜色
-					this.fontColor2 = "#000000"; //字体颜色
-					this.fontColor3 = "#004178"; //字体颜色
-					this.checkData.forEach(item=>{
-						if(item.lable == options.contractName){
-							item.checked = true
+						if (this.userinfoType == "1") {
+							//个人用户
+							this.showArea = true;
+						} else {
+							this.showArea = true;
 						}
-					})
-					this.getShow()
-					this.qyBut = false
-					this.iconShow1 = false
-					this.iconShow2 = true
-					this.selectValue = true
-				}
-			} else {
-					// let parmas = {
-					// 	memberGcode: "0",
-					// 	contractInvstate: 0,
-					// 	rows: 10,
-					// 	page: 1
-					// };
-					// this.getData(parmas);
+						this.fontColor1 = "#000000"; //字体颜色
+						this.fontColor2 = "#000000"; //字体颜色
+						this.fontColor3 = "#004178"; //字体颜色
+						this.checkData.forEach(item => {
+							if (item.lable == options.contractName) {
+								item.checked = true
+							}
+						})
+						this.getShow()
+						this.qyBut = false
+						this.iconShow1 = false
+						this.iconShow2 = true
+						this.selectValue = true
+					}
+				} else {
 					this.parts('0')
-					// this.getDataBak()
-			
+
+				}
+			}else{
+				this.parts(JSON.parse(options.scene).id)
+				this.defaulePhone = JSON.parse(options.scene).phone
 			}
+
 
 			// $('fixedStyle').set()
 
@@ -229,21 +225,21 @@
 		},
 		methods: {
 			//合同搜索
-			serchContract(value){
+			serchContract(value) {
 				this.searchValue = value
-				if(!this.qyBut ){
-					if(value != ''){
-						this.contractData = this.contractDataBak.filter(item=>item.scontractName.indexOf(value) != -1)
-					}else{
+				if (!this.qyBut) {
+					if (value != '') {
+						this.contractData = this.contractDataBak.filter(item => item.scontractName.indexOf(value) != -1)
+					} else {
 						this.contractData = this.contractDataBak
 					}
-				}else{
-					let parmas={
-						goodsType:'05',
+				} else {
+					let parmas = {
+						goodsType: '05',
 						rows: 10,
 						page: this.page,
-						likeGoodsName:value,
-						classtreeCode:this.classtreeData == '0'?'2021043000000019':'2021043000000018'
+						likeGoodsName: value,
+						classtreeCode: this.classtreeData == '0' ? '2021043000000019' : '2021043000000018'
 					}
 					this.getData(parmas)
 				}
@@ -339,8 +335,8 @@
 			},
 			//点击预约
 			talkOrder(item) {
-				console.log('合同信息---',item)
-				console.log(this.areaCode,1111)
+				console.log('合同信息---', item)
+				console.log(this.areaCode, 1111)
 				if (this.showArea) {
 					if (this.city == '') {
 						uni.showModal({
@@ -350,40 +346,40 @@
 							success(res) {}
 						})
 					} else {
-						let that =this
+						let that = this
 						uni.showModal({
 							title: '提示',
 							content: '服务预约确认！',
 							confirmColor: '#' + $storage.get('baseColor'),
 							success(res) {
-								if(res.confirm){
+								if (res.confirm) {
 									let json = {
-										scontractCode:item.scontractCode,
+										scontractCode: item.scontractCode,
 										// scontractCode:'2020030300000016',
-										userinfoPhone:$storage.get('loginInfor').userPhone,
-										areaCode:that.areaCode
+										userinfoPhone: $storage.get('loginInfor').userPhone,
+										areaCode: that.areaCode,
+										contractTypepro: this.defaulePhone
 									}
 									http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
-									.then(res1=>{
-										if(res1.success){
-											wx.showToast({
-												title: '预约成功！',
-												duration: 2000,
-												icon: "error",
-												success(data) {
-													that.getShow()
-												}
-											});
-										}else{
-											wx.showToast({
-												title: res1.msg,
-												duration: 2000,
-												icon: "error",
-												success(data) {
-												}
-											});
-										}
-									})
+										.then(res1 => {
+											if (res1.success) {
+												wx.showToast({
+													title: '预约成功！',
+													duration: 2000,
+													icon: "error",
+													success(data) {
+														that.getShow()
+													}
+												});
+											} else {
+												wx.showToast({
+													title: res1.msg,
+													duration: 2000,
+													icon: "error",
+													success(data) {}
+												});
+											}
+										})
 								}
 							}
 						})
@@ -394,33 +390,33 @@
 						content: '服务预约确认！',
 						confirmColor: '#' + $storage.get('baseColor'),
 						success(res) {
-							if(res.confirm){
+							if (res.confirm) {
 								let json = {
-									scontractCode:item.scontractCode,
+									scontractCode: item.scontractCode,
 									// scontractCode:'2021030400000001',
-									userinfoPhone:$storage.get('loginInfor').userPhone
+									userinfoPhone: $storage.get('loginInfor').userPhone,
+									contractTypepro: this.defaulePhone
 								}
 								http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
-								.then(res1=>{
-									if(res1.success){
-										wx.showToast({
-											title: '预约成功！',
-											duration: 2000,
-											icon: "error",
-											success(data) {
-												this.getShow()
-											}
-										});
-									}else{
-										wx.showToast({
-											title: res1.msg,
-											duration: 2000,
-											icon: "error",
-											success(data) {
-											}
-										});
-									}
-								})
+									.then(res1 => {
+										if (res1.success) {
+											wx.showToast({
+												title: '预约成功！',
+												duration: 2000,
+												icon: "error",
+												success(data) {
+													this.getShow()
+												}
+											});
+										} else {
+											wx.showToast({
+												title: res1.msg,
+												duration: 2000,
+												icon: "error",
+												success(data) {}
+											});
+										}
+									})
 							}
 						}
 					})
@@ -433,17 +429,20 @@
 					this.tankuang();
 				} else {
 					//获取签约时的信息
-						http.get('/web/oc/shopping/queryToContract.json', {
-							skuId:items.skuId,
-							goodsNum:1
+					http.get('/web/oc/shopping/queryToContract.json', {
+							skuId: items.skuId,
+							goodsNum: 1
 						})
 						.then(res => {
 							if (Array.isArray(res)) {
-								$router.push('hdb/orderHDB', {scontractId:items.skuId,goodsNum:items.goodsNum});
-							}else{
+								$router.push('hdb/orderHDB', {
+									scontractId: items.skuId,
+									goodsNum: items.goodsNum
+								});
+							} else {
 								this.$qj.message.alert('合同信息有误，请联系商家')
 							}
-					})
+						})
 					// $router.push('hdb/orderHDB', {scontractId:items.skuId,goodsNum:items.goodsNum});
 				}
 
@@ -459,21 +458,21 @@
 					dataState: 0
 				};
 				let parmas1 = {
-					goodsType:'05',
+					goodsType: '05',
 					rows: 10,
 					page: this.page,
-					classtreeCode:this.classtreeData == '0'?'2021043000000019':'2021043000000018'
+					classtreeCode: this.classtreeData == '0' ? '2021043000000019' : '2021043000000018'
 				}
-				if(this.page <= Math.ceil(this.total / 10)){
-					if(!this.qyBut ){
+				if (this.page <= Math.ceil(this.total / 10)) {
+					if (!this.qyBut) {
 						this.getData(parmas);
-					}else{
+					} else {
 						this.getData(parmas1);
 					}
-				}else{
+				} else {
 					this.lastPageLine = true
 				}
-				
+
 			},
 			format(shijianchuo) {
 				//shijianchuo是整数，否则要parseInt转换
@@ -621,7 +620,7 @@
 			parts(data) {
 				console.log(data, 'data')
 				this.searchValue = ''
-				this.classtreeData=data
+				this.classtreeData = data
 				if (data == '0') {
 					this.qyBut = true;
 					console.log('零配件预付款合同')
@@ -632,10 +631,10 @@
 					this.showArea = false;
 					//合同查询接口  web/sp/scontract/queryScontractPageNew.json? memberGcode=2-1,2-2&contractInvstate=0
 					let parmas = {
-						goodsType:'05',
+						goodsType: '05',
 						rows: 10,
 						page: 1,
-						classtreeCode:'2021043000000019'
+						classtreeCode: '2021043000000019'
 					}
 					this.getData(parmas);
 					// this.getDataBak()
@@ -652,10 +651,10 @@
 					this.page = 1; //第一次展示的十条数据
 					console.log('固定价格合同')
 					let parmas = {
-						goodsType:'05',
+						goodsType: '05',
 						rows: 10,
 						page: 1,
-						classtreeCode:'2021043000000018'
+						classtreeCode: '2021043000000018'
 					}
 					this.getData(parmas);
 
@@ -688,44 +687,44 @@
 			getData(data) {
 				this.lastPageLine = false
 				this.contractData = []
-				if(!this.qyBut){
+				if (!this.qyBut) {
 					http.get(queryScontractPageNew, data)
-					.then(res => {
-						console.log("resData....", res)
-						if (res.total > 0) {
-							res.rows.forEach(element => {
-								element.date1 = this.format(element.contractValidate)
-								element.date2 = this.format(element.contractPaydate)
-								if (element.memo == this.userinfoType) {
-									console.log(",,,", element.scontractFileUrl)
-								}
-							});
-							this.contractData = res.rows;
-							this.total = res.total
-						} else {
-							this.contractData = []
-						}
+						.then(res => {
+							console.log("resData....", res)
+							if (res.total > 0) {
+								res.rows.forEach(element => {
+									element.date1 = this.format(element.contractValidate)
+									element.date2 = this.format(element.contractPaydate)
+									if (element.memo == this.userinfoType) {
+										console.log(",,,", element.scontractFileUrl)
+									}
+								});
+								this.contractData = res.rows;
+								this.total = res.total
+							} else {
+								this.contractData = []
+							}
 
-					this.contractDataBak = this.contractData;
-					});
-				}else{
-					http.get('/web/es/searchengine/find.json',data)
-					.then(res=>{
-						if (res.total > 0) {
-							res.rows.forEach(element => {
-								element.date1 = element.gmtCreate.slice(0,10)
-								element.date2 = element.gmtCreate.slice(0,10)
-								// element.date1 = this.format(element.contractValidate)
-								// element.date2 = this.format(element.contractPaydate)
-							});
-							this.contractData = res.rows;
-							this.total = res.total
-						}else{
-							this.contractData = []
-						}
-					})
+							this.contractDataBak = this.contractData;
+						});
+				} else {
+					http.get('/web/es/searchengine/find.json', data)
+						.then(res => {
+							if (res.total > 0) {
+								res.rows.forEach(element => {
+									element.date1 = element.gmtCreate.slice(0, 10)
+									element.date2 = element.gmtCreate.slice(0, 10)
+									// element.date1 = this.format(element.contractValidate)
+									// element.date2 = this.format(element.contractPaydate)
+								});
+								this.contractData = res.rows;
+								this.total = res.total
+							} else {
+								this.contractData = []
+							}
+						})
 				}
-				
+
 			},
 			search() {
 				uni.navigateTo({
@@ -866,7 +865,7 @@
 
 	.chekboxType {
 		width: 45%;
-		height:86%;
+		height: 86%;
 		box-shadow: 0px 0px 10px gray;
 		background-color: #ffffff;
 		position: absolute;

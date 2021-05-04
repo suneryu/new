@@ -333,7 +333,7 @@ export default {
 					}
 				})
 				// console.log("跳转至积分商城")
-				// $router.push("user_modules/user/pointsMall");
+                // $router.push("user_modules/user/pointsMall");
 				
 			}
 			

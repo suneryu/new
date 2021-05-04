@@ -248,7 +248,7 @@ export default {
 					name: '货到付款',
 					ischecked: false
 				}
-			],
+			],  
 			// 地址弹出层
 			addressShow: false,
 			isHaveAddress: false, //判断是否存在地址

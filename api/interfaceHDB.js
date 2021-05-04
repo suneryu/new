@@ -260,6 +260,7 @@ export const addSubAccount = '/web/um/userservice/AddSubAccount.json' // 添加�
 export const deleteSubAccount = '/web/um/userservice/deleteSubAccount.json' // 删除子账号
 export const saveOcRefund = '/web/oc/ocrefund/saveOcRefund.json' // 退款
 export const talkOverWithSell = '/web/sp/scontract/talkOverWithSell.json' //  销售更改洽谈状态
+export const queryGiftPageToC2 = '/web/gt/gift/queryGiftPageToC2.json' //  销售更改洽谈状态
  
 
 

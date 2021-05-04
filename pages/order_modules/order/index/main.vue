@@ -221,7 +221,7 @@ export default {
 				page: this.page,
 				rows: this.rows,
 				childFlag: true,
-				contractType: '00,26',
+				contractType: '00,26,05',
 			};
 		
 				
