@@ -358,14 +358,14 @@
 										// scontractCode:'2020030300000016',
 										userinfoPhone: $storage.get('loginInfor').userPhone,
 										areaCode: that.areaCode,
-										contractTypepro: this.defaulePhone
+										// contractTypepro: that.defaulePhone
 									}
 									http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
 										.then(res1 => {
 											if (res1.success) {
 												wx.showToast({
 													title: '预约成功！',
-													duration: 2000,
+													duration: 3000,
 													icon: "error",
 													success(data) {
 														that.getShow()
@@ -374,7 +374,7 @@
 											} else {
 												wx.showToast({
 													title: res1.msg,
-													duration: 2000,
+													duration: 3000,
 													icon: "error",
 													success(data) {}
 												});
@@ -385,6 +385,7 @@
 						})
 					}
 				} else {
+					let that = this
 					uni.showModal({
 						title: '提示',
 						content: '服务预约确认！',
@@ -395,14 +396,14 @@
 									scontractCode: item.scontractCode,
 									// scontractCode:'2021030400000001',
 									userinfoPhone: $storage.get('loginInfor').userPhone,
-									contractTypepro: this.defaulePhone
+									// contractTypepro: that.defaulePhone
 								}
 								http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
 									.then(res1 => {
 										if (res1.success) {
 											wx.showToast({
 												title: '预约成功！',
-												duration: 2000,
+												duration: 3000,
 												icon: "error",
 												success(data) {
 													this.getShow()
@@ -411,7 +412,7 @@
 										} else {
 											wx.showToast({
 												title: res1.msg,
-												duration: 2000,
+												duration: 3000,
 												icon: "error",
 												success(data) {}
 											});
@@ -451,7 +452,7 @@
 			loadMore(code) {
 				this.page++;
 				let parmas = {
-					memberGcode: code,
+					memberGcode: 2,
 					contractInvstate: 0,
 					rows: 10,
 					page: this.page,
@@ -686,7 +687,7 @@
 			},
 			getData(data) {
 				this.lastPageLine = false
-				this.contractData = []
+				// this.contractData = []
 				if (!this.qyBut) {
 					http.get(queryScontractPageNew, data)
 						.then(res => {
@@ -699,7 +700,11 @@
 										console.log(",,,", element.scontractFileUrl)
 									}
 								});
-								this.contractData = res.rows;
+								if(this.page > 1){
+									this.contractData = [...this.contractData,...res.rows];
+								}else{
+									this.contractData = res.rows;
+								}
 								this.total = res.total
 							} else {
 								this.contractData = []
@@ -717,7 +722,11 @@
 									// element.date1 = this.format(element.contractValidate)
 									// element.date2 = this.format(element.contractPaydate)
 								});
-								this.contractData = res.rows;
+								if(this.page > 1){
+									this.contractData = [...this.contractData,...res.rows];
+								}else{
+									this.contractData = res.rows;
+								}
 								this.total = res.total
 							} else {
 								this.contractData = []
