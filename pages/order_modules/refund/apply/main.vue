@@ -13,9 +13,9 @@
 							</div>
 							<h3>{{ items.skuName }}</h3>
 							<div class="list-add">
-								<div @click="subtract(items)"><i class="iconfont">&#xe755;</i></div>
+								<div @click.stop="subtract(items)"><i class="iconfont">&#xe755;</i></div>
 								<div><input type="text" v-model="items.goodsCamount" disabled /></div>
-								<div @click="add(items)"><i class="iconfont">&#xe756;</i></div>
+								<div @click.stop="add(items)"><i class="iconfont">&#xe756;</i></div>
 							</div>
 						</div>
 					</a>
@@ -82,7 +82,7 @@
 				</dl>
 			</div>
 		</div>
-		<div class="afterApply-btn" @click="submitBtn" :style="{ background: baseColor }">提交</div>
+		<div class="afterApply-btn" @click="submitBtn" :style="{ background: '#004178' }">提交</div>
 	</div>
 </template>
 
@@ -91,6 +91,9 @@ import http from '@/api/http.js';
 import { $storage, $router, $message } from '@/utils/prototype/vue.js';
 import { refund } from '@/api/interface.js';
 import commonHeader from '@/components/communal/commonHeader';
+import {
+			queryNewUserinfoPageByDealerqt,
+	} from '@/api/interfaceHDB.js';
 // import picker from '@/components/communal/picker';
 export default {
 	data() {
@@ -135,7 +138,7 @@ export default {
 		});
 		wx.setNavigationBarColor({
 			frontColor: '#ffffff', // 必写项
-			backgroundColor: '#' + this.$state.baseColor
+			backgroundColor: '#004178'
 		});
 		Object.assign(this, this.$options.data());
 	},

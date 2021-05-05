@@ -28,7 +28,7 @@
 					<i class="iconfont">&#xe675;</i>
 					订单已取消
 				</div>
-				<div class="orderDetail-box-tit-r" v-if="items.dataState == 3 || items.dataState == 4">{{ items.packageList[0].expressName }}</div>
+				<!-- <div class="orderDetail-box-tit-r" v-if="items.dataState == 3 || items.dataState == 4">{{ items.packageList[0].expressName }}</div> -->
 			</div>
 		</div>
 		<div v-show="items.dataState == 3 || items.dataState == 4">
@@ -139,7 +139,7 @@
 					</div>
 					<div v-else>
 						<!-- <span>申请售后</span> -->
-						<div orderDetail-footer-btn :style="{ borderColor: baseColor, color: baseColor }" @click="evaluate(items.goodsList)">去评价</div>
+						<div class='orderDetail-footer-btn' :style="{ borderColor: baseColor, color: baseColor }" @click="evaluate(items.goodsList)">去评价</div>
 					</div>
 				</div>
 			</div>
