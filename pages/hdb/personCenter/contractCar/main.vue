@@ -2,9 +2,8 @@
 	<view class="settle-account">
 		<!-- 结算页面 -->
 		<!-- 地址页面 -->
-		<view class="address" @click="addressClick">
+	<!-- 	<view class="address" @click="addressClick">
 			<view class="address-detail" v-if="isHaveAddress">
-				<!-- {{JSON.stringify(this.address)}} -->
 				<view class="address-tel">
 					<text>{{ address.addressMember }}</text>
 					<text>{{ address.addressPhone }}</text>
@@ -12,11 +11,27 @@
 				<text class="area">{{ address.provinceName }}{{ address.cityName }}{{ address.areaName }}{{ address.addressDetail }}</text>
 			</view>
 			<view class="address-detail" v-else>
-				<!-- {{JSON.stringify(this.address)}} -->
 				<text>请先选择收货地址</text>
 			</view>
 			<i class="iconfont">&#xe61d;</i>
-		</view>
+		</view> -->
+		<div class="accounts-haveAddress" v-if="isHaveAddress" @click="addClass">
+			<div class="accounts-haveAddress-l">
+				<h5>
+					收货人：{{ address.addressMember }}
+					<span>{{ address.addressPhone }}</span>
+				</h5>
+				<p>
+					<span v-if="address.addressDefault == 1" :style="{ background: baseColor }">默认</span>
+					{{ address.provinceName }} {{ address.cityName }} {{ address.areaName }} {{ address.addressDetail }}
+				</p>
+			</div>
+			<div class="accounts-haveAddress-r"><i class="iconfont">&#xe61d;</i></div>
+		</div>
+		<div class="accounts-noAddress" @click="addClass" v-else>
+			<i class="iconfont">&#xe752;</i>
+			添加收货地址
+		</div>
 
 		<!-- 商品列表 -->
 		<view class="goods-list">
@@ -29,10 +44,10 @@
 							<view class="name">{{ goods.goodsName }}</view>
 							<view class="model">{{ goods.skuName }}</view>
 							<view class="other">
-								<text class="price" :style="{ color: baseColor }">¥ {{ goods.pricesetNprice }}</text>
+								<text class="price" :style="{ color: baseColor }">合同价：{{ goods.pricesetNprice }} 元</text>
 								<text class="num">×{{ goods.goodsCamount }}</text>
 							</view>
-							<view class="returnGoods">支持7天无理由退货</view>
+							<!-- <view class="returnGoods">支持7天无理由退货</view> -->
 						</view>
 					</view>
 					<view class="shop-goods-item" v-for="(gift, giftIndex) in list.giftList" :key="giftIndex">
@@ -288,12 +303,16 @@ export default {
 			addressParams: {}, //  jd地址获取运费传参数据
 			skuInfo: [],
 			goodsBeanStr: '',
-			shoppingGoodsIdStr: ''
+			shoppingGoodsIdStr: '',
+			giftCode:'',
+			giftUserId:''
 		};
 	},
 	onLoad(options) {
 		this.goodsBeanStr = options.goodsBeanStr;
 		console.log(options, '3++3++3+3+33+3');
+		this.giftCode = options.giftCode;
+		this.giftUserId = options.giftUserId
 		this.shoppingGoodsIdStr = options.shoppingGoodsIdStr;
 		this.pageState = options.pageState;
 		this.skuId = options.skuId;
@@ -307,7 +326,8 @@ export default {
 		this.shoppingCountPrice = 0.0;
 
 		// 初始化地址信息
-		this.getAddressList();
+		// this.getAddressList();
+		this.initAddressData()
 
 		//地址接口
 		let shoppingGoodsIdStr = this.shoppingGoodsIdStr;
@@ -418,6 +438,33 @@ export default {
 		}
 	},
 	methods: {
+		initAddressData() {
+			// 初始化地址信息
+			this.addressList = {};
+		
+			if (this.$qj.storage.get('changeaddress') && this.$qj.storage.get('changeaddress') != '') {
+				this.address = this.$qj.storage.get('changeaddress');
+				this.isHaveAddress = true;
+			} else {
+				this.$qj
+					.http(this.$qj.domain)
+					.get(addressList)
+					.then(res => {
+						if (res && res.length > 0 && res[0].addressDefault == '1') {
+							this.isHaveAddress = true;
+							this.address = res[0];
+						} else {
+							this.isHaveAddress = false;
+						}
+					});
+			}
+		},
+		//添加地址
+		addClass() {
+			this.$qj.router.push('user_modules/address/manage', {
+				json: 1
+			});
+		},
 		// 跳到地址页面
 		jumpToAddress() {
 			this.addressShow = false;
@@ -815,13 +862,14 @@ export default {
 					if (res.errorCode == 'nologin') {
 						return;
 					}
-
+					
 					if (this.pageState == 2) {
 						http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res => {
 							if (res.success == true) {
-								// uni.redirectTo({
-								// 	url: '/pages/paySuccess/paySuccess?pageState=1' + '&contractBillcode=' + res.dataObj.contractBillcode
-								// });
+								http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.accountsSumPrice,giftUserId:this.giftUserId})
+								.then(res4=>{
+									console.log(res4)
+								})
 								$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
 							}
 						});
@@ -867,6 +915,50 @@ export default {
 	border-bottom: none;
 }
 
+.accounts-haveAddress {
+			height: 180rpx;
+			background: #fff;
+			padding: -10rpx;
+			border-bottom: 20rpx solid #fafafa;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			.accounts-haveAddress-l {
+				font-size: 30rpx;
+				width: 618rpx;
+
+				h5 {
+					margin-bottom: 12rpx;
+
+					span {
+						margin-left: 112rpx;
+					}
+				}
+
+				p {
+					overflow: hidden;
+					-webkit-line-clamp: 3;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					width: 618rpx;
+					color: #666;
+					font-size: 24rpx;
+
+					span {
+						display: inline-block;
+						font-size: 18rpx;
+						padding: 3rpx 15rpx;
+						border-radius: 15rpx;
+						// background: #b79f77;
+						margin-right: 12rpx;
+						color: #fff;
+					}
+				}
+			}
+
+			.accounts-haveAddress-r {}
+		}
 .settle-account {
 	// min-height: 100%;
 	padding-bottom: 120rpx;

@@ -152,6 +152,9 @@
 				userinfoPhone: $storage.get('loginInfor').userPhone
 			}).then(res => {
 				this.infoPage = res.list[0]
+				let loginInfor = $storage.get('loginInfor')
+				loginInfor.employeeName = res.list[0].employeeName
+				 $storage.set('loginInfor',loginInfor)
 			});
 			// this.getUpmupointsPageByPC();
 		},

@@ -459,7 +459,7 @@
 							if (res.dataObj.contractBillcode) {
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);
-								this.$qj.router.replace('pay/paySelect');
+								this.$qj.router.replace('pay/paySelect',{isGiftContract:true,userPhone:$storage.get('loginInfor').userPhone,goodsNo:this.contractData[0].goodsNo});
 								}
 							});	
 				}

@@ -5,7 +5,8 @@
 			<!-- <qj-mini-search-nav-bar :isBack='false' @getNavBarHeight="getNavBarHeight" :isSearch="true"
 				:searchRouter="searchPath"></qj-mini-search-nav-bar> -->
 				<view style="width: 100%;z-index: 99999;position: fixed;top: 0;height: 100rpx;background: #fff;text-align: center;line-height: 100rpx;" >
-					<u-search placeholder="输入商品名称" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
+					<!-- <u-search placeholder="输入商品名称" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search> -->
+					<u-search :placeholder="text1" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled @blur='serarchGoods' action-text='切换' @custom='changeCustom'></u-search>
 				</view>
 			<div class="goodsList-title" >
 				<div class="goodsList-title-left">
@@ -55,7 +56,7 @@
 										<!-- <span v-if='((checkModifyAudit == "3" && item.goodsClass !="1")|| (checkModifyAudit != "3" && item.goodsClass =="1")|| (checkModifyAudit != "3" && item.goodsClass !="1") )&& scontractCode == ""'>{{ item.pricesetNprice }} 元</span> -->
 										<span >{{ item.pricesetNprice }} 元</span>
 										<span v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && scontractCode == ""'>采购价：{{ item.pricesetMakeprice.toFixed(2) }} 元</span>
-										<span v-if='scontractCode != ""'>合同价：{{ item.contractGoodsPrice }} 元</span>
+										<span v-if='scontractCode != ""'>合同价：{{ item.pricesetBaseprice }} 元</span>
 									</div>
 									<view class="list-right-container">
 										<div class="list-add">
@@ -199,7 +200,8 @@
 				goodsClass: "",
 				scontractCode:'',
 				paramsBak:{},
-				goodsClassStr:''
+				goodsClassStr:'',
+				text1:'输入商品名称'
 			};
 		},
 		onShow() {
@@ -241,10 +243,27 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			//点击切换 改变搜索商品条件
+			changeCustom(){
+				this.searchValue = ''
+				if(this.text1 == '输入商品编号'){
+					this.text1 = '输入商品名称'
+					delete this.params.likeSkuNo
+				}else{
+					this.text1 = '输入商品编号'
+					delete this.params.likeGoodsName
+				}
+			},
 			//查询商品
 			serarchGoods(value){
+				if(this.text1 == '输入商品编号'){
+					this.params.likeSkuNo = this.searchValue
+				}else{
+					this.params.likeGoodsName = this.searchValue
+				}
 				this.searchValue = value
-				this.params.likeGoodsName = this.searchValue
+				// this.params.likeGoodsName = this.searchValue
+				// this.params.likeSkuNo = this.searchValue
 				// if(value != ''){
 				// 	this.items = this.itemsBak.filter(item=>item.goodsName.indexOf(value) != -1)
 				// }else{
@@ -265,9 +284,10 @@
 				if(this.scontractCode == ''){
 					delete goodsList[0].goodsContract
 				}else{
-					goodsList[0].goodsContract = item.contractGoodsPrice
+					goodsList[0].goodsContract = item.pricesetBaseprice
+					delete goodsList[0].skuId
+					goodsList[0].skuCode = item.skuCode
 				}
-				console.log(goodsList,6666666)
 				let params = {
 					memberBcode:this.userInfoCode,
 					goodsBeanStr:JSON.stringify(goodsList)
@@ -426,15 +446,12 @@
 				}else{
 					this.$qj
 					.http(this.$qj.domain)
-					.get('/web/sp/scontract/queryScontractGoodsPage.json',this.paramsBak )
+					.get('/web/gt/gift/queryRelToC.json',{giftUserCode: '441973991226212352'} )
 					.then(res=>{
-						if (this.page === 1 && res.rows.length === 0) {
-							this.items = [];
-						}else{
 								let batchCollectData = [];
 								// 获取用户维度起订量倍数
 								let skuMinSaleMultiple = [];
-								res.rows.map(v => {
+								res.gtGiftRelDomainList.map(v => {
 									if (!RegExp(/http/).test(v.dataPic)) {
 										v.dataPic = this.$domain + v.dataPic;
 									}						
@@ -457,12 +474,12 @@
 								});
 								if (this.page === 1) {
 									this.items = [];
-									this.items = res.rows;
+									this.items = res.gtGiftRelDomainList;
 								} else {
-									this.items = [...this.items, ...res.rows];
+									this.items = [...this.items, ...res.gtGiftRelDomainList];
 								}
-							}
-							this.total = res.total;
+							
+							// this.total = res.total;
 						});
 				}
 				

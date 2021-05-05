@@ -308,12 +308,15 @@
 						          contractInmoney: res[0].goodsMoney,
 						          contractMoney: Number(res[0].goodsMoney)*Number(this.userinfoOcode),
 						          goodsPmbillno: res[0].goodsPmbillno,
+								  employeeCode: this.$qj.storage.get('loginInfor').userCode,
+								  employeeName: this.$qj.storage.get('loginInfor').employeeName
 						          // contractRemark: "cccccc",
 						        },
 							];
 						let params = {
 							orderDomainStr:JSON.stringify(orderDomainStr),
-							memberBcode: this.userInfoCode
+							memberBcode: this.userInfoCode,
+							
 						}
 						this.$qj.http(this.$qj.domain).post('/web/oc/empcontract/saveContract.json', params).then(res=>{
 							if(res.success){

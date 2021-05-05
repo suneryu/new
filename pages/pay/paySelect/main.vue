@@ -83,7 +83,10 @@ export default {
 			buttonText: ['立即支付', '查看订单', '', '查看订单'],
 			orderTip: ['订单提交成功，请去支付', '订单提交成功', '', '订单提交成功'],
 			// 支付剩余时间倒计时，单位秒
-			contractPaydate: 0
+			contractPaydate: 0,
+			isGiftContract:false,
+			userPhone:'',
+			goodsNo:''
 		};
 	},
 	watch: {
@@ -99,11 +102,22 @@ export default {
 	},
 	onLoad(options) {
 		// 未支付订单位置点击付款会携带参数
+		if(options.isGiftContract != undefined){
+			this.isGiftContract = true
+			this.userPhone = options.userPhone
+			this.goodsNo = options.goodsNo
+		}
 		if (options && options.contractBillcode) {
 			this.propPayParams = options;
 		}
 	},
 	mounted() {
+		// if(this.isGiftContract){
+		// 	this.$qj.http(this.$qj.domain).post('/web/gt/gift/updateContractAll.json',{giftCode:'442108161478885376',giftUserPhone:this.userPhone,orderPrice:0})
+		// 	.then(res1=>{
+		// 		console.log(res1)
+		// 	})
+		// }
 		this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 		this.$qj.message.loading();
 		// 如果是未支付订单跳转，则不需通过订单号获取订单信息
@@ -225,6 +239,12 @@ export default {
 							})
 							.then(res => {
 								if (res.success) {
+									if(this.isGiftContract){
+										this.$qj.http(this.$qj.domain).post('/web/gt/gift/updateContractAll.json',{giftCode:this.goodsNo,giftUserPhone:this.userPhone,orderPrice:0})
+										.then(res1=>{
+											console.log(res1)
+										})
+									}
 									this.$qj.router.replace('pay/paySuccess', {
 										contractBillcode: this.$state.contractBillcode
 									});
@@ -309,6 +329,12 @@ export default {
 												that.$qj.http(that.$qj.domain)
 												.get('/web/oc/contract/updateContractNew.json',{tempState:"payState",contractBillcode: that.payMessage.contractBillcode})
 												.then(resp=>{
+													if(that.isGiftContract){
+														that.$qj.http(that.$qj.domain).post('/web/gt/gift/updateContractAll.json',{giftCode:that.goodsNo,giftUserPhone:that.userPhone,orderPrice:0})
+														.then(res1=>{
+															console.log(res1)
+														})
+													}
 													that.$qj.router.replace('pay/paySuccess', {
 													contractBillcode: that.$state.contractBillcode
 													});

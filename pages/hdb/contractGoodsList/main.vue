@@ -135,12 +135,13 @@
 				goodsBeanStr: '',
 				price: '',
 				total: 0,
-				
+				giftCode:'',
+				giftUserId:'',
 				wantList:[],  //勾选商品
 
 			}
 		},
-		mounted() {
+		onShow() {
 			this.myCoupon()
 		},
 		components: {
@@ -215,6 +216,9 @@
 				}
 				http.get('/web/gt/gift/queryRelToC.json', params).then(res => {
 					if (res && res.length != 0) {
+						this.giftCode = res.giftCode
+						this.giftUserId = res.gtGiftUserDomain.giftUserId
+						res.gtGiftUserDomain.userRelNum = res.gtGiftUserDomain.goodsOneweight || res.gtGiftUserDomain.userRelNum
 						this.list = res.gtGiftUserDomain
 						this.giftUserEnd = formatDate(res.gtGiftUserDomain.giftUserEnd)
 						this.giftCoupon = res.gtGiftRelDomainList
@@ -284,7 +288,7 @@
 					// 	// url:'/pages/settleAccounts/settleAccounts?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
 					// 	url:'pages/hdb/personCenter/contractCar?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
 					// });
-					$router.push('hdb/personCenter/contractCar',{goodsBeanStr:JSON.stringify(obj),pageState:'2'})
+					$router.push('hdb/personCenter/contractCar',{goodsBeanStr:JSON.stringify(obj),pageState:'2',giftCode:this.giftCode,giftUserId:this.giftUserId })
 					// $router.push("hdb/personCenter/contractCar");
 				}
 			},
@@ -536,7 +540,7 @@
 			}
 
 			view:nth-child(3) {
-				background-color: #EB2B27;
+				background-color: #004178;
 				height: 50rpx;
 				width: 120rpx;
 				line-height: 50rpx;

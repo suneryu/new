@@ -153,6 +153,7 @@ export default {
 					rows: this.rows,
 					childFlag: true,
 					contractType: '39',
+					employeeCode: this.$qj.storage.get('loginInfor').userCode
 					// memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
 				};
 				if(this.dataState != ''){

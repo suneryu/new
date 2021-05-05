@@ -114,13 +114,9 @@
               >
                 合同有效时间：<span>{{ items.date1 }}~{{ items.date2 }}</span>
               </div>
-			                  <button class="buttonClass" @click="useContract(items)"> 使用合同 </button>
-              <div
-                style="height: 25px; width: 20%"
-                v-if="items.memberGcode == 0"
-              >
+			      <button class="buttonClass" @click="useContract(items)" style="width: 150rpx;margin-right: 30rpx;"> 使用合同 </button>
+              <div style="height: 25px; width: 20%" v-if="items.memberGcode == 0">
                 <button class="buttonClass" @click="useContract(items)" v-if="now > items.contractValidate && items.dataState == 1" > 使用合同 </button>
-
                 <button class="buttonClass" v-if="items.dataState == 0" > 未开始 </button>
                 <button class="buttonClass" v-if="items.dataState == 2" > 已暂停 </button>
                 <button class="buttonClass" v-if="items.dataState == 3" > 已禁用 </button>
@@ -224,6 +220,7 @@ export default {
       info: {}, //登录人信息
       userPhone: "", //当前登录人的手机号
       userinfoType: "", // 用户类型
+	  total:0
     };
   },
   onLoad() {
@@ -258,6 +255,7 @@ export default {
 	  console.log("resData....", res);
 	  if (res.total > 0) {
 		  this.contractData = res.rows;
+		  this.total = res.total
 	    // res.rows.forEach((element) => {
 	    //   element.date1 = this.format(element.contractEffectivedate);
 	    //   element.date2 = this.format(element.contractDepositdate);
@@ -644,7 +642,8 @@ button {
   font-size: 12px;
 }
 .buttonClass1 {
-  width: 80%;
+  width: 125rpx;
+  margin-right: 20rpx;
   height: 30rpx;
   line-height: 30rpx;
   color: #fff;
