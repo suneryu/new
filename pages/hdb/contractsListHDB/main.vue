@@ -32,7 +32,7 @@
 		<!-- <div style='border:1px solid #4CD964;z-index: 1;'><image src="../../../static/img/icons/hdb/发票.png"></image></div> -->
 		<div>
 			<div v-for='(items,index) in contractData' :key="index">
-				<div style='height: 150rpx;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px;'>
+				<div style='height: 180rpx;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px;'>
 					<div style="display: flex;height: 40rpx">
 						<div class="entryName">{{!qyBut?items.scontractName:items.goodsName}}</div>
 						<div class='effctivTime'>
@@ -46,10 +46,13 @@
 						<div v-if='qyBut && userinfoType != "1"'>合同金额:<span>￥{{!qyBut?items.goodsMoney:items.pricesetNprice}}</span></div>
 						<div v-if='qyBut && userinfoType == "1"'><span>认证为企业可查看金额</span></div>
 					</div>
-					<div style="display: flex;height: 50rpx">
-						<div class='money' style='width: 60%;'><span v-if='qyBut'>合同签订时间:</span><span v-else>合同预约时间:</span><span>{{items.date1}}~{{items.date2}}</span></div>
-						<div class='lookconstr' style='width: 20%;'><u style='text-decoration:underline' @click='preview(items)'>合同预览</u></div>
-						<div style='width: 20%;'>
+					<div style="display: flex;">
+						<div class='money' style='width: 60%;display: flex;flex-direction: column;justify-content: flex-start;'>
+							<span v-if='qyBut'>合同签订时间:</span><span v-else>合同预约时间:</span>
+							<span>{{items.date1}}~{{items.date2}}</span>
+						</div>
+						<div class='lookconstr' style='width: 20%;align-self: flex-end;'><u style='text-decoration:underline' @click='preview(items)'>合同预览</u></div>
+						<div style='width: 20%;align-self: flex-end;'>
 							<button class="buttonClass" v-if='qyBut' @click="talkOrAsk(items)">签约</button>
 							<button class="buttonClass" v-else @click="talkOrder(items)">预约</button>
 						</div>
@@ -302,6 +305,7 @@
 				uni.showModal({
 					title: '提示',
 					content: '您还不是企业用户，请先去认证',
+					showCancel:false,
 					confirmColor: '#' + $storage.get('baseColor'),
 					success(res) {
 						this.goToRegister()
@@ -312,7 +316,8 @@
 			yulook() {
 				uni.showModal({
 					title: '提示',
-					content: '当前合同详情可咨询客户！',
+					content: '当前合同详情可咨询客服！',
+					showCancel:false,
 					confirmColor: '#' + $storage.get('baseColor'),
 					success(res) {
 						// $router.back()
@@ -934,7 +939,7 @@
 	}
 
 	.money {
-		height: 20px;
+		// height: 20px;
 		line-height: 20px;
 		font-size: 11px;
 		color: rgba(153, 153, 153, 0.619607843137255);
@@ -942,6 +947,7 @@
 
 	.buttonClass {
 		width: 80%;
+		align-self: flex-end;
 		height: 30rpx;
 		line-height: 30rpx;
 		color: #fff;

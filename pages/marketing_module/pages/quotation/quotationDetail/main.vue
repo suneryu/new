@@ -37,7 +37,7 @@
 												<i class="iconfont" :style="{ color: '#ededed' }" v-else>&#xe671;</i>
 											</div>
 											<div class="list-img">
-												<img :src="(domain +item.dataPic) || userImgurl" /> <!-- 商品图片-->
+												<img :src="item.dataPic || userImgurl" /> <!-- 商品图片-->
 								<!-- 				<span v-if="item.dataState == 2">已下架</span>
 												<span v-if="item.dataState == 3">已失效</span> 
 												<span v-if="item.dataState == 1">库存不足</span> -->
@@ -51,7 +51,8 @@
 													<div 
 														style='font-size: 12px;'>
 														<span style='color: #000000;' >{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
-														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1 && itemList.contractType == 39 && checkModifyAudit == 3'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx' v-if='item.goodsPro != null'>合同价：{{ unitPrice.obpay }}{{ item.goodsPro }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1 && itemList.contractType == 39 && checkModifyAudit == 3 && item.goodsPro == null'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 													</div>
 													<view class="list-right-container" v-if="itemList.contractType != 41">
 														<div class="list-add">
@@ -236,11 +237,15 @@
 						this.discountMoney = 0
 						res.goodsList.forEach(item=>{
 							item.itemChecked = false
-							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3){
+							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
 							}else{
-								this.discountMoney += item.pricesetNprice*item.goodsNum
+								if(item.goodsPro == null){
+									this.discountMoney += item.pricesetNprice*item.goodsNum
+								}else{
+									this.discountMoney += item.goodsPro*item.goodsNum
+								}
 							}
 						})
 						this.discountMoney = this.discountMoney.toFixed(2)

@@ -22,7 +22,7 @@
 			<div class="accounts-info-tit">{{ shoppingItem.memberMname }}</div>
 			<div >
 				<div class="accounts-info-con" v-for="(goods, goodsIndex) in shoppingItem.goodsList" :key="goodsIndex">
-					<img :src="(domain +goods.dataPic)" />
+					<img :src="goods.dataPic || userImgurl" /> <!-- 商品图片-->
 					<div>
 						<h2>{{ goods.goodsName }}</h2>
 						<h3>{{ goods.skuName }}</h3>
@@ -30,7 +30,8 @@
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
 								<span style='margin-left: 4px;' :style="{ color: '#000000' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
-								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1 && shoppingItem.contractType == 39 '>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1 && shoppingItem.contractType == 39 && goods.goodsPro == null'>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='item.goodsPro != null'>采购价：{{ unitPrice.obpay }}{{ goods.goodsPro }}{{ unitPrice.mapay }}</span>
 							</div>
 							<span>×{{ goods.goodsNum }}</span>
 						</h4>
@@ -260,7 +261,9 @@
 				partnerType:0,   //信用额度
 				discountMoney:0, // 权益优惠
 				discountMoneyBak:0, // 确认单权益优惠
-				shoppingGoodsIdStr:[]
+				shoppingGoodsIdStr:[],
+				userImgurl: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/img_default.jpg',
+				isContrat:false
 				
 			};
 		},
@@ -352,9 +355,12 @@
 		methods: {
 			//查询运费
 			getFreightFare(){
-				this.$qj.http(this.$qj.domain).get('/web/oc/contract/calculateFreightFare.json', {
+				this.$qj.http(this.$qj.domain).get('/web/oc/empcontract/calculateFreightFare.json', {
 					areaCode: this.addressList.areaCode,
-					shoppingGoodsIdStr: this.shoppingGoodsIdStr.toString()
+					shoppingGoodsIdStr: this.shoppingGoodsIdStr.toString(),
+					// shoppingGoodsIdStr: JSON.stringify(this.shoppingGoodsIdStr),
+					memberCode:this.userInfoCode
+					// skuIdStr:''
 				})
 				.then(res=>{
 					
@@ -535,11 +541,8 @@
 					ptfpmodeName: '线上',
 					contractPmode:'0'
 					
-				}, {
-					ptfpmodeName: '线下',
-					contractPmode:'1'
 				}]
-				if (this.goodsClass == '1') { //零配件
+				if (this.goodsClass == '1' && !this.isContrat) { //零配件
 					// 价格  线上 线下 信用额度
 					this.payMethodsList = [{
 						ptfpmodeName: '线上',
@@ -550,7 +553,7 @@
 						contractPmode:'1'
 					}]
 					//判断是否有信用额度
-					if(this.partnerType == 1){
+					if(this.partnerType == 1 && !this.isContrat){
 						let type1={
 							ptfpmodeName: '信用额度支付',
 							contractPmode:'2'
@@ -559,7 +562,7 @@
 					}
 					
 				}
-				if (this.goodsClass == '2') { //耗材订单
+				if (this.goodsClass == '2' && !this.isContrat) { //耗材订单
 					// 价格  先去审核  审核通过后 去支付（线上 线下 信用额度）
 					this.payMethodsList = [{
 						ptfpmodeName: '线上',
@@ -578,7 +581,7 @@
 					// }
 
 				}
-				if (this.goodsClass == '3') { //纪念品订单
+				if (this.goodsClass == '3' && !this.isContrat) { //纪念品订单
 					// 价格 线上支付
 					this.payMethodsList = [{
 						ptfpmodeName: '线上',
@@ -609,11 +612,16 @@
 						this.shoppingGoodsIdStr = []
 						this.getGoodsDetial(res.goodsList[0].skuCode)
 						res.goodsList.forEach(item=>{
-							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3){
+							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
 							}else{
-								this.discountMoney += item.pricesetNprice*item.goodsNum
+								if(item.goodsPro != null){
+									this.isContrat = true
+									this.discountMoney += item.pricesetNprice*item.goodsNum
+								}else{
+									this.discountMoney += item.goodsPro*item.goodsNum
+								}
 							}
 							
 							if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){

@@ -484,7 +484,6 @@ export default {
 	&-footer {
 		height: 98rpx;
 		width: calc(100% - 60rpx);
-		width: 100%;
 		border-top: 1rpx solid #f6f6f8;
 		padding: @padding-30;
 		position: fixed;

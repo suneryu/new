@@ -281,6 +281,8 @@
 			createQuotation(){
 				let shoppingGoodsList =[]
 				this.items.forEach(item=>{
+					item.goodsPro = item.goodsContract
+					delete item.goodsContract
 					shoppingGoodsList.push(item.shoppingGoodsId)
 				})
 				if(shoppingGoodsList.length>0){
