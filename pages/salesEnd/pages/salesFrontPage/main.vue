@@ -62,14 +62,14 @@
 		</div>
 		<div class="hd"  v-if='closeShow'>
 			<div class="handleClose">
-				<view class="qr-code" style="text-align: center;">
+				<view class="qr-code" style="text-align: center;line-height: 340px;">
 					<view class="box">
 						<!-- <canvas canvas-id='canvas-demo' class='demo' style="width:100%;height:60vh" @click="saveimg"></canvas> -->
 						<img  :src="miniQRCode" alt="图片Base64编码" style="max-width:90%; max-height:2000px;" mode="widthFix"/>
 					</view>
-					<div class='img_box'>
+					<!-- <div class='img_box'>
 						<i class="cancel iconfont icon-shanchu2" @click="cancelCode" style="color: #ffffff;margin-top: -100rpx;font-size: 24px;"></i>
-					</div>
+					</div> -->
 				</view>
 				<div class="creatButton" style="display: flex; justify-content: center; margin: 40rpx 20rpx 10rpx 20rpx; position: absolute;
 				bottom: 0">
@@ -213,11 +213,10 @@
 					}
 					params.page = 'pages/hdb/contractsListHDB/main';
 					params.scene = JSON.stringify(json);
+					params.mode = 0;
 					// params.id = 2;
 					// params.type = 'c';
 					
-					// params.auto_color = "0";
-					// params.is_hyaline = "0"
 				
 				this.getErWeiMa(params)
 			},
@@ -226,7 +225,7 @@
 					console.log('图片编码----',res)
 					if (res.success) {
 						this.miniQRCode = 'data:image/png;base64,' + res.dataObj.dataObj.toString('base64');
-						console.log('66666666-',this.miniQRCode)
+						// console.log('66666666-',this.miniQRCode)
 						// this.getImg()
 					}
 				});

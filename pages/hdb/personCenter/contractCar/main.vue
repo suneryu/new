@@ -216,7 +216,7 @@
 </template>
 
 <script>
-import moment from 'moment';
+// import moment from 'moment';
 import http from '@/api/http.js';
 import { checkImgUrl } from '@/utils/checkImg.js';
 import { $storage, $router, $message } from '@/utils/prototype/vue.js';
@@ -386,9 +386,10 @@ export default {
 		});
 	},
 	filters: {
-		timeFilter(val, str = 'YYYY-MM-DD') {
-			return moment(val).format(str);
-		}
+		timeFilter(val) {
+		   let time = new Date(val)
+		   return time.getFullYear()+'-'+time.getMonth()+'-'+time.getDate()
+		  }
 	},
 	mounted() {
 		this.discount = 0;

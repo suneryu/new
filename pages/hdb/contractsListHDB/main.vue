@@ -358,7 +358,7 @@
 										// scontractCode:'2020030300000016',
 										userinfoPhone: $storage.get('loginInfor').userPhone,
 										areaCode: that.areaCode,
-										// contractTypepro: that.defaulePhone
+										contractTypepro: that.defaulePhone
 									}
 									http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
 										.then(res1 => {
@@ -396,7 +396,7 @@
 									scontractCode: item.scontractCode,
 									// scontractCode:'2021030400000001',
 									userinfoPhone: $storage.get('loginInfor').userPhone,
-									// contractTypepro: that.defaulePhone
+									contractTypepro: that.defaulePhone
 								}
 								http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
 									.then(res1 => {
