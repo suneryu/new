@@ -207,12 +207,14 @@
 				fileUrl:'',
 			};
 		},
+		onShow() {
+			this.initAddressData()
+		},
 		mounted() {
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			this.secondaryColor = `#${this.$qj.storage.get('secondaryColor')}` || this.baseColor;
 			this.initPayMethods();
-			this.initAddressData() 
 			this.initOrderData(this.$root.$mp.query.scontractId)
 			
 
