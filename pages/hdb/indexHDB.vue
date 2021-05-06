@@ -96,7 +96,8 @@
 		queryCollectPage,
 		userapplyStateAndAuth,
 		queryBuyerScontractPage,
-		queryScontractPage
+		queryScontractPage,
+		queryGiftUserPage
 		
 	} from '@/api/interfaceHDB.js';
 	import {
@@ -211,15 +212,23 @@
 				});
 				},
 			//获取我的合同
-			getMycontract(data) {
-				http.get(queryBuyerScontractPage, {
-					goodsSupplierName: data,
-					contractInvstate: "1"
-				}).then(res => {
-					console.log("getmyContract...", res.total)
-					this.contractTotal = res.total;
+			// getMycontract(data) {
+			// 	http.get(queryBuyerScontractPage, {
+			// 		goodsSupplierName: data,
+			// 		contractInvstate: "1"
+			// 	}).then(res => {
+			// 		console.log("getmyContract...", res.total)
+			// 		this.contractTotal = res.total;
 
-				});
+			// 	});
+		getMycontract(data){
+			http.get(queryGiftUserPage, {
+				rows: 10,
+				page: 1,
+				giftUserPhone: $storage.get('loginInfor').userPhone,
+			}).then((res) => {
+			  this.contractTotal = res.total;
+			});
 				
 			
 				//获取我的預約合同

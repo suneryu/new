@@ -261,6 +261,8 @@ export const deleteSubAccount = '/web/um/userservice/deleteSubAccount.json' // �
 export const saveOcRefund = '/web/oc/ocrefund/saveOcRefund.json' // 退款
 export const talkOverWithSell = '/web/sp/scontract/talkOverWithSell.json' //  销售更改洽谈状态
 export const queryGiftPageToC2 = '/web/gt/gift/queryGiftPageToC2.json' //  销售更改洽谈状态
+export const queryGiftUserPage = '/web/gt/giftUser/queryGiftUserPage.json' //  销售更改洽谈状态
+export const queryGiftFilePage = '/web/gt/giftFile/queryGiftFilePage.json' //  销售更改洽谈状态
  
 
 
