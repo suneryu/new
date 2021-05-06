@@ -11,7 +11,7 @@
 		</div>
 		<div v-if="company.length > 0">
 			<div v-for="(item,index) in company" :key="index">
-				<div @click="add(item.userinfoPhone)"
+				<div @click="add(item)"
 					style="height: 82px;border-bottom: 1px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
 					<div style="display: flex;">
 						<div style="width: 80%; font-size: 17px; color: #004178;">{{item.userinfoCompname}}</div>
@@ -139,7 +139,8 @@
 			},
 			add(item) {
 				$router.push("salesEnd/pages/ChooseaBuyer", {
-					userinfoPhone: item
+					userinfoPhone: item.userinfoPhone,
+					memberBcode:item.userinfoCode
 				})
 			}
 		}

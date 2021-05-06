@@ -156,7 +156,8 @@
 				goodsClass: "",
 				scontractCode:'',
 				totalPrice:0,
-				companyName:''
+				companyName:'',
+				giftCode:''
 			};
 		},
 		onShow() {
@@ -165,6 +166,7 @@
 		onLoad(options) {
 			this.userPhone = options.userPhone
 			this.scontractCode = options.scontractCode
+			this.giftCode = options.giftCode
 		},
 		computed: {
 			unitPrice() {
@@ -282,6 +284,7 @@
 				let shoppingGoodsList =[]
 				this.items.forEach(item=>{
 					item.goodsPro = item.goodsContract
+					item.goodsProperty5 = this.giftCode
 					delete item.goodsContract
 					shoppingGoodsList.push(item.shoppingGoodsId)
 				})

@@ -8,17 +8,17 @@
 				<span class="iconfont icon-tishi"></span>
 			</div>
 		</div>
-		<div  v-if="Buyers.length > 0">
+		<div  v-if="Buyers.length > 0" style='margin-bottom: 125rpx;'>
 			<div v-for="(item,index) in Buyers" :key="index" >
-				<div style="height: 120px;margin-bottom: 3px; border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
-				<div style="font-size: 12px">{{item.memberGname}}</div>
+				<div style="height: 240rpx;margin-bottom: 3px; border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
+				<div style="font-size: 12px">{{item.giftCode}}</div>
 				<div style="display: flex;">
-					<div style="width: 80%; font-size: 17px;">{{item.scontractName}}</div>
+					<div style="width: 80%; font-size: 17px;">{{item.giftName}}</div>
 				</div>
 				<div style="display: flex; font-size: 12px">{{item.contractRemark}}</div>
 				<div style="display: flex; margin: 5px 0;">
 					<div style="width: 80%; font-size: 12px;">合同金额：
-						<span>{{item.goodsMoney}}</span>
+						<span>{{item.giftCnum}}</span>
 					</div>
 					<div style="width: 20%; font-size: 12px;text-align: right;">
 <!-- 						<a href="">预约合同</a> -->
@@ -26,16 +26,16 @@
 				</div>
 				<div style="display: flex;font-size: 12px;margin: 10px 0;">
 					<div style="width: 100%;">合同有效时间：
-						<span>{{item.scontractNbcode}}</span>
-						<button class="buttonClass" @click="useContract(item.scontractCode)">使用合同</button>
+						<span>{{item.memberCcode.slice(0,10)}}~{{item.memberCname.slice(0,10)}}</span>
+						<button class="buttonClass" @click="useContract(item)">使用合同</button>
 					</div>
 				</div>
-				<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;margin-bottom: 20rpx;">
+				<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;align-items: center;height: 50rpx;">
 					<div style="width: 40%;">进度：
-						<span>{{item.scontractNbcode}}%</span>
+						<span>{{item.giftUserWeight}}%</span>
 					</div>
 					<div style="width: 40%;">余额：
-						<span>{{item.memberCname}}</span>
+						<span>{{item.goodsOneweight}}</span>
 					</div>
 					<span style="width: 20%; text-align: right;">使用详情</span>
 				</div>
@@ -45,8 +45,8 @@
 		</div>
 		<div class="goodsList-nulls" v-else><img :src="nullImg" /></div>
 		<div class="creatButton"
-			style="position: fixed; bottom: 0; text-align: center; width: 100%; height: 150rpx;display: flex; justify-content: center;">
-			<button @click="toCreateQuo">线上商城</button>
+			style="position: fixed; bottom: 0; text-align: center; width: 100%; height: 120rpx;display: flex; justify-content: center;background: #fff;">
+			<button @click="toCreateQuo" style="width: 90%;">线上商城</button>
 		</div>
 	</div>
 </template>
@@ -69,6 +69,7 @@
 				companyPack:[],
 				Buyers: [],
 				options:'',
+				userinfoCode:'',
 				nullImg: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/noSearchResult.png',
 			}
 		},
@@ -77,31 +78,27 @@
 		},
 		onLoad(options){
 			this.options = options.userinfoPhone
+			this.userinfoCode = options.memberBcode
 		},
 		methods: {
 			getdata() {
-				http.get(queryBuyerScontractPage, {
-					goodsSupplierName: this.options
+				http.get('/web/gt/giftUser/queryGiftUserPage.json', {
+					giftUserPhone:this.options,
+					giftName:this.searchValue,
+					departCode:19
 				}).then(res => {
 						this.Buyers = res.list || []
-						this.companyPack = this.Buyers				
 				});
 			},
 			toCreateQuo(){
 				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options})
 			},
 			useContract(item){
-				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options,scontractCode:item})
+				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options,scontractCode:item.giftUserCode,giftCode:item.giftCode})
 			},
 			screen(value){
-				console.log(value)
 				this.searchValue = value
-				if(value == ""){
-					this.Buyers = this.companyPack
-				}else{
-					this.Buyers = this.companyPack.filter(item => item.scontractName.indexOf(value) != -1)
-				}
-				
+				this.getdata()
 			}
 		},
 	}

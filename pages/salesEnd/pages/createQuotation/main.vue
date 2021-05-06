@@ -201,7 +201,8 @@
 				scontractCode:'',
 				paramsBak:{},
 				goodsClassStr:'',
-				text1:'输入商品名称'
+				text1:'输入商品名称',
+				giftCode:''
 			};
 		},
 		onShow() {
@@ -212,7 +213,8 @@
 			// this.userPhone = '15234496108'
 			if(options.scontractCode != undefined){
 				this.scontractCode = options.scontractCode
-				// this.scontractCode = '2020120300000001'
+				// this.giftCode = '441910002429460480'
+				this.giftCode = options.giftCode
 			}
 		},
 		onReachBottom() {
@@ -258,8 +260,10 @@
 			serarchGoods(value){
 				if(this.text1 == '输入商品编号'){
 					this.params.likeSkuNo = this.searchValue
+					this.paramsBak.skuNo = this.searchValue
 				}else{
 					this.params.likeGoodsName = this.searchValue
+					this.paramsBak.goodsName = this.searchValue
 				}
 				this.searchValue = value
 				// this.params.likeGoodsName = this.searchValue
@@ -316,7 +320,7 @@
 			createQuotation(){
 				this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/queryShoppingPage.json',{memberBcode:this.userInfoCode,shoppingType: 5}).then(res => {
 					if(res.list && res.list.length>0){
-						$router.push('salesEnd/pages/quotationDetail',{userPhone:this.userPhone,scontractCode:this.scontractCode})
+						$router.push('salesEnd/pages/quotationDetail',{userPhone:this.userPhone,scontractCode:this.scontractCode,giftCode:this.giftCode})
 					}else{
 						this.$qj.message.alert('请先添加商品到购物车');
 					}
@@ -377,7 +381,8 @@
 					// channelCode: "1526",
 				}
 				this.paramsBak = {
-					scontractCode:this.scontractCode,
+					giftUserCode:this.scontractCode,
+					// giftUserCode:'441973991226212352',
 					goodsName:this.searchValue,
 					page: 1,
 					rows: this.rows,
@@ -446,7 +451,7 @@
 				}else{
 					this.$qj
 					.http(this.$qj.domain)
-					.get('/web/gt/gift/queryRelToC.json',{giftUserCode: '441973991226212352'} )
+					.get('/web/gt/gift/queryRelToC.json',this.paramsBak )
 					.then(res=>{
 								let batchCollectData = [];
 								// 获取用户维度起订量倍数
