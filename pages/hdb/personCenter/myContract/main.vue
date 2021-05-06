@@ -332,15 +332,13 @@ export default {
     //查询合同附件的接口
     queryScontractFilePage(item) {
       let data = item;
-
+	this.fileUrl = ""
       console.log("合同信息code", data.giftCode);
       http
         .get(queryGiftFilePage, {
           giftCode: data.giftCode,
         })
         .then((res) => {
-          console.log("合同附件", res);
-          console.log("合同附件", this.userinfoType);
           res.rows.forEach((element) => {
             if (element.giftFileType == this.userinfoType) {
               console.log("scontractFileUrl...", element.giftFileFileUrl);
@@ -348,19 +346,32 @@ export default {
             }
             // this.contractData = res.rows;
           });
+		  if (this.fileUrl == null || this.fileUrl == "") {
+		    this.yulook();
+		  }
         });
     },
+	yulook() {
+		uni.showModal({
+			title: '提示',
+			content: '当前合同详情可咨询客服！',
+			showCancel:false,
+			confirmColor: '#' + $storage.get('baseColor'),
+			success(res) {
+			}
+		})
+	},
     //合同预览
     preview(items) {
-      this.htImg = true;
-      console.log("合同预览，，，", items);
+      // this.htImg = true;
+      // console.log("合同预览，，，", items);
       this.queryScontractFilePage(items);
-      if (this.fileUrl == null || this.fileUrl == "") {
-        //this.tankuang();
-      } else {
-        console.log("有信息");
-      }
-      console.log(this.fileUrl);
+      // if (this.fileUrl == null || this.fileUrl == "") {
+      //   //this.tankuang();
+      // } else {
+      //   console.log("有信息");
+      // }
+      // console.log(this.fileUrl);
     },
 
 

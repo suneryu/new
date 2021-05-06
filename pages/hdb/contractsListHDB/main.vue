@@ -206,11 +206,10 @@
 					}
 				} else {
 					this.parts('0')
-
 				}
 			}else{
-				this.parts(JSON.parse(options.scene).id)
-				this.defaulePhone = JSON.parse(options.scene).phone
+				this.parts('2')
+				this.defaulePhone = this.defaulePhone = options.scene
 			}
 
 
@@ -443,7 +442,8 @@
 							if (Array.isArray(res)) {
 								$router.push('hdb/orderHDB', {
 									scontractId: items.skuId,
-									goodsNum: items.goodsNum
+									goodsNum: items.goodsNum,
+									userinfoType:this.userinfoType
 								});
 							} else {
 								this.$qj.message.alert('合同信息有误，请联系商家')
@@ -517,28 +517,41 @@
 			//查询合同附件的接口
 			queryScontractFilePage(item) {
 				let data = item
-
-				console.log("合同信息code", data.scontractCode)
-				http.get(queryScontractFilePage, {
+				this.fileUrl = ''
+				if(!this.qyBut){
+					http.get(queryScontractFilePage, {
 						scontractCode: data.scontractCode
 					})
 					.then(res => {
-						console.log("合同附件", res)
-						console.log("合同附件", this.userinfoType)
 						res.rows.forEach(element => {
-							if (element.memo == 1) {
-								console.log("scontractFileUrl...", element.scontractFileUrl)
+							if (element.memo == this.userinfoType) {
 								this.fileUrl = element.scontractFileUrl
 							}
-							// this.contractData = res.rows;
 						});
-
 						if (this.fileUrl == null || this.fileUrl == "") {
 							this.yulook();
 						} else {
 							this.htImg = true;
 						}
 					})
+				}else{
+					http.get('/web/gt/giftFile/queryGiftFilePage.json', {
+						giftCode: data.goodsNo
+					})
+					.then(res => {
+						res.rows.forEach(element => {
+							if (element.giftFileType == this.userinfoType) {
+								this.fileUrl = element.giftFileFileUrl
+							}
+						});
+						if (this.fileUrl == null || this.fileUrl == "") {
+							this.yulook();
+						} else {
+							this.htImg = true;
+						}
+					})
+				}
+				
 			},
 			//合同预览
 			preview(items) {

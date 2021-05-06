@@ -30,19 +30,21 @@
 							:class="{ 'icon-weixuanzhongkuang': !item.itemChecked, 'icon-xuanzhongkuang': item.itemChecked }"
 							v-bind:style="{ color: baseColor }"
 						></view> -->
-						<img :src="item.dataPic || userImgurl" />
+						<!-- <img :src="item.dataPic || userImgurl" /> -->
 						<div class="list-box">
-							<p>{{ item.goodsName }}</p>
+							<p style='margin-top: 20rpx;'>{{ item.goodsName }}</p>
 							<p>{{ item.goodsNo }}</p>
 							<p v-if="userinfoType =='1' " class="noPrice">认证为企业用户可查看价格</p>
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: center;" v-if="item.goodsClass != '1' && userinfoType=='2' && checkModifyAudit == '3' ">
 								<span class="originalPrice11">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
 							</div>
-							<div style="text-align: center;" v-if="item.goodsClass == '1' && userinfoType=='2' && checkModifyAudit == '3' ">
+							<div style="text-align: left;" v-if="item.goodsClass == '1' && userinfoType=='2' && checkModifyAudit == '3' ">
 							<!-- <div style="text-align: left;" v-if=" userinfoType=='2' && checkModifyAudit == '3' "> -->
-								<p class="originalPrice">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </p>
-								<p class="purchasePrice" :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</p>
+								<p class="originalPrice">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} 
+								<span class="purchasePrice" :style="{ color: '#d66377',marginLeft:'40rpx' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
+								</p>
+								<!-- <p class="purchasePrice" :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</p> -->
 							</div>
 						</div>
 						<!-- <view class="icon-container">
@@ -947,7 +949,8 @@
 				zoom: 1;
 
 				li {
-					width: calc(50% - 2rpx);
+					// width: calc(50% - 2rpx);
+					width: 100%;
 					float: left;
 					border-right: 2rpx solid #f5f5f5;
 					border-bottom: 2rpx solid #f5f5f5;
@@ -960,7 +963,7 @@
 						// width: 100%;
 						height: 100%;
 						font-size: @middle-title;
-						text-align: center;
+						text-align: left;
 
 						.checked {
 							display: flex;

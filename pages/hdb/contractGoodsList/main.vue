@@ -103,7 +103,7 @@
 	} from '@/api/interface.js';
 	import lastPageLine from '@/components/communal/last-page-line';
 	export default {
-		props: ["giftUserCode"],
+		// props: ["giftUserCode"],
 		data() {
 			return {
 				skuCode:'',
@@ -138,11 +138,15 @@
 				giftCode:'',
 				giftUserId:'',
 				wantList:[],  //勾选商品
+				giftUserCode:''
 
 			}
 		},
 		onShow() {
 			this.myCoupon()
+		},
+		onLoad(options) {
+			this.giftUserCode = options.giftUserCode
 		},
 		components: {
 			lastPageLine
@@ -212,7 +216,7 @@
 
 			myCoupon() {
 				let params = {
-					giftUserCode: '441973991226212352'
+					giftUserCode: this.giftUserCode
 				}
 				http.get('/web/gt/gift/queryRelToC.json', params).then(res => {
 					if (res && res.length != 0) {
@@ -273,7 +277,8 @@
 							goodsName: this.giftCoupon[i].goodsName,
 							goodsNum: this.giftCoupon[i].giftNum,
 							selected: this.giftCoupon[i].ischecked,
-							shoppingType: "08"
+							shoppingType: "08",
+							giftCode:this.giftCode
 						})
 					}
 				}

@@ -205,6 +205,7 @@
 				isupload: false,
 				contractData: [],
 				fileUrl:'',
+				userinfoType:''
 			};
 		},
 		onShow() {
@@ -227,6 +228,7 @@
 		},
 		onLoad(options) {
 			this.contractData.push(options.scontractId)
+			this.userinfoType=options.userinfoType
 		},
 		methods: {
 			/**
@@ -512,7 +514,7 @@
 			yulook() {
 				uni.showModal({
 					title: '提示',
-					content: '当前合同详情可咨询客户！',
+					content: '当前合同详情可咨询客服！',
 					confirmColor: '#' + $storage.get('baseColor'),
 					success(res) {
 					}
@@ -565,28 +567,22 @@
 			//查询合同附件的接口
 			queryScontractFilePage(item) {
 				let data = item
-			
-				console.log("合同信息code", data.scontractCode)
-				http.get(queryScontractFilePage, {
-						scontractCode: data.scontractCode
-					})
-					.then(res => {
-						console.log("合同附件", res)
-						console.log("合同附件", this.userinfoType)
-						res.rows.forEach(element => {
-							if (element.memo == 1) {
-								console.log("scontractFileUrl...", element.scontractFileUrl)
-								this.fileUrl = element.scontractFileUrl
-							}
-							// this.contractData = res.rows;
-						});
-			
-						if (this.fileUrl == null || this.fileUrl == "") {
-							this.yulook();
-						} else {
-							this.htImg = true;
+				this.fileUrl = ''
+				http.get('/web/gt/giftFile/queryGiftFilePage.json', {
+					giftCode: data.goodsNo
+				})
+				.then(res => {
+					res.rows.forEach(element => {
+						if (element.giftFileType == this.userinfoType) {
+							this.fileUrl = element.giftFileFileUrl
 						}
-					})
+					});
+					if (this.fileUrl == null || this.fileUrl == "") {
+						this.yulook();
+					} else {
+						this.htImg = true;
+					}
+				})
 			},
 			delImg(index) {
 				this.upImg.splice(index, 1)

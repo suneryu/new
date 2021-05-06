@@ -32,7 +32,7 @@
 				</div>
 				<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;align-items: center;height: 50rpx;">
 					<div style="width: 40%;">进度：
-						<span>{{item.giftUserWeight}}%</span>
+						<span>{{(Number(item.giftUserWeight)*100).toFixed(2)}}%</span>
 					</div>
 					<div style="width: 40%;">余额：
 						<span>{{item.goodsOneweight}}</span>
