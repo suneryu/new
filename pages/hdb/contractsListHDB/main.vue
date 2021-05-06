@@ -209,7 +209,7 @@
 				}
 			}else{
 				this.parts('2')
-				this.defaulePhone = this.defaulePhone = options.scene
+				this.defaulePhone = options.scene
 			}
 
 

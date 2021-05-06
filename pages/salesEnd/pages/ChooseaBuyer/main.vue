@@ -37,7 +37,7 @@
 					<div style="width: 40%;">余额：
 						<span>{{item.goodsOneweight}}</span>
 					</div>
-					<span style="width: 20%; text-align: right;">使用详情</span>
+					<span style="width: 20%; text-align: right;" @click='toOrderList(item)'>使用详情</span>
 				</div>
 			</div>
 			
@@ -81,6 +81,11 @@
 			this.userinfoCode = options.memberBcode
 		},
 		methods: {
+			toOrderList(scontractObillcode){
+				this.$router.push("order_modules/order/index", {
+				  isContract:false,serachPhone:$storage.get("loginInfor").userPhone,searchGiftcode:scontractObillcode.giftCode
+				});
+			},
 			getdata() {
 				http.get('/web/gt/giftUser/queryGiftUserPage.json', {
 					giftUserPhone:this.options,

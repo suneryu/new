@@ -196,28 +196,7 @@ export default {
       img: this.$imgDomain, // 域名
       selectValue: false,
       imgDefalut: "icon-arrfill_l",
-      contractData: [
-        {
-          scontractName: "千匠",
-          goodsMoney: "1000.00",
-          scontractNbcode: "1年",
-          contractValidate: "2020/11/02",
-          contractPaydate: "2021/02/24",
-          contractRemark: "合同的描述。。。。。",
-          memberCcode: "25",
-          memberCname: "12032",
-        },
-        {
-          scontractName: "千禧",
-          goodsMoney: "2000.00",
-          scontractNbcode: "2年",
-          contractValidate: "2022/11/02",
-          contractPaydate: "2023/02/24",
-          contractRemark: "千禧合同的描述。。。。。",
-          memberCcode: "25",
-          memberCname: "12032",
-        },
-      ],
+      contractData: [],
       iconShow1: true, //线下合同弹出层
       iconShow2: false,
       fontColor1: "#004178", //字体颜色
@@ -492,8 +471,8 @@ export default {
       this.$qj.router.push("user_modules/user/user-ui/webMail");
     },
     order(scontractObillcode) {
-      this.$router.push("hdb/personCenter/contractOrder", {
-        scontractObillcode,
+      this.$router.push("order_modules/order/index", {
+        isContract:false,serachPhone:$storage.get("loginInfor").userPhone,searchGiftcode:scontractObillcode.giftCode
       });
     },
   },

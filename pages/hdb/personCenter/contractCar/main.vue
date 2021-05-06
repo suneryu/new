@@ -727,6 +727,8 @@ export default {
 						goodsSupplierName: '', //配送商
 						goodsSupplierCode: '', //配送商Code
 						packageList: [],
+						contractEcurl:this.giftCode,
+						areaName:$storage.get('loginInfor').userPhone,
 						packageMode: '', //配送方式
 						contractType: this.shoppingItems[0].shoppingType,
 						ocContractSettlList:
@@ -770,6 +772,8 @@ export default {
 						packageMode: '', //配送方式
 						contractType: v.shoppingType,
 						packageList: [],
+						contractEcurl:this.giftCode,
+						areaName:$storage.get('loginInfor').userPhone,
 						//contractType: this.$state.shoppingType[index].shoppingType,
 						ocContractSettlList:
 							Object.keys(this.currentCoupon).length > 0

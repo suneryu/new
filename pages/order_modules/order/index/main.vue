@@ -1,7 +1,7 @@
 <template>
 	<div class="orderList">
 		<qj-mini-search-nav-bar inputPlaceholder="输入商品名称搜索订单" @getNavBarHeight="getNavBarHeight" :isSearch="true" :isBack="false" @search="toSearch"></qj-mini-search-nav-bar>
-		<div class="orderList-tit" v-bind:style="{ top: topDistance + 'px' }">
+		<div class="orderList-tit" :style="{ top: topDistance + 'px' }" v-if='isContract'>
 			<ul>
 				<li v-for="(item, index) in items" :key="index" @click="orderTitle(item, index)">
 					<div :class="current === index ? 'active' : ''" :style="{ color: current === index ? baseColor : '' }">
@@ -11,7 +11,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="orderList-info" v-if="orderList.length > 0">
+		<div class="orderList-info" v-if="orderList.length > 0" :style="{marginTop:isContract?'100rpx':'20rpx'}">
 			<ol>
 				<li v-for="(order, index) in orderList" :key="index">
 					<div class="order-item">
@@ -139,10 +139,18 @@ export default {
 			orderTagText: {
 				'30': '预售订单',
 				'06': '积分订单'
-			}
+			},
+			isContract:true,
+			serachPhone:'',
+			searchGiftcode:''
 		};
 	},
 	onLoad(options) {
+		if(options.isContract != undefined){
+			this.isContract = false,
+			this.serachPhone = options.serachPhone,
+			this.searchGiftcode = options.searchGiftcode
+		}
 		console.log('跳转页面---',options)
 		this.getQY();
 		this.dataState = options.dataState || '-1'
@@ -214,8 +222,6 @@ export default {
 				this.dataState = dataState;
 				this.current = Number(dataState);
 			}
-			console.log(this.dataState,'-----状态')
-			console.log(this.current,'-----呜呜呜呜态')
 			
 			let params = {
 				page: this.page,
@@ -223,6 +229,11 @@ export default {
 				childFlag: true,
 				contractType: '00,26,05',
 			};
+			if(!this.isContract){
+				params.contractType='08'
+				params.areaName=this.serachPhone
+				params.contractEcurl = this.searchGiftcode
+			}
 		
 				
 			if (this.current !== 0) {
