@@ -72,7 +72,6 @@ export const saveOrderSubToPay = "/web/pte/pay/saveOrderSubToPay.json"; // 分�
 export const paymentCommit = "web/pte/pay/paymentCommit.json"; // 开始支付
 export const syncContractPayState =
 	"/web/oc/contract/syncContractPayState.json"; // 查看商品是否支付成功
-export const saveOrderToPay = "web/pte/pay/saveOrderToPay.json"; // 获取支付方式
 
 export const loginOut = "/web/ml/mlogin/loginOut.json"; // 获取支付方式
 
@@ -286,3 +285,6 @@ export const updateUmuserPwSell = '/web/ml/mlogin/updateUmuserPwSell2.json' //  
 export const queryUserinfoPageBySales = '/web/um/userserviceinfo/queryUserinfoPageBySales.json' //  查询用户资质
 export const updateContractNew = '/web/oc/contract/updateContractNew.json' //  
 export const queryCompanyUserinfo = '/web/um/userDealer/queryCompanyUserinfo.json' //  
+export const syncContractBatchState = "/web/oc/contract/syncContractBatchState.json"; // 查询订单是否创建成功（单条）
+export const saveOrderToBatchPay = "web/pte/pay/saveOrderToBatchPay.json"; // 获取支付方式
+export const saveOrderToPay = "web/pte/pay/saveOrderToPay.json"; // 获取支付方式

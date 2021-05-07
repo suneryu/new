@@ -204,12 +204,10 @@
 			// 邀请洽谈二维码
 			invitation(){
 				this.closeShow = true
-				let params = {
-				
-				};
+				let params = {};
 					params.page = 'pages/hdb/contractsListHDB/main';
 					//params.scene = "i=2&p="+'15234496108';
-					params.scene = "15234496108";
+					params.scene = $storage.get('loginInfor').userPhone;
 					params.mode = 0;
 					// params.id = 2;
 					// params.type = 'c';

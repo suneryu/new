@@ -44,7 +44,7 @@
 							<view class="name">{{ goods.goodsName }}</view>
 							<view class="model">{{ goods.skuName }}</view>
 							<view class="other">
-								<text class="price" :style="{ color: baseColor }">合同价：{{ goods.pricesetNprice }} 元</text>
+								<text class="price" :style="{ color: '#ec2b27' }">合同价：{{ goods.pricesetNprice }} 元</text>
 								<text class="num">×{{ goods.goodsCamount }}</text>
 							</view>
 							<!-- <view class="returnGoods">支持7天无理由退货</view> -->
@@ -93,15 +93,15 @@
 		<view class="allPrice currency">
 			<view class="item">
 				<view class="title">商品总额</view>
-				<text class="price" :style="{ color: baseColor }">¥{{ shoppingCountPrice.toFixed(2) }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ shoppingCountPrice.toFixed(2) }}</text>
 			</view>
 			<view class="item">
 				<view class="title">运费</view>
-				<text class="price" :style="{ color: baseColor }">¥{{ totalFreight }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ totalFreight }}</text>
 			</view>
 			<view class="item">
 				<view class="title">促销满减</view>
-				<text class="price" :style="{ color: baseColor }">-¥{{ totalDiscountPrice }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">-¥{{ totalDiscountPrice }}</text>
 			</view>
 			<view class="item" @click="isShowPreferential">
 				<view class="title" :style="{ color: baseColor }">优惠券</view>
@@ -112,7 +112,7 @@
 			</view>
 			<view class="total">
 				<text>合计：</text>
-				<text class="price" :style="{ color: baseColor }">¥{{ accountsSumPrice }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ accountsSumPrice }}</text>
 			</view>
 		</view>
 
@@ -141,7 +141,7 @@
 		<!-- 底部  立即购买 -->
 		<view class="footer">
 			<text class="copyWith">应付：</text>
-			<text class="price" :style="{ color: baseColor }">¥ {{ accountsSumPrice }}</text>
+			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ accountsSumPrice }}</text>
 			<view class="buyNow" @click="savePayPrice" :style="{ background: '#004178' }">提交订单</view>
 		</view>
 
@@ -246,7 +246,9 @@ import {
 	updateAddress, 
 	getVopCarriageNew, // 获取京东运费
 	queryToContractCodeList,
-	syncContractPayState
+	syncContractPayState,
+	saveOrderToPay, //设置支付方式
+	saveOrderToBatchPay
 } from '@/api/interface.js';
 import { formatTimes } from '@/utils/prototype/date.js';
 export default {
@@ -875,6 +877,7 @@ export default {
 									console.log(res4)
 								})
 								$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
+								// $router.replace('pay/payMethods',{contractBillcode:res.dataObj.contractBillcode})
 							}
 						});
 						return;
