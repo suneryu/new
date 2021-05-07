@@ -157,7 +157,8 @@
 				scontractCode:'',
 				totalPrice:0,
 				companyName:'',
-				giftCode:''
+				giftCode:'',
+				giftUserId:''
 			};
 		},
 		onShow() {
@@ -167,6 +168,7 @@
 			this.userPhone = options.userPhone
 			this.scontractCode = options.scontractCode
 			this.giftCode = options.giftCode
+			this.giftUserId = options.giftUserId
 		},
 		computed: {
 			unitPrice() {
@@ -285,6 +287,7 @@
 				this.items.forEach(item=>{
 					item.goodsPro = item.goodsContract
 					item.goodsProperty5 = this.giftCode
+					item.goodsProperty4 = this.giftUserId
 					delete item.goodsContract
 					shoppingGoodsList.push(item.shoppingGoodsId)
 				})

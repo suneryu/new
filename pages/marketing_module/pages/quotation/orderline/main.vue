@@ -154,6 +154,7 @@
 	} from '@/api/interfaceHDB.js';
 	import {
 			userapplyStateAndAuth,
+			syncContractPayState,
 			getContractByContractBillcode,
 	} from '@/api/interface.js';
 	import {
@@ -263,7 +264,9 @@
 				discountMoneyBak:0, // 确认单权益优惠
 				shoppingGoodsIdStr:[],
 				userImgurl: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/img_default.jpg',
-				isContrat:false
+				isContrat:false,
+				giftCode:'',
+				giftUserId:''
 				
 			};
 		},
@@ -610,6 +613,8 @@
 						this.discountMoney = 0
 						this.shoppingGoodsIdStr = []
 						this.getGoodsDetial(res.goodsList[0].skuCode)
+						this.giftCode = res.goodsList[0].goodsProperty5
+						this.giftUserId = res.goodsList[0].goodsProperty4
 						res.goodsList.forEach(item=>{
 							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
@@ -772,8 +777,8 @@
 							packageList: [],
 							ocContractSettlList: [],
 							// contractInmoney: (Number(this.shoppingCountPrice) + Number(this.freight.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)
-							contractInmoney: Number(this.allPrice),
-							contractMoney: Number(this.allPrice)*Number(this.userinfoOcode), // 最终销售含税金额 (优惠后)
+							contractInmoney: Number(this.discountMoney),
+							contractMoney: Number(this.discountMoney), // 最终销售含税金额 (优惠后)
 							goodsReceiptMem: this.addressList.addressMember, //收货人
 							goodsReceiptArrdess: this.addressList.provinceName + this.addressList.cityName + this.addressList.areaName +
 								this.addressList.addressDetail, //收货地址
@@ -865,6 +870,17 @@
 							});
 						});
 					});
+					if(this.isContrat){
+						this.orderDomainStr.forEach(item=>{
+							delete item.goodsClass
+							delete item.ocContractproDomainList
+							item.contractEcurl = this.giftCode,
+							item.areaName = $storage.get('loginInfor').userPhone
+							item.contractType = '08'
+							item.giftSkuIdList = []
+							item.contractNbillcode = null
+						})
+					}
 					let orderDomainStr = JSON.stringify(this.orderDomainStr);
 					let params = {
 						orderDomainStr: orderDomainStr			
@@ -874,7 +890,6 @@
 						.http(this.$qj.domain)
 						.post(saveContract, params)
 						.then(res => {
-							console.log(res, 'fygryefgre7gtrt')
 							if (res.errorCode == 'nologin') {
 								return;
 							}
@@ -884,29 +899,38 @@
 							})
 							//确认单改价
 							if(this.shoppingItems[0].contractType == 41){
-								this.$qj.http(this.$qj.domain).post('/web/oc/contract/syncContractState.json', {contractBillcode:res.dataObj.contractBillcode}).then(res=>{
-								if(res.success){
+								this.$qj.http(this.$qj.domain).post('/web/oc/contract/syncContractState.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
+								if(res1.success){
 									changeTotalMoney = Number(res.dataObj.dataBmoney) - Number(this.shoppingItems[0].contractInmoney) + Number(this.discountMoneyBak)
 									let json = {
-										dataBmoney: (changeTotalMoney + Number(this.allPrice)).toFixed(2),
-										contractMoney: (changeTotalMoney + Number(this.allPrice)).toFixed(2),
-										goodsMoney: (changeTotalMoney + Number(this.allPrice)).toFixed(2),
+										dataBmoney: (changeTotalMoney + Number(this.discountMoney)).toFixed(2),
+										contractMoney: (changeTotalMoney + Number(this.discountMoney)).toFixed(2),
+										goodsMoney: (changeTotalMoney + Number(this.discountMoney)).toFixed(2),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口
 									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
-										
 									})
 								}
 							})
+							}
+							//合同单支付
+							if (this.isContrat) {
+								http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res2 => {
+									if (res2.success == true) {
+										http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.discountMoney,giftUserId:this.giftUserId})
+										.then(res4=>{
+											console.log(res4)
+										})
+										$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
+									}
+								});
 							}
 							
 							
 							if (res.dataObj.contractBillcode) {
 								this.contractBillcode = res.dataObj.contractBillcode;
 								this.$state.set('contractBillcode', this.contractBillcode);
-								// this.$qj.router.replace('pay/paySelect');
-								
 								if(this.goodsClass == '2'){ //耗材订单
 								console.log(111111)
 									   let options = {
@@ -924,18 +948,6 @@
 										this.$qj.router.replace('order_modules/order/index');
 									}
 								}
-								// if(this.goodsClass == '1'){ //零配件
-								// if(this.contractPmode == '0'){ // 线上
-								
-									
-								// }else{
-								// 	this.$qj.router.replace('order_modules/order/index');
-								// }
-								// 	// this.$qj.router.replace('pay/paySelect');
-								// }
-								// if(this.goodsClass == '3'){ //纪念品
-								//    this.$qj.router.replace('pay/paySelect');
-								// }
 							}
 						});	
 				}

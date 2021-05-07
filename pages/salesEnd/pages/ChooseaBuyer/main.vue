@@ -99,7 +99,7 @@
 				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options})
 			},
 			useContract(item){
-				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options,scontractCode:item.giftUserCode,giftCode:item.giftCode})
+				$router.push("salesEnd/pages/createQuotation",{userinfoPhone:this.options,scontractCode:item.giftUserCode,giftCode:item.giftCode,giftUserId:item.giftUserId})
 			},
 			screen(value){
 				this.searchValue = value

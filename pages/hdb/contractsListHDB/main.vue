@@ -49,7 +49,7 @@
 					<div style="display: flex;">
 						<div class='money' style='width: 60%;display: flex;flex-direction: column;justify-content: flex-start;'>
 							<span v-if='qyBut'>合同签订时间:</span><span v-else>合同预约时间:</span>
-							<span>{{items.mschannelCode}}~{{items.mschannelName}}</span>
+							<span>{{items.date1}}~{{items.date2}}</span>
 						</div>
 						<div class='lookconstr' style='width: 20%;align-self: flex-end;'><u style='text-decoration:underline' @click='preview(items)'>合同预览</u></div>
 						<div style='width: 20%;align-self: flex-end;'>
@@ -735,10 +735,9 @@
 						.then(res => {
 							if (res.total > 0) {
 								res.rows.forEach(element => {
-									element.date1 = element.gmtCreate.slice(0, 10)
-									element.date2 = element.gmtCreate.slice(0, 10)
-									// element.date1 = this.format(element.contractValidate)
-									// element.date2 = this.format(element.contractPaydate)
+										element.date1 = element.mschannelCode==null?null:element.mschannelCode.slice(0,10)
+										element.date2 = element.mschannelName==null?null:element.mschannelName.slice(0,10)
+									
 								});
 								if(this.page > 1){
 									this.contractData = [...this.contractData,...res.rows];

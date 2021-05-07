@@ -202,7 +202,8 @@
 				paramsBak:{},
 				goodsClassStr:'',
 				text1:'输入商品名称',
-				giftCode:''
+				giftCode:'',
+				giftUserId:''
 			};
 		},
 		onShow() {
@@ -215,6 +216,7 @@
 				this.scontractCode = options.scontractCode
 				// this.giftCode = '441910002429460480'
 				this.giftCode = options.giftCode
+				this.giftUserId = options.giftUserId
 			}
 		},
 		onReachBottom() {
@@ -320,7 +322,7 @@
 			createQuotation(){
 				this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/queryShoppingPage.json',{memberBcode:this.userInfoCode,shoppingType: 5}).then(res => {
 					if(res.list && res.list.length>0){
-						$router.push('salesEnd/pages/quotationDetail',{userPhone:this.userPhone,scontractCode:this.scontractCode,giftCode:this.giftCode})
+						$router.push('salesEnd/pages/quotationDetail',{userPhone:this.userPhone,scontractCode:this.scontractCode,giftCode:this.giftCode,giftUserId:this.giftUserId})
 					}else{
 						this.$qj.message.alert('请先添加商品到购物车');
 					}

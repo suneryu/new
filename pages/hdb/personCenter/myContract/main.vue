@@ -118,16 +118,16 @@
                   line-height: 25px;
                 "
               >
-                合同有效时间：<span>{{ (items.memberCcode) }}~{{ (items.memberCname)}}</span>
+                合同有效时间：<span>{{ (items.date1) }}~{{ (items.date2)}}</span>
               </div>
-			      <button class="buttonClass" @click="useContract(items)" style="width: 150rpx;margin-right: 30rpx;" v-if='items.departCode == "2021043000000019"'> 使用合同 </button>
-              <div style="height: 25px; width: 20%" v-if="items.memberGcode == 0">
-                <button class="buttonClass" @click="useContract(items)" v-if="now > items.contractValidate && items.dataState == 1" > 使用合同 </button>
-                <button class="buttonClass" v-if="items.dataState == 0" > 未开始 </button>
-                <button class="buttonClass" v-if="items.dataState == 2" > 已暂停 </button>
-                <button class="buttonClass" v-if="items.dataState == 3" > 已禁用 </button>
-                <button class="buttonClass" v-if="items.dataState == 4" > 已完成 </button>
-                <button class="buttonClass" v-if="items.dataState == 5" > 已关闭 </button>
+			      <!-- <button class="buttonClass" @click="useContract(items)" style="width: 150rpx;margin-right: 30rpx;" v-if='items.departCode == "2021043000000019"'> 使用合同 </button> -->
+              <div style="height: 25px; width: 20%" v-if="items.departCode == '2021043000000019'">
+                <button class="buttonClass" @click="useContract(items)" v-if="items.companyCode == 1" > 使用合同 </button>
+                <button class="buttonClass" v-if="items.companyCode == 0" > 未开始 </button>
+                <button class="buttonClass" v-if="items.companyCode == 2" > 已暂停 </button>
+                <button class="buttonClass" v-if="items.companyCode == 3" > 已禁用 </button>
+                <button class="buttonClass" v-if="items.companyCode == 4" > 已完成 </button>
+                <button class="buttonClass" v-if="items.companyCode == 5" > 已关闭 </button>
                 <!-- <button class="buttonClass1" v-if='now < items.contractValidate'>待启用</button> -->
               </div>
             </div>
@@ -240,11 +240,14 @@ export default {
 	http.get(queryGiftUserPage, parmas).then((res) => {
 	  console.log("resDataaaaaaa....", res);
 	  if (res.total > 0) {
-		  this.contractData = res.rows;
+		  // this.contractData = res.rows;
 		  this.total = res.total
 	    res.rows.forEach((element) => {
-	      element.memberCcode = element.memberCcode;
-	      element.memberCname = element.memberCname;
+			element.date1 = element.memberCcode==null?null:element.memberCcode.slice(0,10);
+			element.date2 = element.memberCname==null?null:element.memberCname.slice(0,10);
+	      // element.memberCcode = element.memberCcode;
+	      // element.memberCname = element.memberCname;
+		  
 	      // if (element.memo == this.userinfoType) {
 	      //   console.log(",,,", element.scontractFileUrl);
 	      // }
@@ -373,8 +376,10 @@ export default {
         res.rows.forEach((element) => {
           // element.date1 = this.format(element.contractEffectivedate);
           // element.date2 = this.format(element.contractDepositdate);
-		  element.memberCcode = element.memberCcode;
-		  element.memberCname = element.memberCname;
+		  // element.memberCcode = element.memberCcode;
+		  // element.memberCname = element.memberCname;
+		  element.date1 = element.memberCcode==null?null:element.memberCcode.slice(0,10);
+		  element.date2 = element.memberCname==null?null:element.memberCname.slice(0,10);
           this.contractData.push(element);
           // this.contractData = res.rows;
         });
@@ -440,12 +445,13 @@ export default {
           res.rows.forEach((element) => {
             // element.date1 = this.format(element.contractEffectivedate);
             // element.date2 = this.format(element.contractDepositdate);
-			// element.memberCcode = element.memberCcode.substring(0,10);
-			// element.memberCname = element.memberCname.substring(0,10);
+			element.date1 = element.memberCcode==null?null:element.memberCcode.slice(0,10);
+			element.date2 = element.memberCname==null?null:element.memberCname.slice(0,10);
             if (element.memo == this.userinfoType) {
               console.log(",,,", element.scontractFileUrl);
             }
             this.contractData = res.rows;
+			console.log(this.contractData,66666666666)
           });
         } else {
           this.contractData = [];
