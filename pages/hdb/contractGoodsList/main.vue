@@ -7,7 +7,7 @@
 				<view>领取方式:
 					<span>{{list.giftCtype=='0'?"一次":"多次"}}</span>
 					<span>{{list.giftChange=='0'?"按金额兑换":"按数量兑换"}}</span>
-				</view>
+				</view> 
 				<view>截止日期：{{list?giftUserEnd:''}}</view>
 			</view>
 			<view class="right">
