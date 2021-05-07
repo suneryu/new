@@ -234,10 +234,10 @@
 			},
 			salesperson(data) {
 				console.log('查看联系方式--',data)
-				let showHtml = ""
+				let showHtml = data.contractInvoice || '个人'
 				wx.showModal({
 					title: "企业信息",
-					content: data.contractUserurl + '企业编码:'+data.contractInvoice+'\r\n企业联系人：'+data.mschannelName+	'\r\n电话：'+data.goodsPbillno,
+					content: data.contractUserurl + '\r\n企业编码:'+ showHtml + '\r\n企业联系人：'+data.mschannelName+	'\r\n电话：'+data.goodsPbillno,
 					cancelText: '关闭',
 					confirmText:'一键拨号',
 					success: res => {
