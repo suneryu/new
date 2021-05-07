@@ -49,7 +49,7 @@
 					<div style="display: flex;">
 						<div class='money' style='width: 60%;display: flex;flex-direction: column;justify-content: flex-start;'>
 							<span v-if='qyBut'>合同签订时间:</span><span v-else>合同预约时间:</span>
-							<span>{{items.date1}}~{{items.date2}}</span>
+							<span>{{items.mschannelCode}}~{{items.mschannelName}}</span>
 						</div>
 						<div class='lookconstr' style='width: 20%;align-self: flex-end;'><u style='text-decoration:underline' @click='preview(items)'>合同预览</u></div>
 						<div style='width: 20%;align-self: flex-end;'>

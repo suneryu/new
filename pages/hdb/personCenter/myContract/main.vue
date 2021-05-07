@@ -118,9 +118,9 @@
                   line-height: 25px;
                 "
               >
-                合同有效时间：<span>{{ items.memberCcode }}~{{ items.memberCname}}</span>
+                合同有效时间：<span>{{ (items.memberCcode) }}~{{ (items.memberCname)}}</span>
               </div>
-			      <button class="buttonClass" @click="useContract(items)" style="width: 150rpx;margin-right: 30rpx;"> 使用合同 </button>
+			      <button class="buttonClass" @click="useContract(items)" style="width: 150rpx;margin-right: 30rpx;" v-if='items.departCode == "2021043000000019"'> 使用合同 </button>
               <div style="height: 25px; width: 20%" v-if="items.memberGcode == 0">
                 <button class="buttonClass" @click="useContract(items)" v-if="now > items.contractValidate && items.dataState == 1" > 使用合同 </button>
                 <button class="buttonClass" v-if="items.dataState == 0" > 未开始 </button>
@@ -133,9 +133,9 @@
             </div>
           </div>
           <div style="width: 100%; height: 20px; display: flex">
-            <div class="lessMoney">进度：<span>{{ items.giftUserWeight }}</span>%</div>
+            <div class="lessMoney">进度：<span>{{ (Number(items.giftUserWeight) * 100).toFixed(2) }}</span>%</div>
             <div class="lessMoney" v-if='items.departCode == "2021043000000019"'>
-              余额：{{ items.goodsOneweight }}
+              余额：{{ items.appmanageIcode }}
             </div>
             <div
               class="lessMoney"
@@ -243,8 +243,8 @@ export default {
 		  this.contractData = res.rows;
 		  this.total = res.total
 	    res.rows.forEach((element) => {
-	      element.memberCcode = element.memberCcode.substring(0,10);
-	      element.memberCname = element.memberCname.substring(0,10);
+	      element.memberCcode = element.memberCcode;
+	      element.memberCname = element.memberCname;
 	      // if (element.memo == this.userinfoType) {
 	      //   console.log(",,,", element.scontractFileUrl);
 	      // }
@@ -342,8 +342,9 @@ export default {
 	},
     //合同预览
     preview(items) {
-      // this.htImg = true;
+      this.htImg = true;
       // console.log("合同预览，，，", items);
+	  this.fileUrl ='';
       this.queryScontractFilePage(items);
       // if (this.fileUrl == null || this.fileUrl == "") {
       //   //this.tankuang();
@@ -372,8 +373,8 @@ export default {
         res.rows.forEach((element) => {
           // element.date1 = this.format(element.contractEffectivedate);
           // element.date2 = this.format(element.contractDepositdate);
-		  element.memberCcode = element.memberCcode.substring(0,10);
-		  element.memberCname = element.memberCname.substring(0,10);
+		  element.memberCcode = element.memberCcode;
+		  element.memberCname = element.memberCname;
           this.contractData.push(element);
           // this.contractData = res.rows;
         });
@@ -434,13 +435,13 @@ export default {
     getData(data) {
       // 查询当前线下
       http.get(queryGiftUserPage, data).then((res) => {
-        console.log("resData....", res);
+        console.log("resData..qweqwe..", res);
         if (res.total > 0) {
           res.rows.forEach((element) => {
             // element.date1 = this.format(element.contractEffectivedate);
             // element.date2 = this.format(element.contractDepositdate);
-			element.memberCcode = element.memberCcode.substring(0,10);
-			element.memberCname = element.memberCname.substring(0,10);
+			// element.memberCcode = element.memberCcode.substring(0,10);
+			// element.memberCname = element.memberCname.substring(0,10);
             if (element.memo == this.userinfoType) {
               console.log(",,,", element.scontractFileUrl);
             }

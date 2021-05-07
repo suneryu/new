@@ -34,7 +34,7 @@
 					<li v-for="(item, index) in items" :key="index">
 						<div class="item-container">
 							<div class="list-img" @click.stop="goToGoodsDetail(item)">
-								<img :src="item.dataPic || userImgurl" /> <!-- 商品图片-->
+								<img :src="item.dataPic || userImgurl" />
 							</div>
 							<div class="list-r" >
 								<p @click.stop="goToGoodsDetail(item)">{{ item.goodsName }}</p>

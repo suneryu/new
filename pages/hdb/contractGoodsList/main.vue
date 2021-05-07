@@ -222,7 +222,7 @@
 					if (res && res.length != 0) {
 						this.giftCode = res.giftCode
 						this.giftUserId = res.gtGiftUserDomain.giftUserId
-						res.gtGiftUserDomain.userRelNum = res.gtGiftUserDomain.goodsOneweight || res.gtGiftUserDomain.userRelNum
+						res.gtGiftUserDomain.userRelNum = res.gtGiftUserDomain.appmanageIcode || res.gtGiftUserDomain.userRelNum
 						this.list = res.gtGiftUserDomain
 						this.giftUserEnd = formatDate(res.gtGiftUserDomain.giftUserEnd)
 						this.giftCoupon = res.gtGiftRelDomainList

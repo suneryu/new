@@ -207,12 +207,9 @@
 				let params = {
 				
 				};
-					let json = {
-						id:2,
-						phone:'15234496108'
-					}
 					params.page = 'pages/hdb/contractsListHDB/main';
-					params.scene = JSON.stringify(json);
+					//params.scene = "i=2&p="+'15234496108';
+					params.scene = "15234496108";
 					params.mode = 0;
 					// params.id = 2;
 					// params.type = 'c';
@@ -221,6 +218,7 @@
 				this.getErWeiMa(params)
 			},
 			getErWeiMa(params) {
+			
 				http.post(getWxMiniQRCode, params).then(res => {
 					console.log('图片编码----',res)
 					if (res.success) {
