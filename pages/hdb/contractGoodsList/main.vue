@@ -61,8 +61,10 @@
 				<p>
 					<image :src="item.dataPic" mode="" @click="getDetail(item)" :prop="skuCode"></image>
 				</p>
-				<p>{{item.goodsName}}</p>
-				<p><span style='color: #3B4246;margin-right: 10rpx;'>商品编号：{{item.goodsCode}}</span></p>
+				<p>{{item.goodsName}}
+					<span style='color: #3B4246;margin-right: 10rpx;display: block;'>{{item.goodsCode}}</span>
+				</p>
+				<!--  -->
 				<p><span style='color: #3B4246;margin-right: 10rpx;'>原价:{{item.pricesetNprice}}元</span>合同价:{{item.pricesetBaseprice}}元</p>
 				<p><span>规格</span>
 					<span @click="showBox(index)">+</span>
