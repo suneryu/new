@@ -42,7 +42,7 @@
 								</div>
 								<div style="text-align:right;">
 									<!-- <p style="width:160rpx;" >{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p> -->
-									<p style="width:160rpx;" >{{ goods.pricesetNprice }} 元</p>
+									<p style="width:160rpx;" >{{ order.contractType != '08'?goods.pricesetNprice:goods.goodsPro == null? goods.pricesetNprice:goods.goodsPro}} 元</p>
 									<!-- <p style="width:160rpx;" v-if='order.goodsClass == "1"'>{{ unitPrice.obpay }}{{ (Number(goods.pricesetNprice) * userinfoOcode).toFixed(2)}}{{ unitPrice.mapay }}</p> -->
 									<h6>x{{ goods.goodsNum }}</h6>
 									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if=" order.dataState == 1 && order.dataStatestr == 3  && order.contractPmode =='0'">

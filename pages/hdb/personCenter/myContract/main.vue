@@ -32,7 +32,7 @@
         线下销售合同
       </div>
     </div>
-    <div style = 'position: relative;margin-top: 40px;'>
+    <div style = 'position: relative;margin-top: 40px;margin-bottom: 30rpx;'>
       <div v-for="items in contractData">
         <div
           style="
@@ -148,6 +148,7 @@
           </div>
         </div>
       </div>
+	  <qj-mini-last-page-line :lastPageLine="lastPageLine"></qj-mini-last-page-line>
     </div>
     <view class="popup" v-show="htImg">
       <view class="htImage">
@@ -207,7 +208,8 @@ export default {
       userPhone: "", //当前登录人的手机号
       userinfoType: "", // 用户类型
 	  total:0,
-	  contractType:'2021043000000019'
+	  contractType:'2021043000000019',
+	  lastPageLine: false,
     };
   },
   onLoad() {
@@ -361,19 +363,16 @@ export default {
     //懒加载的事件
     loadMore(code) {
       this.page++;
-      console.log("qqqqqqqqqqqqaaaaa", this.page);
-      console.log("qqqqqqqqqqqqaaaaa2", code);
-	  console.log('当前合同的类型---',this.contractType)
+	  let num = Math.ceil(this.total / 10);
       let parmas = {
 		departCode:this.contractType,
         rows: 10,
         page: this.page,
         giftUserPhone: this.info.userPhone,
       };
-      http.get(queryBuyerScontractPage, parmas).then((res) => {
-        console.log("resData....", res);
-
-        res.rows.forEach((element) => {
+	  if (parmas.page <= num) {
+		  http.get(queryBuyerScontractPage, parmas).then((res) => {
+			res.rows.forEach((element) => {
           // element.date1 = this.format(element.contractEffectivedate);
           // element.date2 = this.format(element.contractDepositdate);
 		  // element.memberCcode = element.memberCcode;
@@ -384,6 +383,10 @@ export default {
           // this.contractData = res.rows;
         });
       });
+	  }else{
+		  this.lastPageLine = true;
+	  }
+      
     },
 
     //根据合同类型查询合同数据
@@ -439,6 +442,7 @@ export default {
     },	
     getData(data) {
       // 查询当前线下
+	  this.lastPageLine = false;
       http.get(queryGiftUserPage, data).then((res) => {
         console.log("resData..qweqwe..", res);
         if (res.total > 0) {
@@ -451,6 +455,7 @@ export default {
               console.log(",,,", element.scontractFileUrl);
             }
             this.contractData = res.rows;
+			this.total = res.total
 			console.log(this.contractData,66666666666)
           });
         } else {

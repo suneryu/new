@@ -50,6 +50,9 @@
 				</u-popup>
 			</view>
 		</view>
+		<view style="width: 100%;height: 100rpx;background: #fff;text-align: center;line-height: 100rpx;padding: 0 20rpx;box-sizing: border-box;" >
+			<u-search placeholder="输入商品编号" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
+		</view>
 		<view class="getCoupon-content">
 			<view v-for="(item,index) in giftCoupon" :key="index">
 				<p>
@@ -76,7 +79,7 @@
 						</view>
 					</view>
 
-					<view>规格:{{giftCouponType.skuName}}</view>
+					<!-- <view>规格:{{giftCouponType.skuName}}</view> -->
 					<view @click="showClick()">确定</view>
 				</view>
 			</u-popup>
@@ -138,11 +141,15 @@
 				giftCode:'',
 				giftUserId:'',
 				wantList:[],  //勾选商品
-				giftUserCode:''
+				giftUserCode:'',
+				searchValue:''
 
 			}
 		},
 		onShow() {
+			wx.setNavigationBarTitle({
+				title: '合同商品列表'
+			});
 			this.myCoupon()
 		},
 		onLoad(options) {
@@ -152,6 +159,10 @@
 			lastPageLine
 		},
 		methods: {
+			serarchGoods(val){
+				this.searchValue = val
+				this.myCoupon()
+			},
 			showClick() {
 				if (this.total > this.list.userRelNum) {
 					$message.alert('最多可领取' + this.list.userRelNum + '商品');
@@ -216,7 +227,8 @@
 
 			myCoupon() {
 				let params = {
-					giftUserCode: this.giftUserCode
+					giftUserCode: this.giftUserCode,
+					goodsCode:this.searchValue
 				}
 				http.get('/web/gt/gift/queryRelToC.json', params).then(res => {
 					if (res && res.length != 0) {
@@ -397,7 +409,7 @@
 			padding: 2%;
 			margin-bottom: 100rpx;
 			flex-wrap: wrap;
-
+		
 			view {
 				height: 510rpx;
 				width: 48%;

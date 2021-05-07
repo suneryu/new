@@ -916,6 +916,15 @@
 							}
 							//合同单支付
 							if (this.isContrat) {
+								let json = {
+									dataBmoney:this.discountMoney,
+									contractMoney:this.discountMoney,
+									goodsMoney:this.discountMoney,
+									contractBillcode: res.dataObj.contractBillcode,
+								}
+								//调价接口
+								this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+								})
 								http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res2 => {
 									if (res2.success == true) {
 										http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.discountMoney,giftUserId:this.giftUserId})
@@ -925,6 +934,7 @@
 										$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
 									}
 								});
+								return;
 							}
 							
 							
