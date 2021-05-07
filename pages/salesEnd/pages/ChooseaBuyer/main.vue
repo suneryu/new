@@ -35,7 +35,7 @@
 						<span>{{(Number(item.giftUserWeight)*100).toFixed(2)}}%</span>
 					</div>
 					<div style="width: 40%;">余额：
-						<span>{{item.goodsOneweight}}</span>
+						<span>{{item.appmanageIcode}}</span>
 					</div>
 					<span style="width: 20%; text-align: right;" @click='toOrderList(item)'>使用详情</span>
 				</div>
@@ -83,7 +83,7 @@
 		methods: {
 			toOrderList(scontractObillcode){
 				this.$router.push("order_modules/order/index", {
-				  isContract:false,serachPhone:$storage.get("loginInfor").userPhone,searchGiftcode:scontractObillcode.giftCode
+				  isContract:false,serachPhone:this.options,searchGiftcode:scontractObillcode.giftCode
 				});
 			},
 			getdata() {

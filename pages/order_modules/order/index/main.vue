@@ -1,7 +1,7 @@
 <template>
 	<div class="orderList">
 		<qj-mini-search-nav-bar inputPlaceholder="输入商品名称搜索订单" @getNavBarHeight="getNavBarHeight" :isSearch="true" :isBack="false" @search="toSearch"></qj-mini-search-nav-bar>
-		<div class="orderList-tit" v-bind:style="{ top: topDistance + 'px' }">
+		<div class="orderList-tit" :style="{ top: topDistance + 'px' }" v-if='isContract'>
 			<ul>
 				<li v-for="(item, index) in items" :key="index" @click="orderTitle(item, index)">
 					<div :class="current === index ? 'active' : ''" :style="{ color: current === index ? baseColor : '' }">
@@ -11,7 +11,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="orderList-info" v-if="orderList.length > 0">
+		<div class="orderList-info" v-if="orderList.length > 0" :style="{marginTop:isContract?'100rpx':'20rpx'}">
 			<ol>
 				<li v-for="(order, index) in orderList" :key="index">
 					<div class="order-item">
@@ -41,7 +41,8 @@
 									<h6>{{ goods.skuName }}</h6>
 								</div>
 								<div style="text-align:right;">
-									<p style="width:160rpx;" >{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>
+									<!-- <p style="width:160rpx;" >{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p> -->
+									<p style="width:160rpx;" >{{ goods.pricesetNprice }} 元</p>
 									<!-- <p style="width:160rpx;" v-if='order.goodsClass == "1"'>{{ unitPrice.obpay }}{{ (Number(goods.pricesetNprice) * userinfoOcode).toFixed(2)}}{{ unitPrice.mapay }}</p> -->
 									<h6>x{{ goods.goodsNum }}</h6>
 									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if=" order.dataState == 1 && order.dataStatestr == 3  && order.contractPmode =='0'">
@@ -54,7 +55,8 @@
 						<div class="order-btn">
 							<div class="left">
 								实付:
-								<i :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ order.dataBmoney }}{{ unitPrice.mapay }}</i>
+								<!-- <i :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ order.dataBmoney }}{{ unitPrice.mapay }}</i> -->
+								<i :style="{ color: '#d66377' }">{{ order.dataBmoney }} 元</i>
 							</div>
 							<div class="right" v-if="order.dataState == 1 && (order.dataStatestr == 2 )&& order.pricesetCurrency != 2">
 								<div class="btn" @click.stop="cancelOrder(order)">取消订单</div>
@@ -139,10 +141,18 @@ export default {
 			orderTagText: {
 				'30': '预售订单',
 				'06': '积分订单'
-			}
+			},
+			isContract:true,
+			serachPhone:'',
+			searchGiftcode:''
 		};
 	},
 	onLoad(options) {
+		if(options.isContract != undefined){
+			this.isContract = false,
+			this.serachPhone = options.serachPhone,
+			this.searchGiftcode = options.searchGiftcode
+		}
 		console.log('跳转页面---',options)
 		this.getQY();
 		this.dataState = options.dataState || '-1'
@@ -191,7 +201,7 @@ export default {
 			this.$qj
 				.http(this.$qj.domain)
 				.get(queryNewUserinfoPageByDealerqt, {
-					userinfoPhone: this.$qj.storage.get('loginInfor').userPhone
+					userinfoPhone:this.serachPhone|| this.$qj.storage.get('loginInfor').userPhone
 				})
 				.then(res => {
 						console.log("用户信息-----",res)
@@ -214,15 +224,20 @@ export default {
 				this.dataState = dataState;
 				this.current = Number(dataState);
 			}
-			console.log(this.dataState,'-----状态')
-			console.log(this.current,'-----呜呜呜呜态')
 			
 			let params = {
 				page: this.page,
 				rows: this.rows,
 				childFlag: true,
-				contractType: '00,26,05,08',
+				contractType: '00,26,05',
+				memberBcode:$storage.get('loginInfor').userInfoCode
 			};
+			if(!this.isContract){
+				delete params.memberBcode
+				params.contractType='08'
+				params.areaName=this.serachPhone
+				params.contractEcurl = this.searchGiftcode
+			}
 		
 				
 			if (this.current !== 0) {
@@ -256,7 +271,7 @@ export default {
 						}
 			this.$qj
 				.http(this.$qj.domain)
-				.get(myOrder.queryContractPage, params)
+				.get('web/oc/contract/queryContractPagePlat.json', params)
 				.then(res => {
 					if (res && res.rows) {
 						if (this.page === 1 && res.rows.length === 0) {
@@ -491,7 +506,8 @@ export default {
 				// expressType: order.packageList[0].expressCode,
 				// expressNo: order.packageList[0].packageBillno
 			};
-			$router.push("marketing_module/pages/groupBuy/grouporder_modules/infor",params)
+			if(this.isContract)$router.push("marketing_module/pages/groupBuy/grouporder_modules/infor",params)
+			
 			// this.$state.orderMenu.map(v => {
 			// 	if (v.menuAction == 'orderInfor') {
 			// 		this.$qj.router.push(v.menuJspath, params);

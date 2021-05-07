@@ -188,7 +188,7 @@
 							//个人用户
 							this.showArea = true;
 						} else {
-							this.showArea = true;
+							this.showArea = false;
 						}
 						this.fontColor1 = "#000000"; //字体颜色
 						this.fontColor2 = "#000000"; //字体颜色
@@ -400,7 +400,7 @@
 									scontractCode: item.scontractCode,
 									// scontractCode:'2021030400000001',
 									userinfoPhone: $storage.get('loginInfor').userPhone,
-									contractTypepro: that.defaulePhone
+									contractTypepro: that.defaulePhone	
 								}
 								http.get('/web/sp/scontract/forwardQueryScontractPageNew.json', json)
 									.then(res1 => {
@@ -415,7 +415,7 @@
 											});
 										} else {
 											wx.showToast({
-												title: res1.msg,
+												title: res1.msg == "该销售手机号不存在"?"暂无销售手机号":res1.msg,
 												duration: 3000,
 												icon: "error",
 												success(data) {}

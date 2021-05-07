@@ -31,7 +31,7 @@
 							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
 								<span style='margin-left: 4px;' :style="{ color: '#000000' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
 								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1 && shoppingItem.contractType == 39 && goods.goodsPro == null'>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
-								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='item.goodsPro != null'>采购价：{{ unitPrice.obpay }}{{ goods.goodsPro }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsPro != null'>合同价：{{ unitPrice.obpay }}{{ goods.goodsPro }}{{ unitPrice.mapay }}</span>
 							</div>
 							<span>×{{ goods.goodsNum }}</span>
 						</h4>
@@ -90,7 +90,7 @@
 				<span>{{ unitPrice.obpay }}{{freight}}{{ unitPrice.mapay }}</span>
 			</div> -->
 			<div class='goodsPrice-item'>
-				<span>权益优惠：</span>
+				<span>优惠：</span>
 				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
 				<span>{{ unitPrice.obpay }}{{(allPrice-discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
 			</div>
@@ -358,8 +358,7 @@
 				this.$qj.http(this.$qj.domain).get('/web/oc/empcontract/calculateFreightFare.json', {
 					areaCode: this.addressList.areaCode,
 					shoppingGoodsIdStr: this.shoppingGoodsIdStr.toString(),
-					// shoppingGoodsIdStr: JSON.stringify(this.shoppingGoodsIdStr),
-					memberCode:this.userInfoCode
+					memberBcode:this.userInfoCode
 					// skuIdStr:''
 				})
 				.then(res=>{
@@ -616,10 +615,10 @@
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
 							}else{
-								if(item.goodsPro != null){
-									this.isContrat = true
+								if(item.goodsPro == null){
 									this.discountMoney += item.pricesetNprice*item.goodsNum
 								}else{
+									this.isContrat = true
 									this.discountMoney += item.goodsPro*item.goodsNum
 								}
 							}
@@ -866,18 +865,6 @@
 							});
 						});
 					});
-					// let arr = []
-					// for (let i = 0; i < this.upImg.length; i++) {
-					// 	let obj = {
-					// 		contractproKey: '图片',
-					// 		contractproName: '',
-					// 		contractproValue1: this.upImg[i].url,
-					// 		contractproValue: '',
-					// 	}
-					// 	// obj.contractproValue1 = this.upImg[i]
-					// 	arr.push(obj)
-					// }
-					// let orderDomainStr = this.orderWay === 0 ? JSON.stringify(detailDomainStr) : JSON.stringify(this.orderDomainStr);
 					let orderDomainStr = JSON.stringify(this.orderDomainStr);
 					let params = {
 						orderDomainStr: orderDomainStr			
@@ -893,7 +880,7 @@
 							}
 							//更新订单状态
 							let changeTotalMoney = 0
-							this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
+								this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
 							})
 							//确认单改价
 							if(this.shoppingItems[0].contractType == 41){

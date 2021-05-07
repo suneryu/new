@@ -88,7 +88,7 @@
 								<span>{{ unitPrice.obpay }}{{itemList.freight == null?0:itemList.freight}}{{ unitPrice.mapay }}</span>
 							</div> -->
 							<div class='goodsPrice-item'>
-								<span>权益优惠：</span>
+								<span>优惠：</span>
 								<!-- <span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span> -->
 								<span>{{ unitPrice.obpay }}{{(totalPrice - discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
 							</div>
