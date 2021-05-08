@@ -45,7 +45,7 @@
 									<p style="width:160rpx;" >{{ order.contractType != '08'?goods.pricesetNprice:goods.goodsPro == null? goods.pricesetNprice:goods.goodsPro}} 元</p>
 									<!-- <p style="width:160rpx;" v-if='order.goodsClass == "1"'>{{ unitPrice.obpay }}{{ (Number(goods.pricesetNprice) * userinfoOcode).toFixed(2)}}{{ unitPrice.mapay }}</p> -->
 									<h6>x{{ goods.goodsNum }}</h6>
-									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if=" order.dataState == 1 && order.dataStatestr == 3  && order.contractPmode =='0'">
+									<div style="text-align:right;width: 100rpx;display: inline-block;margin-top: 10rpx;"  v-if=" order.dataState == 1 && order.dataStatestr == 3  && order.contractPmode =='0' && isContract">
 										<div style='border-radius: 26rpx;border: 1rpx solid #d4d4d4;text-align: center;' @click.stop="refund(goods,order)" :style="{ borderColor: baseColor, color: baseColor }">退款</div>
 									</div>
 								</div>
@@ -346,11 +346,20 @@ export default {
 						this.commonMounted(-1);
 					});
 				}else{
-					this.$qj.router.push('pay/paySelect', {
-						dataBmoney: order.dataBmoney,
-						contractBillcode: order.contractBillcode,
-						contractPmode: order.contractPmode
-					});
+					if(this.isContract){
+						this.$qj.router.push('pay/paySelect', {
+							dataBmoney: order.dataBmoney,
+							contractBillcode: order.contractBillcode,
+							contractPmode: order.contractPmode
+						});
+					}else{
+						this.$qj.router.push('pay/payMethods', {
+							dataBmoney: order.dataBmoney,
+							contractBillcode: order.contractBillcode,
+							contractPmode: order.contractPmode
+						});
+					}
+					
 				}
 			
 			

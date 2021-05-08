@@ -68,7 +68,7 @@
 					</view>
 
 					<!-- 配送 -->
-					<view class="distribution">
+					<!-- <view class="distribution">
 						<view class="item">
 							<view class="left">
 								<view class="method">配送方式</view>
@@ -84,7 +84,7 @@
 							<view class="method">留言</view>
 							<input class="postage end other" type="text" v-model="list.packageRemark" placeholder="选填，给商家留言" />
 						</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
 		</view>
@@ -307,7 +307,8 @@ export default {
 			goodsBeanStr: '',
 			shoppingGoodsIdStr: '',
 			giftCode:'',
-			giftUserId:''
+			giftUserId:'',
+			userRelNum:0
 		};
 	},
 	onLoad(options) {
@@ -319,6 +320,7 @@ export default {
 		this.pageState = options.pageState;
 		this.skuId = options.skuId;
 		this.goodsNum = options.goodsNum;
+		this.userRelNum = options.userRelNum
 		wx.setNavigationBarTitle({
 			title: '确认订单页'
 		});
@@ -731,6 +733,8 @@ export default {
 						packageList: [],
 						contractEcurl:this.giftCode,
 						areaName:$storage.get('loginInfor').userPhone,
+						employeeCode:this.giftUserId,
+						employeeName:this.userRelNum,
 						packageMode: '', //配送方式
 						contractType: this.shoppingItems[0].shoppingType,
 						ocContractSettlList:
@@ -776,6 +780,8 @@ export default {
 						packageList: [],
 						contractEcurl:this.giftCode,
 						areaName:$storage.get('loginInfor').userPhone,
+						employeeCode:this.giftUserId,
+						employeeName:this.userRelNum,
 						//contractType: this.$state.shoppingType[index].shoppingType,
 						ocContractSettlList:
 							Object.keys(this.currentCoupon).length > 0
@@ -872,14 +878,46 @@ export default {
 					if (this.pageState == 2) {
 						http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res => {
 							if (res.success == true) {
-								http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.accountsSumPrice,giftUserId:this.giftUserId})
-								.then(res4=>{
-									console.log(res4)
-								})
-								$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
-								// $router.replace('pay/payMethods',{contractBillcode:res.dataObj.contractBillcode})
+								if(Number(this.userRelNum) >= Number(res.dataObj.dataBmoney)){
+									http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.accountsSumPrice,giftUserId:this.giftUserId})
+									.then(res4=>{
+									})
+									http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'payState' }).then(res3 => {
+										console.log(res3)
+									})
+									let json = {
+										dataBmoney: 0,
+										contractMoney: 0,
+										goodsMoney: 0,
+										contractBillcode: res.dataObj.contractBillcode,
+									}
+									//调价接口
+									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+										$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
+									})
+								}else{
+									let json = {
+										// dataBmoney:Number(res.dataObj.dataBmoney)- Number(this.userRelNum) ,
+										// contractMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
+										// goodsMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
+										dataBmoney: 0.01,
+										contractMoney: 0.01,
+										goodsMoney: 0.01,
+										contractBillcode: res.dataObj.contractBillcode,
+									}
+									//调价接口
+									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+										this.$state.set('contractBillcode', res.dataObj.contractBillcode);
+										$storage.set('contractGoodsPrice','')
+										http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'contract' }).then(res3 => {
+											$router.replace('pay/payMethods',{contractBillcode:res.dataObj.contractBillcode})
+										})
+									})
+									
+								}
 							}
 						});
+						
 						return;
 					}
 

@@ -145,8 +145,7 @@
 				giftUserId:'',
 				wantList:[],  //勾选商品
 				giftUserCode:'',
-				searchValue:''
-
+				searchValue:'',
 			}
 		},
 		onShow() {
@@ -205,18 +204,18 @@
 					this.isAdd = false
 			},
 			add() {
-				if (this.total > this.list.userRelNum) {
-					$message.alert('余额不足')
-				} else {
+				// if (this.total > this.list.userRelNum) {
+				// 	$message.alert('余额不足')
+				// } else {
 
 					this.giftCoupon[this.isindex].giftNum += 1
 					this.checkPrice();
-					if (this.total > this.list.userRelNum) {
-						$message.alert('余额不足')
-						this.giftCoupon[this.isindex].giftNum -= 1
-						this.checkPrice();
-					}
-				}
+				// 	if (this.total > this.list.userRelNum) {
+				// 		$message.alert('余额不足')
+				// 		this.giftCoupon[this.isindex].giftNum -= 1
+				// 		this.checkPrice();
+				// 	}
+				// }
 
 				this.$forceUpdate()
 
@@ -263,7 +262,7 @@
 					price += this.giftCoupon[i].pricesetBaseprice * this.giftCoupon[i].giftNum
 				}
 				let remindPrice = this.list.userRelNum - price //判断兑换商品是否大于总金额
-				if (remindPrice >= item.pricesetBaseprice) {
+				// if (remindPrice >= item.pricesetBaseprice) {
 					item.ischecked = !item.ischecked
 					if (item.ischecked) {
 						item.giftNum=1
@@ -274,11 +273,11 @@
 						console.log(this.totalPrice, '12345')
 					}
 
-				} else {
-					$message.alert('余额不足')
-					item.ischecked = false
-					this.$forceUpdate()
-				}
+				// } else {
+				// 	$message.alert('余额不足')
+				// 	item.ischecked = false
+				// 	this.$forceUpdate()
+				// }
 
 
 			},
@@ -308,7 +307,7 @@
 					// 	// url:'/pages/settleAccounts/settleAccounts?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
 					// 	url:'pages/hdb/personCenter/contractCar?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
 					// });
-					$router.push('hdb/personCenter/contractCar',{goodsBeanStr:JSON.stringify(obj),pageState:'2',giftCode:this.giftCode,giftUserId:this.giftUserId })
+					$router.push('hdb/personCenter/contractCar',{goodsBeanStr:JSON.stringify(obj),pageState:'2',giftCode:this.giftCode,giftUserId:this.giftUserId,userRelNum:this.list.userRelNum })
 					// $router.push("hdb/personCenter/contractCar");
 				}
 			},

@@ -93,6 +93,12 @@
 			}
 		},
 		{
+			"path": "pages/pay/payMethods/main",
+			"style": {
+				"navigationBarTitleText": "订单支付页"
+			}
+		},
+		{
 			"path": "pages/pay/paySuccess/main",
 			"style": {}
 		},
