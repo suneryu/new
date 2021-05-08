@@ -23,7 +23,7 @@
 						</div>
 					</div>
 					<div style="display: flex;font-size: 12px;margin: 10px 0;">
-						<div style="width: 100%;">合同签订时间：
+						<div style="width: 100%;">提交预约时间：
 							<span>{{item.goodsPmbillno}}</span>
 							<button class="buttonClass" @click="salesperson(item)" v-if="item.dataState  != 0">联系销售员</button>
 						</div>

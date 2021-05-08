@@ -208,7 +208,18 @@
 					this.parts('0')
 				}
 			}else{
-				this.parts('2')
+				// this.parts('2')
+				this.fontColor1 = "#000000"; //字体颜色
+				this.fontColor2 = "#000000"; //字体颜色
+				this.fontColor3 = "#004178"; //字体颜色
+				this.checkData.forEach(item => {
+					item.checked = true
+				})
+				this.getShow()
+				this.qyBut = false
+				this.iconShow1 = false
+				this.iconShow2 = true
+				this.selectValue = true
 				this.defaulePhone = options.scene
 			}
 

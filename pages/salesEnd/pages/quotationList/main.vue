@@ -19,12 +19,8 @@
 								<div>报价单编号：{{ order.contractBillcode }}</div>
 							</div>
 							<div v-if="order.dataState == -1">已取消</div>
-							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '2' ">待审核</div> -->
-							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待支付</div> -->
 							<div v-else-if="order.dataState == 2">待确认</div>
-							<!-- <div v-else-if="order.dataState == 3">待收货</div> --> 
 							<div v-else-if="order.dataState == 3">已完成</div>
-							<!-- <button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button> -->
 						</div>
 						<div class="order-msg" v-for="(goods, goodsIndex) in order.goodsList" :key="goodsIndex">
 							<img :src="goods.dataPic || userImgurl" />
@@ -37,13 +33,12 @@
 									<!-- <p style="width:160rpx;color: #ff557f;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p> -->
 									<p style="width:160rpx;color: #ff557f;">{{ goods.pricesetNprice }}</p>
 									<h6>x{{ goods.goodsNum }}</h6>
-									<!-- <button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState != -1">查看编辑</button> -->
 								</div>
 							</div>
 						</div>
 						<div style='display: flex;justify-content: space-between;height: 50rpx;align-items: center;color: #828282;'>
 							<span>咨询单总额</span>
-							<span style='color: #ff557f;'>{{order.contractInmoney}} 元</span>
+							<span style='color: #ff557f;'>{{Number(order.contractInmoney) + Number(order.departShortname || 0)}} 元</span>
 						</div>
 					</div>
 				</li>

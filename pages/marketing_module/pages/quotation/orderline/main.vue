@@ -85,10 +85,10 @@
 				<span>商品金额：</span>
 				<span>{{ unitPrice.obpay }}{{allPrice}}{{ unitPrice.mapay }}</span>
 			</div>
-			<!-- <div class='goodsPrice-item'>
+			<div class='goodsPrice-item'>
 				<span>运费：</span>
-				<span>{{ unitPrice.obpay }}{{freight}}{{ unitPrice.mapay }}</span>
-			</div> -->
+				<span>{{ unitPrice.obpay }}{{freight || 0}}{{ unitPrice.mapay }}</span>
+			</div>
 			<div class='goodsPrice-item'>
 				<span>优惠：</span>
 				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
@@ -98,7 +98,7 @@
 		<div class="accounts-sum">
 			<p>
 				应付金额:
-				<i>{{ unitPrice.obpay }}{{ Number(discountMoney).toFixed(2) }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{(Number(discountMoney)+(freight || 0)).toFixed(2) }}{{ unitPrice.mapay }}</i>
 				<!-- <i>{{ unitPrice.obpay }}{{ Number(userinfoOcode)*Number(allPrice)  }}{{ unitPrice.mapay }}</i> -->
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
@@ -266,7 +266,7 @@
 				userImgurl: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/img_default.jpg',
 				isContrat:false,
 				giftCode:'',
-				giftUserId:''
+				giftUserId:'',
 				
 			};
 		},
@@ -358,14 +358,12 @@
 		methods: {
 			//查询运费
 			getFreightFare(){
-				this.$qj.http(this.$qj.domain).get('/web/oc/empcontract/calculateFreightFare.json', {
+				this.$qj.http(this.$qj.domain).get('/web/oc/contract/calculateFreightFare.json', {
 					areaCode: this.addressList.areaCode,
-					shoppingGoodsIdStr: this.shoppingGoodsIdStr.toString(),
-					memberBcode:this.userInfoCode
-					// skuIdStr:''
+					skuIdStr:JSON.stringify(this.shoppingGoodsIdStr)
 				})
 				.then(res=>{
-					
+					this.freight = res.dataObj
 				})
 			},
 			// 查询 认证授权 状态
@@ -631,7 +629,7 @@
 							if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){
 								this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 							}
-							this.shoppingGoodsIdStr.push(item.contractGoodsId)
+							this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
 						})
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.shoppingItems.push(res)
@@ -641,7 +639,6 @@
 						this.getFreightFare()
 					})
 			},
-
 
 			addClass() {
 				this.$qj.router.push('user_modules/address/manage', {

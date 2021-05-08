@@ -65,6 +65,10 @@
 					<span>{{totalPrice.toFixed(2)}} 元</span>
 				</div>
 				<div class='customInfo'>
+					<span>运费</span>
+					<span>{{freight || 0}} 元</span>
+				</div>
+				<div class='customInfo'>
 					<span>公司名称</span>
 					<span>{{companyName}}</span>
 				</div>
@@ -158,7 +162,9 @@
 				totalPrice:0,
 				companyName:'',
 				giftCode:'',
-				giftUserId:''
+				giftUserId:'',
+				shoppingGoodsIdStr:[],
+				freight:0
 			};
 		},
 		onShow() {
@@ -189,6 +195,16 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			//查询运费
+			getFreightFare(){
+				this.$qj.http(this.$qj.domain).get('/web/oc/contract/calculateFreightFare.json', {
+					areaCode: 140107,
+					skuIdStr:JSON.stringify(this.shoppingGoodsIdStr)
+				})
+				.then(res=>{
+					this.freight = res.dataObj
+				})
+			},
 			//获取详情
 			getGoodsDetial(skuCode,res){
 				let batchCollectData = [];
@@ -222,7 +238,7 @@
 											this.totalPrice +=  Number(v.goodsContract)* v.goodsNum
 										}
 									}
-														
+									this.shoppingGoodsIdStr.push({skuId:v.goodsProperty3,goodsNum:v.goodsNum})
 									v.itemChecked = false;
 									v.itemCheckedDelete = false;
 									batchCollectData.push({
@@ -237,6 +253,7 @@
 								})
 							})
 						})
+						this.getFreightFare()
 					})
 			},
 			//取消报价单
@@ -315,8 +332,8 @@
 						          contractMoney: Number(res[0].goodsMoney)*Number(this.userinfoOcode),
 						          goodsPmbillno: res[0].goodsPmbillno,
 								  employeeCode: this.$qj.storage.get('loginInfor').userCode,
-								  employeeName: this.$qj.storage.get('loginInfor').employeeName
-						          // contractRemark: "cccccc",
+								  employeeName: this.$qj.storage.get('loginInfor').employeeName,
+						          departShortname: this.freight
 						        },
 							];
 						let params = {
@@ -529,6 +546,7 @@
 					let skuMinSaleMultiple = [];
 					this.items = []
 					this.totalPrice = 0
+					this.shoppingGoodsIdStr = []
 					if(this.goodsClass == ''){
 						this.getGoodsDetial(res.list[0].shoppingpackageList[0].shoppingGoodsList[0].skuCode,res)
 					}else{
@@ -555,7 +573,7 @@
 										}
 										
 									}
-														
+									this.shoppingGoodsIdStr.push({skuId:v.goodsProperty3,goodsNum:v.goodsNum})				
 									v.itemChecked = false;
 									v.itemCheckedDelete = false;
 									batchCollectData.push({
@@ -570,6 +588,7 @@
 								})
 							})
 						})
+						this.getFreightFare()
 					}
 					
 					

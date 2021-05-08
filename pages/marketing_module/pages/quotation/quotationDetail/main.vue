@@ -83,10 +83,10 @@
 								<span>商品总额：</span>
 								<span>{{ unitPrice.obpay }}{{itemList.contractType == 39?itemList.contractInmoney:itemList.contractMoney}}{{ unitPrice.mapay }}</span>
 							</div>
-							<!-- <div class='goodsPrice-item'>
+							<div class='goodsPrice-item'>
 								<span>运费：</span>
-								<span>{{ unitPrice.obpay }}{{itemList.freight == null?0:itemList.freight}}{{ unitPrice.mapay }}</span>
-							</div> -->
+								<span>{{ unitPrice.obpay }}{{freight || 0}}{{ unitPrice.mapay }}</span>
+							</div>
 							<div class='goodsPrice-item'>
 								<span>优惠：</span>
 								<!-- <span>{{ unitPrice.obpay }}{{(1-Number(userinfoOcode))*Number(itemList.contractInmoney)}}{{ unitPrice.mapay }}</span> -->
@@ -99,7 +99,7 @@
 			<div class='totalPrice'>
 				<div style='width: 70%;float: left;padding: 20rpx;box-sizing: border-box;'>应付金额：
 					<!-- <span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(userinfoOcode)*totalPrice}}{{ unitPrice.mapay }}</span> -->
-					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{Number(discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
+					<span style='color: #ff557f;'>{{ unitPrice.obpay }}{{(Number(discountMoney)+(freight || 0)).toFixed(2)}}{{ unitPrice.mapay }}</span>
 				</div>
 				<div class='goPay' @click='toSettle'>去结算</div>
 			</div>
@@ -163,8 +163,9 @@
 				dataLength: "",
 				contractBillcode: '',
 				discountMoney:0,
+				shoppingGoodsIdStr:[],
+				freight:0
 				
-
 			};
 		},
 		computed: {
@@ -193,6 +194,16 @@
 
 		},
 		methods: {
+			//查询运费
+			getFreightFare(){
+				this.$qj.http(this.$qj.domain).get('/web/oc/contract/calculateFreightFare.json', {
+					areaCode: 140107,
+					skuIdStr:JSON.stringify(this.shoppingGoodsIdStr)
+				})
+				.then(res=>{
+					this.freight = res.dataObj
+				})
+			},
 			//查询权益
 			getQY() {
 				this.$qj
@@ -247,7 +258,9 @@
 									this.discountMoney += item.goodsPro*item.goodsNum
 								}
 							}
+							this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
 						})
+						this.getFreightFare()
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.listItems = []
 						this.listItems.push(res)
