@@ -31,7 +31,7 @@
 					<div style="display: flex; font-size: 12px;border-top: 1px solid #E0E0E0;">
 						<div style="width: 40%; color: #007AFF" v-if="item.dataState == 0">待接洽</div>
 						<div style="width: 40%; color: #007AFF" v-if="item.dataState == 1">接洽中</div>
-						<div style="width: 40%; color: #007AFF" v-if="item.dataState == 2">服务完成</div>
+						<div style="width: 40%; color: #007AFF" v-if="item.dataState == 2">已完成</div>
 					</div>
 				</div>
 			</div>

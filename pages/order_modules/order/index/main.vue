@@ -229,7 +229,7 @@ export default {
 				page: this.page,
 				rows: this.rows,
 				childFlag: true,
-				contractType: '00,26,05',
+				contractType: '00,26,05,08',
 				memberBcode:$storage.get('loginInfor').userInfoCode
 			};
 			if(!this.isContract){

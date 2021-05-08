@@ -42,7 +42,7 @@
 							<div style="text-align: left;" v-if="item.goodsClass == '1' && userinfoType=='2' && checkModifyAudit == '3' ">
 							<!-- <div style="text-align: left;" v-if=" userinfoType=='2' && checkModifyAudit == '3' "> -->
 								<span class="originalPrice">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
-								<span class="purchasePrice" :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
+								<span class="purchasePrice" style='display: block;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
 							</div>
 						</div>
 						<!-- <view class="icon-container">

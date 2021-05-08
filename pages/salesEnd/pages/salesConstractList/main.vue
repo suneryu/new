@@ -29,7 +29,7 @@
 						</div>
 						<div style='width:20%;line-height: 40px;text-align: center;color: red;' v-if='items.dataState == 0'>待接洽</div>
 						<div style='width:20%;line-height: 40px;text-align: center;color: #169BD5;' v-if='items.dataState == 1'>接洽中</div>
-						<div style='width:20%;line-height: 40px;text-align: center;' v-if='items.dataState == 2'>已接洽</div>
+						<div style='width:20%;line-height: 40px;text-align: center;' v-if='items.dataState == 2'>已完成</div>
 					</div>
 					<div style='width: 100%;height: 100px;border-bottom: 1rpx solid #E0E0E0;'>
 						<div style='height: 25px;width: 100%;font-size: 14px; sans-serif;font-weight: 400;font-style: normal;line-height: 25px;display: flex;'>
@@ -49,7 +49,7 @@
 						<div style='height: 25px;width: 100%;display: flex;'>
 							<div style='height: 25px;width: 50%;font-size: 12px;line-height: 25px;'>企业编号：<span>{{items.contractInvoice}}</span></div>
 							<div style='height: 25px;width: 50%;display: flex;padding: 0 10px 0 10px;'>
-								<button class="buttonClass" @click="contactPerson(items,'2','1')" v-if='items.dataState == 1'>已接洽</button>
+								<button class="buttonClass" @click="contactPerson(items,'2','1')" v-if='items.dataState == 1'>已完成</button>
 								<button class="buttonClass" @click="contactPerson(items,'1','0')" v-if='items.dataState == 0'>立即接洽</button>
 								<button :class="[items.dataState !=2 ? 'buttonClass':'buttonClass1']" @click="salesperson(items)" v-if='items.dataState != 2'>查看联系方式</button>
 							</div>

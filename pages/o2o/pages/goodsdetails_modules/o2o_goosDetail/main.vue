@@ -741,18 +741,15 @@
 							};
 							// 先调用查询接口
 							http.post(queryToContract, atr).then(st => {
-								console.log('res---p',st.length)
-								// if(!st.success){
-									
-								// 	return;
-								// }
-								if(st.length>0){
-									that.$router.replace('order/accounts', {
-										json: JSON.stringify(atr)
-									});
-								}else{
-									$message.alert(st.msg);
-								}
+								console.log('re666666s---p',st.length)
+								
+									if(st.length>0){
+										that.$router.replace('order/accounts', {
+											json: JSON.stringify(atr)
+										});
+									}else{
+										$message.alert(st.msg);
+									}
 							});
 							
 							
