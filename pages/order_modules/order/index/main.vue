@@ -332,7 +332,7 @@ export default {
 			console.log('立即支付-----',order)
 			this.$state.set('contractBillcode', order.contractBillcode);
 			
-			if(order.contractPmode == '1' || order.contractPmode == '2' ){
+			if((order.contractPmode == '1' || order.contractPmode == '2') &&  order.contractType != '08'){
 				
 				let params = {
 					"tempState":'true',
@@ -346,7 +346,7 @@ export default {
 						this.commonMounted(-1);
 					});
 				}else{
-					if(this.isContract){
+					if(this.isContract && order.contractType != '08'){
 						this.$qj.router.push('pay/paySelect', {
 							dataBmoney: order.dataBmoney,
 							contractBillcode: order.contractBillcode,

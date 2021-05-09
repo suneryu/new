@@ -327,10 +327,19 @@ export default {
     },
     pay(items) {
       this.$state.set("contractBillcode", items.contractBillcode);
-      $router.push("pay/paySelect", {
-        dataBmoney: items.dataBmoney,
-        contractBillcode: items.contractBillcode
-      });
+	  if(items.contractType != '08'){
+		  $router.push("pay/paySelect", {
+			dataBmoney: items.dataBmoney,
+			contractBillcode: items.contractBillcode
+		});
+	  }else{
+		  $router.push('pay/payMethods', {
+		  	dataBmoney: items.dataBmoney,
+		  	contractBillcode: items.contractBillcode,
+		  	contractPmode: items.contractPmode
+		  });
+	  }
+      
     },
     evaluate(items) {
       this.$state.set("order", items);
