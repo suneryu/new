@@ -320,10 +320,13 @@
 				console.log('当前的类型898--8--',this.userinfoType )
 				if(this.userinfoType == '2'){
 					this.params.channelCode = 'tempChannelCode'
-					this.params.temp = this.channelCode
+					this.params.temp = this.channelCode || ''
 					// this.params.temp = 'SHA/SBB0/SB1S1'
 					// this.params.temp = 'SHA/SBB0/SB1S'  //上海
 					this.params.goodsOrigin = "13"
+				}
+				if(this.$qj.storage.get('loginInfor').userinfoQuality == 'sales'){
+					this.params.temp = 'SHA/SBB0/SB1S'
 				}
 
 				// if (this.classtreeCode || classtreeCode) {

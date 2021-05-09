@@ -326,7 +326,9 @@
 					// this.params.temp = 'SHA/SBB0/SB1S'  //上海
 					this.params.goodsOrigin = "13"
 				}
-
+				if(this.$qj.storage.get('loginInfor').userinfoQuality == 'sales'){
+					this.params.temp = 'SHA/SBB0/SB1S'
+				}
 				// if (this.classtreeCode || classtreeCode) {
 				// 	delete this.params.searchParam;
 				// 	this.params.classtreeCode = this.classtreeCode || classtreeCode;
