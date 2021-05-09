@@ -61,7 +61,10 @@
 				<p>
 					<image :src="item.dataPic" mode="" @click="getDetail(item)" :prop="skuCode"></image>
 				</p>
-				<p>{{item.goodsName}}
+				<p >
+					<view style='overflow: hidden;white-space: nowrap;width: 98%;height: 30rpx;text-overflow: ellipsis;'>
+						{{item.goodsName}}
+					</view>
 					<span style='color: #3B4246;margin-right: 10rpx;display: block;'>{{item.skuNo}}</span>
 				</p>
 				<!--  -->
@@ -441,7 +444,7 @@
 					width: 100%;
 					line-height: 30rpx;
 					height: 60rpx;
-					margin: 10rpx 0rpx 0rpx 0rpx;
+					margin: 10rpx 0rpx 10rpx 0rpx;
 					font-size: 24rpx;
 
 				}

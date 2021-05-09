@@ -878,7 +878,7 @@ export default {
 					if (this.pageState == 2) {
 						http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res => {
 							if (res.success == true) {
-								if(Number(this.userRelNum) >= Number(res.dataObj.dataBmoney)){
+								if(Number(this.userRelNum) >= Number(this.accountsSumPrice)){
 									http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.accountsSumPrice,giftUserId:this.giftUserId})
 									.then(res4=>{
 									})
