@@ -51,7 +51,7 @@
 			</view>
 		</view>
 		<view style="width: 100%;height: 100rpx;background: #fff;text-align: center;line-height: 100rpx;padding: 0 20rpx;box-sizing: border-box;" >
-			<u-search paceholder="输入商品编号" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
+			<u-search placeholder="输入商品编号" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
 		</view>
 		<view class="getCoupon-content">
 			<view v-for="(item,index) in giftCoupon" :key="index">

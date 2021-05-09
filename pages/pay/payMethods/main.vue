@@ -41,7 +41,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="paySelect-btn" v-if="payMessage" @click="paySubmit" :style="{ backgroundColor: baseColor }">{{ buttonText[payMethods] }}</div>
+		<div class="paySelect-btn" v-if="payMessage" @click="paySubmit" :style="{ backgroundColor: baseColor }"> 立即支付 </div>
 		<!-- #ifdef MP-WEIXIN -->
 		<u-popup class="pwd-popup" v-model="pwdShow" mode="center" border-radius="16" length="90%">
 			<view class="title">请输入支付密码</view>
@@ -135,7 +135,7 @@ export default {
 					if (res.success && res.dataObj != null) {
 						if (res.dataObj.dataBmoney > 0) {
 							this.payMessage = res.dataObj;
-							this.payMethods = Number(this.payMessage.contractPmode);
+							this.payMethods = 0;
 							if (this.payMethods === 0) {
 								this.setPayChannelList();
 							}
