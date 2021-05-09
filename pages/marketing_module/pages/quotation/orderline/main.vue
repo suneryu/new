@@ -272,8 +272,8 @@
 				isContrat:false,
 				giftCode:'',
 				giftUserId:'',
-				userRealNum:0
-				
+				userRealNum:0,
+				contractType:0
 			};
 		},
 		onLoad(options) {
@@ -629,6 +629,7 @@
 						this.getGoodsDetial(res.goodsList[0].skuCode)
 						this.giftCode = res.goodsList[0].goodsProperty5
 						this.giftUserId = res.goodsList[0].goodsProperty4
+						this.contractType = res.contractType
 						res.goodsList.forEach(item=>{
 							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
@@ -914,8 +915,11 @@
 							}
 							//更新订单状态
 							let changeTotalMoney = 0
+							if(this.contractType == '41'){
 								this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
-							})
+								})
+							}
+								
 							//确认单改价
 							if(this.shoppingItems[0].contractType == 41){
 								this.$qj.http(this.$qj.domain).post('/web/oc/contract/syncContractState.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{

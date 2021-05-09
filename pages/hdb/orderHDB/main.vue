@@ -473,11 +473,11 @@
 				}else{
 					let that = this
 					wx.requestSubscribeMessage({
-						tmplIds: ["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"], //需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
+						tmplIds: ["vghHMQfsLbth7D1a0tyOwYZUdbMn2spWpPpdC-I9UFQ"], //需要订阅的消息模板的id的集合，一次调用最多可订阅3条消息
 						// 消息模板id在[微信公众平台(mp.weixin.qq.com)-功能-订阅消息]中配置
 						success(res) { // 接口调用成功的回调函数
 							if (
-								res["c1kKxRSrGSb_qx0KDOeCBceWS0qPKh0vhWHl8PlEJwQ"] == "accept"
+								res["vghHMQfsLbth7D1a0tyOwYZUdbMn2spWpPpdC-I9UFQ"] == "accept"
 							) {
 								that.toGenerateOrders()
 								

@@ -37,6 +37,10 @@
 							</div>
 						</div>
 						<div style='display: flex;justify-content: space-between;height: 50rpx;align-items: center;color: #828282;'>
+							<span>运费</span>
+							<span style='color: #ff557f;'>{{Number(order.departShortname || 0)}} 元</span>
+						</div>
+						<div style='display: flex;justify-content: space-between;height: 50rpx;align-items: center;color: #828282;'>
 							<span>咨询单总额</span>
 							<span style='color: #ff557f;'>{{Number(order.contractInmoney) + Number(order.departShortname || 0)}} 元</span>
 						</div>
