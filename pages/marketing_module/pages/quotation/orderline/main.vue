@@ -598,8 +598,7 @@
 				}
 				http.get('/web/gt/gift/queryRelToC.json', params).then(res => {
 					if (res && res.length != 0) {
-						this.userRealNum = res.gtGiftUserDomain.appmanageIcode || res.gtGiftUserDomain.userRelNum
-					}
+						this.userRealNum = res.gtGiftUserDomain.appmanageIcode || res.gtGiftUserDomain.userRelNum					}
 				})
 			},
 			/**
@@ -929,7 +928,7 @@
 							}
 							//合同单支付
 							if (this.isContrat) {
-								if(Number(this.userRelNum) >= (Number(this.discountMoney)+(this.freight || 0)) ){
+								if(Number(this.userRealNum) >= (Number(this.discountMoney)+(this.freight || 0)) ){
 									http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res2 => {
 										if (res2.success == true) {
 											http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:(Number(this.discountMoney)+(this.freight || 0)),giftUserId:this.giftUserId})
@@ -952,9 +951,9 @@
 									});
 								}else{
 									let json = {
-										dataBmoney:(Number(this.discountMoney)+(this.freight || 0))- Number(this.userRelNum) ,
-										contractMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRelNum),
-										goodsMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRelNum),
+										dataBmoney:(Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum) ,
+										contractMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum),
+										goodsMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口
