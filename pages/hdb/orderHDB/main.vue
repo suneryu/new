@@ -34,7 +34,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="accounts-textarea">
+			<div class="accounts-textarea" style='display: flex;justify-content: flex-start;'>
 				<span>备注信息：</span>
 				<input placeholder="请填写" v-model="contractData[0].packageRemark" />
 			</div>
@@ -907,7 +907,7 @@
 						if (res.dataObj.contractBillcode) {
 							this.contractBillcode = res.dataObj.contractBillcode;
 							this.$state.set('contractBillcode', this.contractBillcode);
-							this.$qj.router.replace('pay/paySelect');
+							this.$qj.router.replace('pay/paySelect',{contractType:'05'});
 						}
 					});
 				// }

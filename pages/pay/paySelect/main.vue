@@ -103,12 +103,12 @@ export default {
 	},
 	onLoad(options) {
 		// 未支付订单位置点击付款会携带参数
+		this.contractType = options.contractType
 		console.log('qqqq',options)
 		if(options.isGiftContract != undefined){
 			this.isGiftContract = true
 			this.userPhone = options.userPhone
 			this.goodsNo = options.goodsNo
-			this.contractType = options.contractType
 		}
 		if (options && options.contractBillcode) {
 			this.propPayParams = options;
@@ -330,6 +330,7 @@ export default {
 										.then(res => {
 											if (res.success) {
 												if(that.contractType != '05'){
+													console.log(1111111111)
 													that.$qj.http(that.$qj.domain)
 													.get('/web/oc/contract/updateContractNew.json',{tempState:"payState",contractBillcode: that.payMessage.contractBillcode})
 													.then(resp=>{
@@ -344,6 +345,7 @@ export default {
 														});
 													})
 												}else{
+													console.log(2222222)
 														that.$qj.http(that.$qj.domain).post('/web/gt/gift/updateContractAll.json',{giftCode:that.goodsNo,giftUserPhone:that.userPhone,orderPrice:0})
 														.then(res1=>{
 															console.log(res1)

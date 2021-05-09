@@ -331,14 +331,23 @@ export default {
 								signType: data.signType,
 								paySign: data.paySign,
 								success: function(res) {
+									console.log(res,6666666)
 									that.$qj
 										.http(that.$qj.domain)
-										.post('web/oc/contract/updateContractNew.json', {
+										.post(syncContractPayState, {
 											contractBillcode: that.$state.contractBillcode,
-											tempState:'payState'
 										})
 										.then(res => {
 											if (res.success) {
+												that.$qj
+													.http(that.$qj.domain)
+													.post('web/oc/contract/updateContractNew.json', {
+														contractBillcode: that.$state.contractBillcode,
+														tempState:'payState'
+													})
+												.then(res6=>{
+													
+												})
 												that.$qj.http(that.$qj.domain).post('/web/gt/gift/updateContract.json',{giftCode:that.giftCode,giftUserPhone:that.giftUserPhone,orderPrice:that.accountsSumPrice,giftUserId:that.giftUserId})
 												.then(res4=>{
 													that.$qj.router.replace('pay/paySuccess', {

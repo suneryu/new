@@ -240,6 +240,7 @@
 			//合同搜索
 			serchContract(value) {
 				this.searchValue = value
+				this.page=1
 				if (!this.qyBut) {
 					if (value != '') {
 						this.contractData = this.contractDataBak.filter(item => item.scontractName.indexOf(value) != -1)
@@ -250,7 +251,7 @@
 					let parmas = {
 						goodsType: '05',
 						rows: 10,
-						page: this.page,
+						page: 1,
 						likeGoodsName: value,
 						classtreeCode: this.classtreeData == '0' ? '2021043000000019' : '2021043000000018'
 					}
