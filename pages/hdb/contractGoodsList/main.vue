@@ -8,7 +8,7 @@
 					<span>{{list.giftCtype=='0'?"一次":"多次"}}</span>
 					<span>{{list.giftChange=='0'?"按金额兑换":"按数量兑换"}}</span>
 				</view> 
-				<view>截止日期：{{list?giftUserEnd:''}}</view>
+				<view>截止日期：{{list?list.memberCname:''}}</view>
 			</view>
 			<view class="right">
 				<view @click="showCustomBtnTxt()" class="rigth-content">
@@ -62,11 +62,11 @@
 					<image :src="item.dataPic" mode="" @click="getDetail(item)" :prop="skuCode"></image>
 				</p>
 				<p>{{item.goodsName}}
-					<span style='color: #3B4246;margin-right: 10rpx;display: block;'>{{item.goodsCode}}</span>
+					<span style='color: #3B4246;margin-right: 10rpx;display: block;'>{{item.skuNo}}</span>
 				</p>
 				<!--  -->
 				<p><span style='color: #3B4246;margin-right: 10rpx;'>原价:{{item.pricesetNprice}}元</span>合同价:{{item.pricesetBaseprice}}元</p>
-				<p><span>规格</span>
+				<p v-if='item.ischecked'><span>规格</span>
 					<span @click="showBox(index)">+</span>
 
 				</p>
@@ -230,7 +230,7 @@
 			myCoupon() {
 				let params = {
 					giftUserCode: this.giftUserCode,
-					goodsCode:this.searchValue
+					skuNo:this.searchValue
 				}
 				http.get('/web/gt/gift/queryRelToC.json', params).then(res => {
 					if (res && res.length != 0) {

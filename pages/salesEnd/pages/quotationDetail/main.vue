@@ -61,7 +61,7 @@
 					</li>
 				</ul>
 				<div class='customInfo'>
-					<span>订单总额</span>
+					<span>商品总额</span>
 					<span>{{totalPrice.toFixed(2)}} 元</span>
 				</div>
 				<div class='customInfo'>
@@ -305,6 +305,7 @@
 					item.goodsPro = item.goodsContract
 					item.goodsProperty5 = this.giftCode
 					item.goodsProperty4 = this.giftUserId
+					item.goodsProperty2 = this.scontractCode
 					delete item.goodsContract
 					shoppingGoodsList.push(item.shoppingGoodsId)
 				})

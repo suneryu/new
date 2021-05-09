@@ -897,12 +897,9 @@ export default {
 									})
 								}else{
 									let json = {
-										// dataBmoney:Number(res.dataObj.dataBmoney)- Number(this.userRelNum) ,
-										// contractMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
-										// goodsMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
-										dataBmoney: 0.01,
-										contractMoney: 0.01,
-										goodsMoney: 0.01,
+										dataBmoney:Number(res.dataObj.dataBmoney)- Number(this.userRelNum) ,
+										contractMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
+										goodsMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口

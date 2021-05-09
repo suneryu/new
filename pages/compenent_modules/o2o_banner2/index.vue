@@ -25,7 +25,7 @@
     </swiper>
     <div class="goods-infor">
       <h3>{{ skuList.goodsName }}</h3>
-      <h3>{{ skuList.skuCode }}</h3>
+      <h3>{{ skuList.skuNo }}</h3>
 	  <div v-if='userinfoType=="1"' style='margin-top: 10px;font-size: 11px;color: #b7b5b5;'>认证为企业用户可以查看价格</div>
 	  <!-- <div style='display: flex;' v-else> -->
 	  <!-- <h3 v-if="userinfoType=='2' && goodsClass == '1' && checkModifyAudit != '3'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ pricesetNprice }}{{ unitPrice.mapay }}</h3> -->

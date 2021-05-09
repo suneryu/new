@@ -267,6 +267,7 @@
 				isContrat:false,
 				giftCode:'',
 				giftUserId:'',
+				userRealNum:0
 				
 			};
 		},
@@ -590,7 +591,17 @@
 				}
 
 			},
-
+			//查询信息
+			getGift(val){
+				let params = {
+					giftUserCode: val,
+				}
+				http.get('/web/gt/gift/queryRelToC.json', params).then(res => {
+					if (res && res.length != 0) {
+						this.userRealNum = res.gtGiftUserDomain.appmanageIcode || res.gtGiftUserDomain.userRelNum
+					}
+				})
+			},
 			/**
 			 * 初始化订单数据
 			 */
@@ -631,6 +642,9 @@
 							}
 							this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
 						})
+						if(this.isContrat){
+							this.getGift(res.goodsList[0].goodsProperty2)
+						}
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.shoppingItems.push(res)
 						this.allPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
@@ -873,6 +887,8 @@
 							delete item.ocContractproDomainList
 							item.contractEcurl = this.giftCode,
 							item.areaName = $storage.get('loginInfor').userPhone
+							item.employeeCode=this.giftUserId,
+							item.employeeName=this.userRelNum,
 							item.contractType = '08'
 							item.giftSkuIdList = []
 							item.contractNbillcode = null
@@ -913,24 +929,44 @@
 							}
 							//合同单支付
 							if (this.isContrat) {
-								let json = {
-									dataBmoney:this.discountMoney,
-									contractMoney:this.discountMoney,
-									goodsMoney:this.discountMoney,
-									contractBillcode: res.dataObj.contractBillcode,
-								}
-								//调价接口
-								this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
-								})
-								http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res2 => {
-									if (res2.success == true) {
-										http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.discountMoney,giftUserId:this.giftUserId})
-										.then(res4=>{
-											console.log(res4)
-										})
-										$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
+								if(Number(this.userRelNum) >= (Number(this.discountMoney)+(this.freight || 0)) ){
+									http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res2 => {
+										if (res2.success == true) {
+											http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:(Number(this.discountMoney)+(this.freight || 0)),giftUserId:this.giftUserId})
+											.then(res4=>{
+												console.log(res4)
+											})
+											http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'payState' }).then(res3 => {
+												console.log(res3)
+											})
+											let json = {
+												dataBmoney:0,
+												contractMoney:0,
+												goodsMoney:0,
+												contractBillcode: res.dataObj.contractBillcode,
+											}
+											this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+											})
+											$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
+										}
+									});
+								}else{
+									let json = {
+										dataBmoney:(Number(this.discountMoney)+(this.freight || 0))- Number(this.userRelNum) ,
+										contractMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRelNum),
+										goodsMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRelNum),
+										contractBillcode: res.dataObj.contractBillcode,
 									}
-								});
+									//调价接口
+									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+										this.$state.set('contractBillcode', res.dataObj.contractBillcode);
+										$storage.set('contractGoodsPrice','')
+										http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'contract' }).then(res3 => {
+											$router.replace('pay/payMethods',{contractBillcode:res.dataObj.contractBillcode})
+										})
+									})
+								}
+								
 								return;
 							}
 							

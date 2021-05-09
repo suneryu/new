@@ -10,7 +10,7 @@
 		</div>
 		<div  v-if="Buyers.length > 0" style='margin-bottom: 125rpx;'>
 			<div v-for="(item,index) in Buyers" :key="index" >
-				<div style="height: 240rpx;margin-bottom: 3px; border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
+				<div style="height: 260rpx;margin-bottom: 3px; border-bottom: 3px solid #E0E0E0;margin-top: 5px;padding: 0 10px 0 10px">
 				<div style="font-size: 12px">{{item.giftCode}}</div>
 				<div style="display: flex;">
 					<div style="width: 80%; font-size: 17px;">{{item.giftName}}</div>
@@ -24,9 +24,9 @@
 <!-- 						<a href="">预约合同</a> -->
 					</div>
 				</div>
-				<div style="display: flex;font-size: 12px;margin: 10px 0;">
-					<div style="width: 100%;">合同有效时间：
-						<span>{{item.memberCcode.slice(0,10)}}~{{item.memberCname.slice(0,10)}}</span>
+				<div style="font-size: 12px;margin: 5px 0 10px 0;">合同有效时间：
+					<div style="width: 100%;display: flex;justify-content: space-between;">
+						<span>{{item.memberCcode}}~{{item.memberCname}}</span>
 						<button class="buttonClass" @click="useContract(item)">使用合同</button>
 					</div>
 				</div>
@@ -92,6 +92,13 @@
 					giftName:this.searchValue,
 					departCode:19
 				}).then(res => {
+					if(res.list.length>0){
+						res.list.forEach(item=>{
+							item.memberCcode = item.memberCcode==null?item.memberCcode:item.memberCcode.slice(0,10)
+							item.memberCname = item.memberCname==null?item.memberCname:item.memberCname.slice(0,10)
+						})
+					}
+					
 						this.Buyers = res.list || []
 				});
 			},
