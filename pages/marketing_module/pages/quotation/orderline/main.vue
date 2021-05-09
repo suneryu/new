@@ -89,16 +89,21 @@
 				<span>运费：</span>
 				<span>{{ unitPrice.obpay }}{{freight || 0}}{{ unitPrice.mapay }}</span>
 			</div>
-			<div class='goodsPrice-item'>
+			<div class='goodsPrice-item' v-if='!isContrat'>
 				<span>优惠：</span>
 				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
 				<span>{{ unitPrice.obpay }}{{(allPrice-discountMoney).toFixed(2)}}{{ unitPrice.mapay }}</span>
+			</div>
+			<div class='goodsPrice-item' v-else>
+				<span>合同额度抵扣：</span>
+				<!-- <span>{{ unitPrice.obpay }}{{ (1-Number(userinfoOcode))*Number(allPrice) }}{{ unitPrice.mapay }}</span> -->
+				<span>{{ unitPrice.obpay }}{{ userRealNum >= ((Number(discountMoney)+Number(freight || 0)).toFixed(2) )?((Number(discountMoney)+Number(freight || 0)).toFixed(2)) : userRealNum }}{{ unitPrice.mapay }}</span>
 			</div>
 		</div>
 		<div class="accounts-sum">
 			<p>
 				应付金额:
-				<i>{{ unitPrice.obpay }}{{(Number(discountMoney)+(freight || 0)).toFixed(2) }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{userRealNum >= ((Number(discountMoney)+Number(freight || 0)).toFixed(2) )? 0:((Number(discountMoney)+Number(freight || 0)).toFixed(2))- userRealNum }}{{ unitPrice.mapay }}</i>
 				<!-- <i>{{ unitPrice.obpay }}{{ Number(userinfoOcode)*Number(allPrice)  }}{{ unitPrice.mapay }}</i> -->
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
@@ -598,7 +603,8 @@
 				}
 				http.get('/web/gt/gift/queryRelToC.json', params).then(res => {
 					if (res && res.length != 0) {
-						this.userRealNum = res.gtGiftUserDomain.appmanageIcode || res.gtGiftUserDomain.userRelNum					}
+						this.userRealNum = Number(res.gtGiftUserDomain.appmanageIcode || res.gtGiftUserDomain.userRelNum)				
+					}
 				})
 			},
 			/**
@@ -891,6 +897,7 @@
 							item.contractType = '08'
 							item.giftSkuIdList = []
 							item.contractNbillcode = null
+							item.contractPmode = Number(this.userRealNum) >= (Number(this.discountMoney)+(this.freight || 0)) ?0:1
 						})
 					}
 					let orderDomainStr = JSON.stringify(this.orderDomainStr);

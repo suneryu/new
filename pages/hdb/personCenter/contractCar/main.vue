@@ -42,7 +42,7 @@
 						<image :src="goods.dataPic" mode=""></image>
 						<view class="info">
 							<view class="name">{{ goods.goodsName }}</view>
-							<view class="model">{{ goods.skuName }}</view>
+							<view class="model">{{ goods.skuNo }}</view>
 							<view class="other">
 								<text class="price" :style="{ color: '#ec2b27' }">合同价：{{ goods.pricesetNprice }} 元</text>
 								<text class="num">×{{ goods.goodsCamount }}</text>
@@ -100,19 +100,19 @@
 				<text class="price" :style="{ color: '#ec2b27' }">¥{{ totalFreight }}</text>
 			</view>
 			<view class="item">
-				<view class="title">促销满减</view>
-				<text class="price" :style="{ color: '#ec2b27' }">-¥{{ totalDiscountPrice }}</text>
+				<view class="title">合同额度抵扣</view>
+				<text class="price" :style="{ color: '#ec2b27' }">-¥{{ userRelNum>=accountsSumPrice?accountsSumPrice:userRelNum }}</text>
 			</view>
-			<view class="item" @click="isShowPreferential">
+			<!-- <view class="item" @click="isShowPreferential">
 				<view class="title" :style="{ color: baseColor }">优惠券</view>
 				<view class="right">
 					<text class="price">-¥{{ comDisMoney }}</text>
 					<i class="iconfont">&#xe61d;</i>
 				</view>
-			</view>
+			</view> -->
 			<view class="total">
 				<text>合计：</text>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ accountsSumPrice }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:accountsSumPrice-userRelNum }}</text>
 			</view>
 		</view>
 
@@ -141,7 +141,7 @@
 		<!-- 底部  立即购买 -->
 		<view class="footer">
 			<text class="copyWith">应付：</text>
-			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ accountsSumPrice }}</text>
+			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:accountsSumPrice-userRelNum }}</text>
 			<view class="buyNow" @click="savePayPrice" :style="{ background: '#004178' }">提交订单</view>
 		</view>
 
@@ -320,7 +320,7 @@ export default {
 		this.pageState = options.pageState;
 		this.skuId = options.skuId;
 		this.goodsNum = options.goodsNum;
-		this.userRelNum = options.userRelNum
+		this.userRelNum = options.userRelNum || 0
 		wx.setNavigationBarTitle({
 			title: '确认订单页'
 		});
@@ -726,7 +726,7 @@ export default {
 						contractProperty: '0', //订单性质
 						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
 						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
-						contractPmode: this.scontractPmode || 0, //付款方式：场内、场外，即线上、线下
+						contractPmode: this.userRelNum>=this.accountsSumPrice?0:1, //付款方式：场内、场外，即线上、线下
 						contractPumode: '0', //提货方式
 						goodsSupplierName: '', //配送商
 						goodsSupplierCode: '', //配送商Code
@@ -771,7 +771,7 @@ export default {
 						contractProperty: '0', //订单性质
 						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
 						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
-						contractPmode: this.scontractPmode || 0, //付款方式：场内、场外，即线上、线下
+						contractPmode: this.userRelNum>=this.accountsSumPrice?0:1, //付款方式：场内、场外，即线上、线下
 						contractPumode: '0', //提货方式
 						goodsSupplierName: '', //配送商
 						goodsSupplierCode: '', //配送商Code
@@ -897,9 +897,9 @@ export default {
 									})
 								}else{
 									let json = {
-										dataBmoney:Number(res.dataObj.dataBmoney)- Number(this.userRelNum) ,
-										contractMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
-										goodsMoney: Number(res.dataObj.dataBmoney)- Number(this.userRelNum),
+										dataBmoney:Number(this.accountsSumPrice)-Number(this.userRelNum) ,
+										contractMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
+										goodsMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口

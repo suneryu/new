@@ -25,7 +25,7 @@
 					<img :src="goods.dataPic" />
 					<div>
 						<h2>{{ goods.goodsName }}</h2>
-						<h3>{{ goods.skuName }}</h3>
+						<h3>{{ goods.skuNo }}</h3>
 						<h4>
 							{{ unitPrice.obpay }}{{goods.goodsClass=='1' && checkModifyAudit == '3'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):goods.pricesetNprice }}{{ unitPrice.mapay }}
 							<span>×{{ goods.goodsCamount }}</span>

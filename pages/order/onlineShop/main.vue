@@ -25,7 +25,7 @@
 					<img :src="goods.dataPic" />
 					<div>
 						<h2>{{ goods.goodsName }}</h2>
-						<h3>{{ goods.skuName }}</h3>
+						<h3>{{ goods.skuNo }}</h3>
 						<h4>
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="goodsClass==1 && userinfoType=='2' && checkModifyAudit == '3' ">
