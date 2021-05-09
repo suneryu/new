@@ -350,7 +350,8 @@ export default {
 						this.$qj.router.push('pay/paySelect', {
 							dataBmoney: order.dataBmoney,
 							contractBillcode: order.contractBillcode,
-							contractPmode: order.contractPmode
+							contractPmode: order.contractPmode,
+							contractType:order.contractType
 						});
 					}else{
 						this.$qj.router.push('pay/payMethods', {

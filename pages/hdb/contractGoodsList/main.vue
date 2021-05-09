@@ -166,14 +166,14 @@
 				this.myCoupon()
 			},
 			showClick() {
-				if (this.total > this.list.userRelNum) {
-					$message.alert('最多可领取' + this.list.userRelNum + '商品');
-					this.isAdd = true
-					this.show = true
-					// this.giftCoupon[this.isindex].giftNum -=1
-				} else {
+				// if (this.total > this.list.userRelNum) {
+				// 	$message.alert('最多可领取' + this.list.userRelNum + '商品');
+				// 	this.isAdd = true
+				// 	this.show = true
+				// 	// this.giftCoupon[this.isindex].giftNum -=1
+				// } else {
 					this.show = false;
-				}
+				// }
 
 			},
 			checkPrice(){

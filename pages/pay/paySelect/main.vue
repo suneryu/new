@@ -242,7 +242,7 @@ export default {
 							})
 							.then(res => {
 								if (res.success) {
-									if(this.isGiftContract){
+									if(this.contractType == '05'){
 										this.$qj.http(this.$qj.domain).post('/web/gt/gift/updateContractAll.json',{giftCode:this.goodsNo,giftUserPhone:this.userPhone,orderPrice:0})
 										.then(res1=>{
 											console.log(res1)
@@ -344,12 +344,10 @@ export default {
 														});
 													})
 												}else{
-													if(that.isGiftContract){
 														that.$qj.http(that.$qj.domain).post('/web/gt/gift/updateContractAll.json',{giftCode:that.goodsNo,giftUserPhone:that.userPhone,orderPrice:0})
 														.then(res1=>{
 															console.log(res1)
 														})
-													}
 													that.$qj.router.replace('pay/paySuccess', {
 													contractBillcode: that.$state.contractBillcode
 													});
