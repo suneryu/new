@@ -121,6 +121,7 @@
 				if (!this.$qj.phoneValidation(this.userPhone || this.inputUserPhone)) {
 					return;
 				}
+				this.codeTxt = '验证码发送中...'
 				this.$qj
 					.http(this.$qj.domain)
 					.post(changePhone.sendPhone, {
@@ -139,6 +140,9 @@
 									this.codeTxt = '获取验证码';
 								}
 							}, 1000);
+						}else{
+							this.$qj.message.alert('验证码发送失败');
+							this.codeTxt = '获取验证码';
 						}
 					});
 			},
