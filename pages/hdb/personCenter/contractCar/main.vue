@@ -93,7 +93,7 @@
 		<view class="allPrice currency">
 			<view class="item">
 				<view class="title">商品总额</view>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?shoppingCountPrice.toFixed(2):contractRealNum }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?shoppingCountPrice.toFixed(2):contractRealNum.toFixed(2) }}</text>
 			</view>
 			<view class="item">
 				<view class="title">运费</view>
@@ -112,7 +112,7 @@
 			</view> -->
 			<view class="total">
 				<text>合计：</text>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:contractRealNum-userRelNum+totalFreight }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:(contractRealNum-userRelNum+totalFreight).toFixed(2) }}</text>
 			</view>
 		</view>
 
@@ -141,7 +141,7 @@
 		<!-- 底部  立即购买 -->
 		<view class="footer">
 			<text class="copyWith">应付：</text>
-			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:contractRealNum-userRelNum+totalFreight }}</text>
+			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:(contractRealNum-userRelNum+totalFreight).toFixed(2) }}</text>
 			<view class="buyNow" @click="savePayPrice" :style="{ background: '#004178' }">提交订单</view>
 		</view>
 
