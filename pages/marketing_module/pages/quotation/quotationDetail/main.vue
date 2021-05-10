@@ -51,7 +51,8 @@
 													<div 
 														style='font-size: 12px;'>
 														<span style='color: #000000;' >{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
-														<span style='color: #ff557f;margin-left: 10rpx' v-if='item.goodsPro != null'>合同价：{{ unitPrice.obpay }}{{ item.goodsPro }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx' v-if="itemList.contractType == '41'">订单价：{{ unitPrice.obpay }}{{ item.goodsProperty5 }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx' v-if="item.goodsPro != null && itemList.contractType == '39'">合同价：{{ unitPrice.obpay }}{{ item.goodsPro }}{{ unitPrice.mapay }}</span>
 														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1 && itemList.contractType == 39 && checkModifyAudit == 3 && item.goodsPro == null'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 													</div>
 													<view class="list-right-container" v-if="itemList.contractType != 41">
@@ -246,21 +247,30 @@
 						contractBillcode: code
 					}).then(res => {
 						this.discountMoney = 0
+						this.shoppingGoodsIdStr=[]
 						res.goodsList.forEach(item=>{
 							item.itemChecked = false
 							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
 							}else{
-								if(item.goodsPro == null){
-									this.discountMoney += item.pricesetNprice*item.goodsNum
-								}else{
-									this.discountMoney += item.goodsPro*item.goodsNum
+								if(res.contractType == 39){
+									if(item.goodsPro == null ){
+										this.discountMoney += item.pricesetNprice*item.goodsNum
+									}else{
+										this.discountMoney += item.goodsPro*item.goodsNum
+									}
 								}
 							}
 							this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
 						})
-						this.getFreightFare()
+						if(res.contractType == 39){
+							this.getFreightFare()
+						}else{
+							this.discountMoney = res.contractMoney
+							this.freight = Number(res.employeeCode) || 0
+						}
+						
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.listItems = []
 						this.listItems.push(res)

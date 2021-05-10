@@ -1,6 +1,6 @@
 <template>
   <div class="paySuccess">
-    <commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" />
+    <!-- <commonHeader :title="title" :leftIcon="leftIcon" :rightIcon="rightIcon" /> -->
     <div class="paySuccess-tit">
       <i :style="{'color':baseColor}" class="iconfont">&#xe69f;</i>
       <span :style="{'color':baseColor}">支付成功</span>

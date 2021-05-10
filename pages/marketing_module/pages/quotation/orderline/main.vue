@@ -29,9 +29,10 @@
 						<h4>
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
-								<span style='margin-left: 4px;' :style="{ color: '#000000' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
+								<span :style="{ color: '#000000' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
+								<span style='color: #ff557f;margin-left: 10rpx' v-if="shoppingItem.contractType == '41'">订单价：{{ unitPrice.obpay }}{{ goods.goodsProperty5 }}{{ unitPrice.mapay }}</span>
 								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1 && shoppingItem.contractType == 39 && goods.goodsPro == null'>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
-								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsPro != null'>合同价：{{ unitPrice.obpay }}{{ goods.goodsPro }}{{ unitPrice.mapay }}</span>
+								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsPro != null && shoppingItem.contractType == 39'>合同价：{{ unitPrice.obpay }}{{ goods.goodsPro }}{{ unitPrice.mapay }}</span>
 							</div>
 							<span>×{{ goods.goodsNum }}</span>
 						</h4>
@@ -630,33 +631,38 @@
 						this.giftCode = res.goodsList[0].goodsProperty5
 						this.giftUserId = res.goodsList[0].goodsProperty4
 						this.contractType = res.contractType
+						this.shoppingGoodsIdStr=[]
 						res.goodsList.forEach(item=>{
 							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
 							}else{
-								if(item.goodsPro == null){
-									this.discountMoney += item.pricesetNprice*item.goodsNum
-								}else{
-									this.isContrat = true
-									this.discountMoney += item.goodsPro*item.goodsNum
+								if(res.contractType == 39){
+									if(item.goodsPro == null ){
+										this.discountMoney += item.pricesetNprice*item.goodsNum
+									}else{
+										this.discountMoney += item.goodsPro*item.goodsNum
+									}
 								}
 							}
 							
-							if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){
-								this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
-							}
+							// if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){
+							// 	this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+							// }
 							this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
 						})
 						if(this.isContrat){
 							this.getGift(res.goodsList[0].goodsProperty2)
 						}
+						if(res.contractType == 39){
+							this.getFreightFare()
+						}else{
+							this.discountMoney = res.contractMoney
+							this.freight = Number(res.employeeCode) || 0
+						}
 						this.discountMoney = this.discountMoney.toFixed(2)
 						this.shoppingItems.push(res)
 						this.allPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
-						this.freight = res.freight == null ?0:res.freight
-						// this.goodsClass = res.goodsClass
-						this.getFreightFare()
 					})
 			},
 
@@ -924,11 +930,11 @@
 							if(this.shoppingItems[0].contractType == 41){
 								this.$qj.http(this.$qj.domain).post('/web/oc/contract/syncContractState.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
 								if(res1.success){
-									changeTotalMoney = Number(res.dataObj.dataBmoney) - Number(this.shoppingItems[0].contractInmoney) + Number(this.discountMoneyBak)
+									// changeTotalMoney = Number(res.dataObj.dataBmoney) - Number(this.shoppingItems[0].contractInmoney) + Number(this.discountMoneyBak)
 									let json = {
-										dataBmoney: (changeTotalMoney + Number(this.discountMoney)).toFixed(2),
-										contractMoney: (changeTotalMoney + Number(this.discountMoney)).toFixed(2),
-										goodsMoney: (changeTotalMoney + Number(this.discountMoney)).toFixed(2),
+										dataBmoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
+										contractMoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
+										goodsMoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口

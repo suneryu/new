@@ -17,7 +17,7 @@
 				<view class="banner">
 					<swiper class="banner-swiper" :autoplay="true" :interval="3000" :duration="1000" circular :indicator-dots="true">
 						<swiper-item v-for="item in data.cmsContlistReDomainList">
-							<image :src="item.contlistPicurlNow" @click="onClickSwiperItem(data.conttitleUrlNow)" mode="scaleToFill"></image>
+							<image :src="item.contlistPicurlNow" @click="onClickSwiperItem(data.conttitleUrlNow)" mode="widthFix"></image>
 						</swiper-item>
 					</swiper>
 				</view>

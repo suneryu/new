@@ -93,7 +93,7 @@
 		<view class="allPrice currency">
 			<view class="item">
 				<view class="title">商品总额</view>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ shoppingCountPrice.toFixed(2) }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?shoppingCountPrice.toFixed(2):contractRealNum }}</text>
 			</view>
 			<view class="item">
 				<view class="title">运费</view>
@@ -112,7 +112,7 @@
 			</view> -->
 			<view class="total">
 				<text>合计：</text>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:accountsSumPrice-userRelNum }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:contractRealNum-userRelNum+totalFreight }}</text>
 			</view>
 		</view>
 
@@ -141,7 +141,7 @@
 		<!-- 底部  立即购买 -->
 		<view class="footer">
 			<text class="copyWith">应付：</text>
-			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:accountsSumPrice-userRelNum }}</text>
+			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:contractRealNum-userRelNum+totalFreight }}</text>
 			<view class="buyNow" @click="savePayPrice" :style="{ background: '#004178' }">提交订单</view>
 		</view>
 
@@ -308,7 +308,9 @@ export default {
 			shoppingGoodsIdStr: '',
 			giftCode:'',
 			giftUserId:'',
-			userRelNum:0
+			userRelNum:0,
+			contractRate:1,
+			contractRealNum:0
 		};
 	},
 	onLoad(options) {
@@ -396,8 +398,8 @@ export default {
 						}
 					});
 				});
-				console.log(this.shoppingItems, 78787878);
-
+				let itemBak = this.shoppingItems[0].shoppingpackageList[0].shoppingGoodsList[0]
+				this.contractRate = itemBak.pricesetNprice/itemBak.pricesetBaseprice
 				//运费接口
 				this.calculateFreight();
 				// 有京东商品才调用这个接口
@@ -493,6 +495,7 @@ export default {
 		calculateFreight() {
 			//运费接口
 			this.shoppingCountPrice = 0;
+			this.contractRealNum = 0
 			let freightFare = '';
 			if (this.pageState == 0) {
 				freightFare = {
@@ -533,6 +536,17 @@ export default {
 							});
 						});
 					});
+					if(Number(this.userRelNum)<Number(this.shoppingCountPrice + this.freight)){ //contractRealNum
+						this.shoppingItems.map((v, k) => {
+							v.shoppingpackageList.map(vk => {
+								vk.shoppingGoodsList.map((val, index) => {
+									let count = val.pricesetBaseprice/(val.goodsCamount*val.pricesetBaseprice)*this.userRelNum
+									this.contractRealNum += ((val.pricesetNprice - count)/this.contractRate)* val.goodsCamount
+								});
+							});
+						});
+						this.contractRealNum = parseFloat(this.contractRealNum)
+					}
 				});
 		},
 		// 计算京东商品运费
@@ -897,9 +911,9 @@ export default {
 									})
 								}else{
 									let json = {
-										dataBmoney:Number(this.accountsSumPrice)-Number(this.userRelNum) ,
-										contractMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
-										goodsMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
+										dataBmoney:Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight) ,
+										contractMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
+										goodsMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口

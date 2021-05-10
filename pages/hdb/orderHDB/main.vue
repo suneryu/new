@@ -25,7 +25,7 @@
 						<div class="entryName">{{items.goodsName}}</div>
 						<!-- <div class="effctivTime">有效期：{{items.scontractNbcode}}</div> -->
 					</div>
-					<div class='miaoshu'>合同描述: <span>{{items.skuName}}</span></div>
+					<!-- <div class='miaoshu'>合同描述: <span>{{items.skuName}}</span></div> -->
 					<div style="display: flex;height: 50rpx;justify-content: space-between;margin-bottom: 30rpx;">
 						<div class='money' style='width: 60%;'><span>合同金额：</span><span style='color: #ff557f;'>￥{{items.pricesetNprice}} 元</span></div>
 						<div class='lookconstr' style='width: 20%;'><u style='text-decoration:underline'
