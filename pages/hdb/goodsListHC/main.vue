@@ -32,7 +32,7 @@
 						></view> -->
 						<img :src="item.dataPic || userImgurl" />
 						<div class="list-box">
-							<p>{{ item.goodsName }}</p>
+							<p style='text-overflow: ellipsis;'>{{ item.goodsName }}</p>
 							<p>{{ item.goodsNo }}</p>
 							<p v-if="userinfoType =='1' " class="noPrice">认证为企业用户可查看价格</p>
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h3>
