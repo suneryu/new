@@ -23,7 +23,7 @@
 					</div>
 					<div style="display: flex; margin: 5px 0;">
 						<div style="width: 80%; font-size: 12px;">企业编码：
-							<span>{{item.companyCode}}</span>
+							<span>{{item.companyCode==null?'':item.companyCode}}</span>
 						</div>
 						<div style="width: 20%; font-size: 12px;text-align: right;">
 							<div class="authorization" style="color: #4CD964;"
@@ -33,7 +33,7 @@
 					</div>
 					<div style="display: flex;font-size: 12px;margin: 10px 0;">
 						<div style="width: 40%;">联系人：
-							<span>{{item.userinfoCon}}</span>
+							<span>{{item.userinfoCon==null?'':item.userinfoCon}}</span>
 						</div>
 						<div style="width: 50%;font-size: 12px;">
 							<div class="phone">电话：
