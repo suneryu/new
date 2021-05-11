@@ -211,24 +211,28 @@
 				http.get(talkOverWithSell, parmas)
 					.then(res => {
 						console.log("更改预约合同结果....",res)	
-						
-						let parmas = {
-							contractInvstate:2,
-							rows: 10,
-							page: 1,
-							contractTypepro:$storage.get('loginInfor').userPhone
+						if(res.success){
+							let parmas = {
+								contractInvstate:2,
+								rows: 10,
+								page: 1,
+								contractTypepro:$storage.get('loginInfor').userPhone
 							// goodsSupplierName:this.info.userPhone
-						};
-						if(this.current == 1 ){
-							parmas.dataState = 0
+							};
+							if(this.current == 1 ){
+								parmas.dataState = 0
+							}
+							if(this.current == 2 ){
+								parmas.dataState = 1
+							}
+							if(this.current == 3 ){
+								parmas.dataState = 2
+							}
+							this.getData(parmas);
+						}else{
+							this.$qj.message.alert(res.msg)
 						}
-						if(this.current == 2 ){
-							parmas.dataState = 1
-						}
-						if(this.current == 3 ){
-							parmas.dataState = 2
-						}
-						this.getData(parmas);
+						
 						
 					});
 			},
