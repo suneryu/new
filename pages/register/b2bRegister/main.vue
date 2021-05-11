@@ -289,7 +289,7 @@
 					// areaName: this.areaName,
 					userPwsswd: this.userPassword,
 					userPhone: this.userPhone || this.inputUserPhone,
-					
+					userinfoOcode: '1' ,
 					userOpenid: this.$qj.storage.get('userOpenid')
 				};
 				if (this.userInfoCode) {
