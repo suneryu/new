@@ -93,7 +93,8 @@
 	import {
 		queryGroupBuyerPageByAG,
 		getWxMiniQRCode,
-		getPersonal
+		getPersonal,
+		getTopPerMenuListFPc
 	} from '@/api/interfaceHDB.js';
 	import {
 		clearTimeout,
@@ -145,6 +146,7 @@
 		},
 
 		onShow() {
+			
 			console.log('用户类型', $storage.get('loginInfor').userinfoType)
 			this.userinfoType = $storage.get('loginInfor').userinfoType;
 			console.log('个人中心onShow', $storage.get('userId'));
@@ -158,6 +160,7 @@
 			}
 		},
 		created() {
+			this.setLoginAfterRouter()
 			this.djq = this.$domain + '/paas/shop/2020063000000001/2021-04-28/5bd23eec2edc494588836f7820eb2412.png';
 			this.jqz = this.$domain + '/paas/shop/2020063000000001/2021-04-29/7cad91913672419fb074e90f1fcbda7f.png';
 			this.ywc = this.$domain + '/paas/shop/2020063000000001/2021-04-29/6094f8a21b8645ebbd683ec22071959c.png';
@@ -167,15 +170,15 @@
 			// this.aaa();
 		},
 		mounted() {
-			this.footerMenu = $storage.get('footerMenu'); //下面一行的按钮
-			console.log('tableVar....', this.footerMenu)
+			// this.footerMenu = $storage.get('footerMenu'); //下面一行的按钮
+			// console.log('tableVar....', this.footerMenu)
 
-			this.footerMenu.forEach(element => {
-				if (element.menuName == '我的') {
-					// if (element.menuAction == 'user') {
-					this.settingMenu(element.children);
-				}
-			});
+			// this.footerMenu.forEach(element => {
+			// 	if (element.menuName == '我的') {
+			// 		// if (element.menuAction == 'user') {
+			// 		this.settingMenu(element.children);
+			// 	}
+			// });
 		},
 		components: {
 			headerCenter,
@@ -183,6 +186,71 @@
 			vueTabBar
 		},
 		methods: {
+			setLoginAfterRouter() {
+				this.$qj.http(this.$qj.domain).get(getTopPerMenuListFPc).then(res => {
+					if (res) {
+						let a = res.menuList.filter(v => v.menuShow === 0);
+						a.forEach(element => {
+							if (element.menuName == '我的') {
+								// if (element.menuAction == 'user') {
+								this.settingMenu(element.children);
+							}
+						});
+						this.$qj.storage.set('getTopPerMenuList', res.menuList);
+						this.$qj.storage.set('footerMenu', res.menuList.filter(v => v.menuShow === 0));
+					}
+				});
+			},
+			settingMenu(menuList) {
+				console.log('menuList---0',menuList)
+				menuList.map((val, index) => {
+					if (val.menuDefaultClass == 'columnList' || val.menuName == '应用') {
+						console.log("应用。。。", val.children)
+						this.columnApplicationIndex.push(val.proappMenuOrder);
+						this.application[val.proappMenuOrder] = val.children.filter(v => v.menuShow === 0);
+						// 还需要优化
+						this.$state.set('application', val.children.filter(v => v.menuShow === 0));
+						this.$state.set('columnList', val.children.filter(v => v.menuShow === 1));
+			
+						this.application[val.proappMenuOrder].map(v => {
+							if (v.menuAction == 'webmail') {
+								this.webmail = v.menuJspath;
+							}
+						});
+					}
+					if (val.menuDefaultClass == 'rowListNav' || val.menuName == '我的订单') {
+						// 待付款，待发货，待收货，待评价，售后
+						this.myOrder = val.children.filter(v => v.menuShow === 0).filter(vt => vt.menuAction !=
+							'order').splice(0,3);
+						// 全部订单
+						let orderIndex = val.children.filter(v => v.menuShow === 0).filter(vt => vt.menuAction ==
+							'order')
+						this.$state.set('orderIndex', orderIndex);
+						this.$state.set('myOrder', this.myOrder);
+						this.$state.set('orderMenu', val.children.filter(v => v.menuShow === 1));
+						// 订单搜索和订单搜索结果页
+						orderIndex[0].routechildren.map(vc => {
+							if (vc.menuAction == 'orderSearch') {
+								this.$state.set('orderSearch', vc.menuJspath);
+							}
+							if (vc.menuAction == 'orderSearchResult') {
+								this.$state.set('orderSearchResult', vc.menuJspath);
+							}
+						});
+					}
+					if (val.menuName == '导航') {
+						console.log("导航。。。nav", val.children)
+						this.nav = val.children;
+						this.$state.set('nav', val.children);
+					}
+				});
+				let moreToolsList = [];
+				this.nav.map(val => {
+					if (val.menuAction === 'collectionGoods' || val.menuAction === 'history') moreToolsList.push(
+						val);
+				});
+				this.$state.set('moreToolList', moreToolsList);
+			},
 			// 跳转到我的预约里面
 			myInfo(data){
 				console.log('datappppp-',data)
@@ -262,55 +330,7 @@
 			 * 根据“个人中心”children路由配置页面
 			 * @param {Object} menuList
 			 */
-			settingMenu(menuList) {
-				menuList.map((val, index) => {
-					if (val.menuDefaultClass == 'columnList' || val.menuName == '应用') {
-						console.log("应用。。。", val.children)
-						this.columnApplicationIndex.push(val.proappMenuOrder);
-						this.application[val.proappMenuOrder] = val.children.filter(v => v.menuShow === 0);
-						// 还需要优化
-						this.$state.set('application', val.children.filter(v => v.menuShow === 0));
-						this.$state.set('columnList', val.children.filter(v => v.menuShow === 1));
-
-						this.application[val.proappMenuOrder].map(v => {
-							if (v.menuAction == 'webmail') {
-								this.webmail = v.menuJspath;
-							}
-						});
-					}
-					if (val.menuDefaultClass == 'rowListNav' || val.menuName == '我的订单') {
-						// 待付款，待发货，待收货，待评价，售后
-						this.myOrder = val.children.filter(v => v.menuShow === 0).filter(vt => vt.menuAction !=
-							'order').splice(0,3);
-						// 全部订单
-						let orderIndex = val.children.filter(v => v.menuShow === 0).filter(vt => vt.menuAction ==
-							'order')
-						this.$state.set('orderIndex', orderIndex);
-						this.$state.set('myOrder', this.myOrder);
-						this.$state.set('orderMenu', val.children.filter(v => v.menuShow === 1));
-						// 订单搜索和订单搜索结果页
-						orderIndex[0].routechildren.map(vc => {
-							if (vc.menuAction == 'orderSearch') {
-								this.$state.set('orderSearch', vc.menuJspath);
-							}
-							if (vc.menuAction == 'orderSearchResult') {
-								this.$state.set('orderSearchResult', vc.menuJspath);
-							}
-						});
-					}
-					if (val.menuName == '导航') {
-						console.log("导航。。。nav", val.children)
-						this.nav = val.children;
-						this.$state.set('nav', val.children);
-					}
-				});
-				let moreToolsList = [];
-				this.nav.map(val => {
-					if (val.menuAction === 'collectionGoods' || val.menuAction === 'history') moreToolsList.push(
-						val);
-				});
-				this.$state.set('moreToolList', moreToolsList);
-			},
+			
 
 			// 退出当前账号
 			loginOut() {
