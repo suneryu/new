@@ -1,5 +1,5 @@
 <template>
-	<div :class="$storage.get('iosModel')?'footer-box isIOS':'footer-box'">
+	<div :class="$storage.get('iosModel')?'footer-box isIOS':'footer-box'" v-if='isGift'>
 		<div class="footer t-box">
 			<div class="left-cont t-box-flex3">
 				<div class="t-box mar-t6">
@@ -74,7 +74,8 @@
 			"baseColor",
 			"getspecs",
 			"indexs",
-			"goodsCode"
+			"goodsCode",
+			'isGift'
 		],
 		data() {
 			return {

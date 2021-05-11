@@ -54,12 +54,12 @@
 			<u-search placeholder="输入商品编号" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
 		</view>
 		<view class="getCoupon-content">
-			<view v-for="(item,index) in giftCoupon" :key="index">
+			<view v-for="(item,index) in giftCoupon" :key="index" @click="goodsDetail(item.skuCode)">
 				<p>
-					<checkbox color="blue" style="transform:scale(0.7) " :checked="item.ischecked" @click="singelCheck(item,itemIndex)" />
+					<checkbox color="blue" style="transform:scale(0.7) " :checked="item.ischecked" @click.stop="singelCheck(item,itemIndex)" />
 				</p>
 				<p>
-					<image :src="item.dataPic" mode="" @click="getDetail(item)" :prop="skuCode"></image>
+					<image :src="item.dataPic" mode="" :prop="skuCode"></image>
 				</p>
 				<p >
 					<view style='overflow: hidden;white-space: nowrap;width: 98%;height: 30rpx;text-overflow: ellipsis;'>
@@ -70,7 +70,7 @@
 				<!--  -->
 				<p><span style='color: #3B4246;margin-right: 10rpx;'>原价:{{item.pricesetNprice}}元</span>合同价:{{item.pricesetBaseprice}}元</p>
 				<p v-if='item.ischecked'><span>规格</span>
-					<span @click="showBox(index)">+</span>
+					<span @click.stop="showBox(index)">+</span>
 
 				</p>
 			</view>
@@ -164,6 +164,13 @@
 			lastPageLine
 		},
 		methods: {
+			goodsDetail(skuCode) {
+				let params ={
+					skuCode: skuCode,
+					isGift:false
+				};
+				this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
+			},
 			serarchGoods(val){
 				this.searchValue = val
 				this.myCoupon()

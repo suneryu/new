@@ -29,7 +29,8 @@
 		<proInfor :goodsRemark="goodsRemark"></proInfor>
 		<!-- 普通 -->
 		<Footers :goodsCode="goodsCode" :indexs="indexs" :skuList="skuList" :userImgurl="userImgurl" :baseColor="baseColor"
-		 @addcollectGoods="addcollectGoods" @getSpec="getSpec" @showSpec="showSpec"  @goBuy="goBuy"></Footers>
+		 @addcollectGoods="addcollectGoods" @getSpec="getSpec" @showSpec="showSpec"  @goBuy="goBuy" :isGift='isGift'></Footers>
+		
 		<!-- 团购 -->
 		<!-- <groupFooters :couponOnceNumd="couponOnceNumd" :getgoodtypes="getgoodtypes" :goodsCode="goodsCode" :indexs="indexs"
 		 :skuList="skuList" :userImgurl="userImgurl" @addcollectGoods="addcollectGoods" @getSpec="getSpec" @goBuy="goBuy" @showSpec="showSpec"
@@ -231,6 +232,8 @@
 				userinfoOcode:1,
 				checkModifyAudit:1,
 				contractGoodsPrice:'',
+				isGift:true,
+				aaa:'',
 				goodsTopnum:'0'  //是否加倍 1是加倍
 
 			};
@@ -255,8 +258,8 @@
 		},
 
 		onLoad(options) {
-			
 			$storage.set("goodsClass",options.goodsClass)
+			$storage.set("isGift",options.isGift)
 			let that = this;
 			console.log('this.options...',options)
 			console.log('this.goodsClass-------',options.goodsClass)
@@ -371,6 +374,7 @@
 		onUnload() {
 			  console.log('onUnload监听页面卸载');
 			$storage.set('contractGoodsPrice','')
+			$storage.set('isGift','')
 		},
 		computed: {
 			unitPrice() {
@@ -387,6 +391,9 @@
 			this.getStore()
 			this.getQY()
 			this.searchStatus()
+			if($storage.get("isGift")=='false'){
+				this.isGift = false
+			}
 		},
 		onShareAppMessage: function(res) {
 			let that = this;
