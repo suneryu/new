@@ -179,6 +179,7 @@
 		},
 
 		onLoad(options) {
+			this.initSearchParams();
 			// wx.setNavigationBarTitle({
 			// 	title: "促销专区"
 			// });
@@ -222,7 +223,7 @@
 					this.searchPath = v.menuJspath;
 				}
 			});
-			this.initSearchParams();
+			// this.initSearchParams();
 			this.commonMounted();
 			this.searchStatus();
 			this.$qj

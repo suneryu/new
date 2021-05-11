@@ -186,17 +186,17 @@
 			};
 		},
 		onShow() {
-			this.userPhone = this.$qj.storage.get('loginInfor').userPhone;
-			console.log(this.$qj.storage.get('userInfo'))
-			console.log(this.$qj.storage.get('userdetailsInfo'))
-			this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
-			this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
+			// this.userPhone = this.$qj.storage.get('loginInfor').userPhone;
+			// console.log(this.$qj.storage.get('userInfo'))
+			// console.log(this.$qj.storage.get('userdetailsInfo'))
+			// this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
+			// this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
 			
-			console.log(this.userinfoType)
-				this.searchStatus();
+			// console.log(this.userinfoType)
+			// 	this.searchStatus();
 				
-			this.batchCheckCollect();
-			this.batchGetSkuMinSaleMultiple();
+			// this.batchCheckCollect();
+			// this.batchGetSkuMinSaleMultiple();
 		},
 		onLoad(options) {
 	
@@ -211,6 +211,17 @@
 			 	// this.searchParams.classtreeCode = JSON.parse(options.json).classtreeCode;
 			 }
 			 this.searchParam = options.searchParam
+			 this.userPhone = this.$qj.storage.get('loginInfor').userPhone;
+			 console.log(this.$qj.storage.get('userInfo'))
+			 console.log(this.$qj.storage.get('userdetailsInfo'))
+			 this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
+			 this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
+			 
+			 console.log(this.userinfoType)
+			 	this.searchStatus();
+			 	
+			 this.batchCheckCollect();
+			 this.batchGetSkuMinSaleMultiple();
 		},
 		onReachBottom() {
 			this.loadMore();
