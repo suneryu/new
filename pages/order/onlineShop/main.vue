@@ -90,10 +90,10 @@
 				</div>
 			</div>
 		</div> -->
-		<!-- <div class="accounts-count">
+		<div class="accounts-count">
 			<p>
 				商品金额
-				<span>{{ unitPrice.obpay }}{{ shoppingCountPrice }}{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{ allPrice }}{{ unitPrice.mapay }}</span>
 			</p>
 			<p>
 				运费
@@ -107,16 +107,16 @@
 				积分抵扣
 				<span>-{{ sumPoints }}积分</span>
 			</p>
-			<p v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
+			<!-- <p v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
 				会员权益
 				<span>{{ unitPrice.obpay }}{{ totalDiscountPrice }}{{ unitPrice.mapay }}</span>
-			</p>
-		</div> -->
+			</p> -->
+		</div>
 		<div class="accounts-sum">
 			<p>
 				应付金额:
 				<!-- <i>{{ unitPrice.obpay }}{{ accountsSumPrice }}{{ unitPrice.mapay }}</i> -->
-				<i>{{ unitPrice.obpay }}{{ allPrice }}{{ unitPrice.mapay }}</i>
+				<i>{{ unitPrice.obpay }}{{ Number(allPrice)+Number(freight) }}{{ unitPrice.mapay }}</i>
 			</p>
 			<div @click="savePayPrice" :style="{ background: baseColor }">立即支付</div>
 		</div>
@@ -274,7 +274,8 @@
 				userinfoOcode: 1, //权益值
 				userPhone:"" ,  //手机号
 				pricesetCGprice:'', //采购价格
-				partnerType:0   //信用额度
+				partnerType:0 ,  //信用额度
+				shoppingGoodsIdStr:[]
 			};
 		},
 		onLoad(options) {
@@ -282,6 +283,7 @@
 			this.temp = options;
 			console.log('传来的option是啥，', this.temp)
 			console.log('传来的option是啥，', options)
+			this.shoppingGoodsIdStr.push({skuId:options.skuId,goodsNum:options.goodsNum})
 			// this.userInfoCode = this.$qj.storage.get('userdetailsInfo').userInfoCode
 		},
 		onShow() {
@@ -364,6 +366,17 @@
 			}
 		},
 		methods: {
+			//运费
+			getFreightFare(){
+							this.$qj.http(this.$qj.domain).get('/web/oc/contract/calculateFreightFare.json', {
+								areaCode: this.addressList.areaCode,
+								skuIdStr:JSON.stringify(this.shoppingGoodsIdStr)
+							})
+							.then(res=>{
+								console.log('hhhhhhdsadasdaadad-----',res)
+								this.freight = res.dataObj
+							})
+						},
 			// 查询 认证授权 状态
 			searchStatus() {
 				let that = this
@@ -679,6 +692,10 @@
 
 						}
 					});
+					
+					console.log('qqqqqqqqqq',this.shoppingGoodsIdStr)
+					console.log('wwwwwwwwww',this.addressList.areaCode)
+					this.getFreightFare();
 			},
 
 
