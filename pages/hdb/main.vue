@@ -155,7 +155,7 @@ export default {
 	onLoad() {
 		this.baseColor = `#${$storage.get('baseColor')}`;
 		wx.setNavigationBarTitle({
-			title: $storage.get('proappEnvName')
+			title: '海德堡官方线上商城'
 		});
 		wx.setNavigationBarColor({
 			frontColor: '#ffffff',

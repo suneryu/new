@@ -316,7 +316,8 @@
 						areaCode: this.addressList.areaCode, //从地址上面带过来`
 						contractNbillcode: this.shoppingItems[0].contractNbillcode,
 						skuIdList: sklist,
-						giftSkuIdList: []
+						giftSkuIdList: [],
+						contractNbbillcode:this.contractData[0].goodsNo
 					}];
 				
 					this.shoppingItems.map((v, index) => {
@@ -343,6 +344,7 @@
 							goodsReceiptArrdess: this.addressList.provinceName + this.addressList.cityName + this.addressList.areaName +
 								this.addressList.addressDetail, //收货地址
 							goodsReceiptPhone: this.addressList.addressPhone, //收货联系方式
+							contractNbbillcode:this.contractData[0].goodsNo,
 							areaCode: this.addressList.areaCode //从地址上面带过来`
 						});
 				
