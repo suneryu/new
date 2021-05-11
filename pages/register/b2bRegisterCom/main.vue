@@ -55,7 +55,8 @@
 
 		</view>
 
-		<button type="default" class="register-btn" v-bind:style="{ backgroundColor: baseColor }" @click="register">提交</button>
+		<button type="default" class="register-btn" v-if="isDisabled" v-bind:style="{ backgroundColor: baseColor }" @click="register">提交</button>
+		<button type="default" disabled class="register-btn" v-else v-bind:style="{ backgroundColor: baseColor }" @click="register">提交</button>
 
 
 		<!-- <u-picker mode="selector" v-model="distributorPicker" :default-selector="[0]" :range="distributorArray" range-key="qtypeQtypeName"
@@ -133,7 +134,8 @@
 				userInfoId:'',
 				userInfoCode:'',
  				loginInfor:'',
-				userinfoapplyType:''
+				userinfoapplyType:'',
+				isDisabled:true
 			};
 		},
 		watch: {
@@ -253,10 +255,12 @@
 			 * 注册按钮
 			 */
 			register() {
+				this.isDisabled = false
 				let that = this
-
+				console.log(1111111111111111)
 				if (!this.userinfoCompname) {
 					this.$qj.message.alert('请输入企业名称');
+					this.isDisabled = true
 					return;
 				}
 				// if (!this.$qj.phoneValidation(this.userPhone || this.inputUserPhone)) {
@@ -270,20 +274,24 @@
 
 				if (!(/[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g.test(this.userinfoCert2No))) {
 					this.$qj.message.alert('请输入正确的信用代码');
+					this.isDisabled = true
 					return;
 				}
 				
 	
 				if (!this.city) {
 					this.$qj.message.alert('请选择城市');
+					this.isDisabled = true
 					return;
 				}
 				if (!this.imgBusinessHttp) {
 					this.$qj.message.alert('请上传营业执照');
+					this.isDisabled = true
 					return;
 				}
 				if (!this.userinfoCorp) {
 					this.$qj.message.alert('请输入真实姓名');
+					this.isDisabled = true
 					return;
 				}
 				// if (!this.userinfoCon) {
@@ -291,6 +299,7 @@
 				// 	return;
 				// }
 					if (this.userinfoTel && !this.$qj.phoneValidation(this.userinfoTel)) {
+						this.isDisabled = true
 						return;
 					}
 				//  注册接口
@@ -352,8 +361,10 @@
 							// 	this.navigateBack();
 							// }
 						} else if(res.msg){
+							this.isDisabled = true
 							this.$qj.message.alert(res.msg);
 						}else{
+							this.isDisabled = true
 							this.$qj.message.alert('认证信息提交失败');
 						}
 					});
