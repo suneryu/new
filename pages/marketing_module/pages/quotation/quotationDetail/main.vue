@@ -51,7 +51,7 @@
 													<div 
 														style='font-size: 12px;'>
 														<span style='color: #000000;' >{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
-														<span style='color: #ff557f;margin-left: 10rpx' v-if="itemList.contractType == '41'">订单价：{{ unitPrice.obpay }}{{ item.goodsProperty5 }}{{ unitPrice.mapay }}</span>
+														<span style='color: #ff557f;margin-left: 10rpx' v-if="itemList.contractType == '41'">订单价：{{ unitPrice.obpay }}{{ item.goodsProperty5 || item.pricesetNprice}}{{ unitPrice.mapay }}</span>
 														<span style='color: #ff557f;margin-left: 10rpx' v-if="item.goodsPro != null && itemList.contractType == '39'">合同价：{{ unitPrice.obpay }}{{ item.goodsPro }}{{ unitPrice.mapay }}</span>
 														<span style='color: #ff557f;margin-left: 10rpx;' v-if='item.goodsClass==1 && itemList.contractType == 39 && checkModifyAudit == 3 && item.goodsPro == null'> 采购价：{{ unitPrice.obpay }}{{ (Number(item.pricesetNprice)*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 													</div>

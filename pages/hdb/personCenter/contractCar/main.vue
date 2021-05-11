@@ -93,7 +93,8 @@
 		<view class="allPrice currency">
 			<view class="item">
 				<view class="title">商品总额</view>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?shoppingCountPrice.toFixed(2):contractRealNum.toFixed(2) }}</text>
+				<!-- <text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?shoppingCountPrice.toFixed(2):contractRealNum.toFixed(2) }}</text> -->
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{shoppingCountPrice.toFixed(2)}}</text>
 			</view>
 			<view class="item">
 				<view class="title">运费</view>
@@ -112,7 +113,7 @@
 			</view> -->
 			<view class="total">
 				<text>合计：</text>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:(contractRealNum-userRelNum+totalFreight).toFixed(2) }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:(accountsSumPrice-userRelNum).toFixed(2) }}</text>
 			</view>
 		</view>
 
@@ -141,7 +142,7 @@
 		<!-- 底部  立即购买 -->
 		<view class="footer">
 			<text class="copyWith">应付：</text>
-			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:(contractRealNum-userRelNum+totalFreight).toFixed(2) }}</text>
+			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:(accountsSumPrice-userRelNum).toFixed(2) }}</text>
 			<view class="buyNow" @click="savePayPrice" :style="{ background: '#004178' }">提交订单</view>
 		</view>
 
@@ -536,17 +537,17 @@ export default {
 							});
 						});
 					});
-					if(Number(this.userRelNum)<Number(this.shoppingCountPrice + this.freight)){ //contractRealNum
-						this.shoppingItems.map((v, k) => {
-							v.shoppingpackageList.map(vk => {
-								vk.shoppingGoodsList.map((val, index) => {
-									let count = val.pricesetBaseprice/(val.goodsCamount*val.pricesetBaseprice)*this.userRelNum
-									this.contractRealNum += ((val.pricesetNprice - count)/this.contractRate)* val.goodsCamount
-								});
-							});
-						});
-						this.contractRealNum = parseFloat(this.contractRealNum)
-					}
+					// if(Number(this.userRelNum)<Number(this.shoppingCountPrice + this.freight)){ //contractRealNum
+					// 	this.shoppingItems.map((v, k) => {
+					// 		v.shoppingpackageList.map(vk => {
+					// 			vk.shoppingGoodsList.map((val, index) => {
+					// 				let count = val.pricesetBaseprice/(val.goodsCamount*val.pricesetBaseprice)*this.userRelNum
+					// 				this.contractRealNum += ((val.pricesetNprice - count)/this.contractRate)* val.goodsCamount
+					// 			});
+					// 		});
+					// 	});
+					// 	this.contractRealNum = parseFloat(this.contractRealNum)
+					// }
 				});
 		},
 		// 计算京东商品运费
@@ -911,9 +912,12 @@ export default {
 									})
 								}else{
 									let json = {
-										dataBmoney:Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight) ,
-										contractMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
-										goodsMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
+										// dataBmoney:Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight) ,
+										// contractMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
+										// goodsMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
+										dataBmoney:Number(this.accountsSumPrice)-Number(this.userRelNum) ,
+										contractMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
+										goodsMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口

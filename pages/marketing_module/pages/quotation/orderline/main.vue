@@ -30,7 +30,7 @@
 							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#333' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</h3>
 							<div style="text-align: left;" v-if="userinfoType=='2' && checkModifyAudit == '3' ">
 								<span :style="{ color: '#000000' }">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</span>
-								<span style='color: #ff557f;margin-left: 10rpx' v-if="shoppingItem.contractType == '41'">订单价：{{ unitPrice.obpay }}{{ goods.goodsProperty5 }}{{ unitPrice.mapay }}</span>
+								<span style='color: #ff557f;margin-left: 10rpx' v-if="shoppingItem.contractType == '41'">订单价：{{ unitPrice.obpay }}{{ goods.goodsProperty5 || goods.pricesetNprice}}{{ unitPrice.mapay }}</span>
 								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsClass == 1 && shoppingItem.contractType == 39 && goods.goodsPro == null'>采购价：{{ unitPrice.obpay }}{{ (goods.pricesetNprice*Number(userinfoOcode)).toFixed(2) }}{{ unitPrice.mapay }}</span>
 								<span style='margin-left: 4px;' :style="{ color: '#d66377',marginLeft:'10rpx' }" v-if='goods.goodsPro != null && shoppingItem.contractType == 39'>合同价：{{ unitPrice.obpay }}{{ goods.goodsPro }}{{ unitPrice.mapay }}</span>
 							</div>
