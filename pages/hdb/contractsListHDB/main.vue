@@ -170,7 +170,8 @@
 				fontColor3: "#000000", //字体颜色
 				searchValue: '',
 				total: 0,
-				defaulePhone:''
+				defaulePhone:'',
+				memberGcode:'2'
 			}
 		},
 		onLoad(options) {
@@ -469,7 +470,7 @@
 			loadMore(code) {
 				this.page++;
 				let parmas = {
-					memberGcode: 2,
+					memberGcode: this.memberGcode,
 					contractInvstate: 0,
 					rows: 10,
 					page: this.page,
@@ -578,6 +579,7 @@
 			// 獲取拿到的線下合同類型
 			getShow() {
 				this.lastPageLine = false
+				this.page = 1
 				let that = this;
 				that.options = [];
 				this.checkData.forEach(item => {
@@ -586,9 +588,9 @@
 					}
 
 				})
-				console.log(this.options, 11111111111111)
+				that.memberGcode = that.options.length>0?that.options.toString():'2'
 				let parmas = {
-					memberGcode: "2",
+					memberGcode:this.memberGcode ,
 					contractInvstate: 0,
 					rows: 10,
 					page: 1,
@@ -603,17 +605,9 @@
 								if (element.memo == this.userinfoType) {
 									console.log(",,,", element.scontractFileUrl)
 								}
-								if (this.options.length > 0) {
-									this.contractData = []
-									res.rows.forEach(item => {
-										if (this.options.includes(item.memberGcode)) {
-											this.contractData.push(item)
-										}
-									})
-									// this.contractData = contractDataBak
-								} else {
-									this.contractData = res.rows
-								}
+								
+								this.contractData = res.rows
+								
 
 							});
 							this.total = res.total
@@ -665,7 +659,7 @@
 						goodsType: '05',
 						rows: 10,
 						page: 1,
-						classtreeCode: '2021043000000019'
+						classtreeCode: '2021043000000019',
 					}
 					this.getData(parmas);
 					// this.getDataBak()
@@ -705,7 +699,7 @@
 					this.fontColor3 = "#004178"; //字体颜色
 					this.page = 1; //第一次展示的十条数据
 					let parmas = {
-						memberGcode: "2",
+						memberGcode: this.memberGcode,
 						contractInvstate: 0,
 						rows: 10,
 						page: 1,
