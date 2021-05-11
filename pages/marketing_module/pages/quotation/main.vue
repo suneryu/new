@@ -26,6 +26,10 @@
 							<div v-else-if="order.dataState == 3">已完成</div>
 							<button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState == 2">查看编辑</button>
 						</div>
+						<div class="order-status" >
+							<div>创建时间：{{ order.gmtCreate | format}}</div>
+							<div v-if='order.employeeName != null'>销售员：{{ order.employeeName}}</div>
+						</div>
 						<div class="order-msg" v-for="(goods, goodsIndex) in order.goodsList" :key="goodsIndex">
 							<img :src="goods.dataPic || userImgurl" />
 							<div>
@@ -89,6 +93,18 @@ export default {
 				'06': '积分订单'
 			}
 		};
+	},
+	filters:{
+		format(shijianchuo){
+			let time = new Date(shijianchuo);
+			let y = time.getFullYear().toString();
+			let m = (time.getMonth()+1).toString();
+			let d = time.getDate().toString();
+			let h = time.getHours().toString();
+			let mm = time.getMinutes().toString();
+			let s = time.getSeconds().toString();
+			return y+'-'+ (m<10?'0'+m:m) + '-' + (d<10?'0'+d:d) +' '+ (h<10?'0'+h:h) +':'+ (mm<10?'0'+mm:mm) +':'+ (s<10?'0'+s:s);
+		}
 	},
 	onLoad(options) {
 		// console.log('跳转页面---',options)

@@ -553,6 +553,11 @@
 								if (!RegExp(/http/).test(v.dataPic)) {
 									v.dataPic = this.$domain + v.dataPic;
 								}
+								if(this.userinfoType == "2" && this.checkModifyAudit == "3"){
+									// 获取权益价格
+									 v.pricesetMakeprice = Number(v.pricesetNprice) * this.userinfoOcode
+									 console.log("获取权益的价格-------",v.pricesetMakeprice)
+								}
 								v.itemChecked = false;
 								batchCollectData.push({
 									collectType: '0',
