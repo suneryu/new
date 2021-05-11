@@ -28,9 +28,11 @@
 			<div class="right">
 				<div class="rightItem" v-for="(item, index) in rightList" :key="index">
 					<div class="title">{{ item.goodsClassName }}</div>
-					<div class="item" v-for="(item1, index1) in item.childList" @click="goTodetail(item1, index1)" :key="index1">
-						<img :src="img + item1.goodsClassLogo" alt="" />
-						<p>{{ item1.goodsClassName }}</p>
+					<div class = "flexItem" style="display: flex; justify-content:end; flex-wrap: wrap;">
+						<div class="item" v-for="(item1, index1) in item.childList" @click="goTodetail(item1, index1)" :key="index1">
+							<img :src="img + item1.goodsClassLogo" alt="" />
+							<p>{{ item1.goodsClassName }}</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -215,7 +217,7 @@ export default {
 					padding: 25rpx 0;
 				}
 				.item {
-					display: inline-block;
+					// display: inline-block;
 					width: 33%;
 					height: 255rpx;
 					overflow: hidden;
