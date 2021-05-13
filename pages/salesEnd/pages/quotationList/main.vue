@@ -19,7 +19,7 @@
 								<div>报价单编号：{{ order.contractBillcode }}</div>
 							</div>
 							<div v-if="order.dataState == -1">已取消</div>
-							<div v-else-if="order.dataState == 2">待确认</div>
+							<div v-else-if="order.dataState == 2 || order.dataState == 9">待确认</div>
 							<div v-else-if="order.dataState == 3">已完成</div>
 						</div>
 						<div class="order-status" style='justify-content: flex-start;'>

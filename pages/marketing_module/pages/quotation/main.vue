@@ -21,10 +21,10 @@
 							<div v-if="order.dataState == -1">已取消</div>
 							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '2' ">待审核</div> -->
 							<!-- <div v-else-if="order.dataState == 1 && order.dataStatestr == '1' ">待支付</div> -->
-							<div v-else-if="order.dataState == 2">待确认</div>
+							<div v-else-if="order.dataState == 2 || order.dataState == 9">待确认</div>
 							<!-- <div v-else-if="order.dataState == 3">待收货</div> --> 
 							<div v-else-if="order.dataState == 3">已完成</div>
-							<button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState == 2">查看编辑</button>
+							<button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState == 2 || order.dataState == 9">查看编辑</button>
 						</div>
 						<div class="order-status" >
 							<div>创建时间：{{ order.gmtCreate | format}}</div>

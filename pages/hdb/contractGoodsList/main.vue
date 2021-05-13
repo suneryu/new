@@ -56,7 +56,7 @@
 		<view class="getCoupon-content">
 			<view v-for="(item,index) in giftCoupon" :key="index" @click="goodsDetail(item.skuCode)">
 				<p>
-					<checkbox color="blue" style="transform:scale(0.7) " :checked="item.ischecked" @click.stop="singelCheck(item,itemIndex)" />
+					<!-- <checkbox color="blue" style="transform:scale(0.7) " :checked="item.ischecked" @click.stop="singelCheck(item,itemIndex)" /> -->
 				</p>
 				<p>
 					<image :src="item.dataPic" mode="" :prop="skuCode"></image>
@@ -69,10 +69,22 @@
 				</p>
 				<!--  -->
 				<p><span style='color: #3B4246;margin-right: 10rpx;'>原价:{{item.pricesetNprice}}元</span>合同价:{{item.pricesetBaseprice}}元</p>
-				<p v-if='item.ischecked'><span>规格</span>
+				<!-- <p v-if='item.ischecked'><span>规格</span>
 					<span @click.stop="showBox(index)">+</span>
-
-				</p>
+				</p> -->
+				<div style='display: flex;justify-content: space-around;height: 50rpx;width: 100%;overflow: hidden;padding: 10rpx;box-sizing: border-box;'>
+					<div style='height: 100%;display: flex;flex-direction: row;'>
+						<div @click.stop="subtract(item, index)">
+							<i class="iconfont"
+								:style="{ color: item.giftNum > 0 ? '#ccc' : '' }">
+								&#xe755;
+							</i>
+						</div>
+						<div style='z-index: 0;height: 20rpx;'><input type="text" v-model="item.giftNum == null?1:item.giftNum" disabled /></div>
+						<div @click.stop="add(item, index)" style='margin-right: 20rpx;'><i class="iconfont" style='font-size: 18px;'>&#xe756;</i></div>
+					</div>
+					<div @click.stop="addShoppingGoodsCode(item)" style='margin-right: 10rpx;border-radius: 50%;height: 20rpx;' ><i class="iconfont icon-gouwuche" style='color: #004178;font-size: 18px;'></i></div>
+				</div>
 			</view>
 			<u-popup v-model="show" mode="bottom">
 				<view class="count" style="width: 100%;height:300rpx;">
@@ -91,7 +103,7 @@
 			</u-popup>
 		</view>
 		<view class="getCoupon-footer" @click="receiveGift" :prop="goodsBeanStr" >
-			确认购买
+			前往购物车
 		</view>
 		<lastPageLine :lastPageLine="lastPageLine" />
 	</view>
@@ -164,6 +176,42 @@
 			lastPageLine
 		},
 		methods: {
+			subtract(item,index){
+				if(item.giftNum > 1){
+					item.giftNum -= 1
+				}else{
+					this.$qj.message.alert('起订量不可小于1')
+				}
+				this.$forceUpdate()
+			},
+			add(item, index){
+				item.giftNum += 1
+				this.$forceUpdate()
+			},
+			//添加购物车
+			addShoppingGoodsCode(item){
+				let goodsList = [{
+					skuCode:item.skuCode,
+					goodsNum:item.giftNum,
+					shoppingType:"6",
+					// channelCode:this.channelCode,
+					goodsContract:item.pricesetBaseprice,
+					warehouseCode: this.giftUserCode,
+					warehouseName: this.list.giftName,
+					giftCode:this.list.giftCode
+				}]
+				let params = {
+					memberBcode:$storage.get('loginInfor').userInfoCode,
+					goodsBeanStr:JSON.stringify(goodsList)
+				}
+				this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/addShoppingGoodsCode.json',params ).then(res => {
+					if(res.success){
+						this.$qj.message.alert('商品加入购物车成功！');
+					}else{
+						this.$qj.message.alert(res.msg);
+					}
+				})
+			},
 			goodsDetail(skuCode) {
 				let params ={
 					skuCode: skuCode,
@@ -213,23 +261,23 @@
 					this.show = true
 					this.isAdd = false
 			},
-			add() {
-				// if (this.total > this.list.userRelNum) {
-				// 	$message.alert('余额不足')
-				// } else {
+			// add() {
+			// 	// if (this.total > this.list.userRelNum) {
+			// 	// 	$message.alert('余额不足')
+			// 	// } else {
 
-					this.giftCoupon[this.isindex].giftNum += 1
-					this.checkPrice();
-				// 	if (this.total > this.list.userRelNum) {
-				// 		$message.alert('余额不足')
-				// 		this.giftCoupon[this.isindex].giftNum -= 1
-				// 		this.checkPrice();
-				// 	}
-				// }
+			// 		this.giftCoupon[this.isindex].giftNum += 1
+			// 		this.checkPrice();
+			// 	// 	if (this.total > this.list.userRelNum) {
+			// 	// 		$message.alert('余额不足')
+			// 	// 		this.giftCoupon[this.isindex].giftNum -= 1
+			// 	// 		this.checkPrice();
+			// 	// 	}
+			// 	// }
 
-				this.$forceUpdate()
+			// 	this.$forceUpdate()
 
-			},
+			// },
 			getDetail(item) {
 				let params = {
 					skuCode: item.skuCode
@@ -253,7 +301,7 @@
 						this.giftInfo = res.giftInfo
 						this.giftCoupon.map(item => {
 							item.ischecked = false //勾选状态，默认false
-							item.giftNum = 0 //默认数量为0
+							item.giftNum = 1 //默认数量为0
 						})
 						res.gtGiftRelDomainList.map((v) => {
 							if (!RegExp(/http/).test(v.dataPic)) {
@@ -292,34 +340,35 @@
 
 			},
 			receiveGift() {
-				let obj = []
-				for (let i = 0; i < this.giftCoupon.length; i++) {
-					if (this.giftCoupon[i].ischecked) {
-						obj.push({
-							skuCode: this.giftCoupon[i].skuCode,
-							goodsContract: this.giftUserCode,
-							goodsName: this.giftCoupon[i].goodsName,
-							goodsNum: this.giftCoupon[i].giftNum,
-							selected: this.giftCoupon[i].ischecked,
-							shoppingType: "08",
-							giftCode:this.giftCode
-						})
-					}
-				}
-				if (obj.length == 0) {  
-					$message.alert('请选择商品')
-					return
-				}else{
-					//新的
-					console.log(obj,'12121212121')
-					console.log(JSON.stringify(obj),'69+9+9+9+9+9+9')
-					// uni.navigateTo({
-					// 	// url:'/pages/settleAccounts/settleAccounts?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
-					// 	url:'pages/hdb/personCenter/contractCar?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
-					// });
-					$router.push('hdb/personCenter/contractCar',{goodsBeanStr:JSON.stringify(obj),pageState:'2',giftCode:this.giftCode,giftUserId:this.giftUserId,userRelNum:this.list.userRelNum })
-					// $router.push("hdb/personCenter/contractCar");
-				}
+				$router.push('hdb/personCenter/contractCar')
+				// let obj = []
+				// for (let i = 0; i < this.giftCoupon.length; i++) {
+				// 	if (this.giftCoupon[i].ischecked) {
+				// 		obj.push({
+				// 			skuCode: this.giftCoupon[i].skuCode,
+				// 			goodsContract: this.giftUserCode,
+				// 			goodsName: this.giftCoupon[i].goodsName,
+				// 			goodsNum: this.giftCoupon[i].giftNum,
+				// 			selected: this.giftCoupon[i].ischecked,
+				// 			shoppingType: "08",
+				// 			giftCode:this.giftCode
+				// 		})
+				// 	}
+				// }
+				// if (obj.length == 0) {  
+				// 	$message.alert('请选择商品')
+				// 	return
+				// }else{
+				// 	//新的
+				// 	console.log(obj,'12121212121')
+				// 	console.log(JSON.stringify(obj),'69+9+9+9+9+9+9')
+				// 	// uni.navigateTo({
+				// 	// 	// url:'/pages/settleAccounts/settleAccounts?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
+				// 	// 	url:'pages/hdb/personCenter/contractCar?goodsBeanStr=' + JSON.stringify(obj) + '&pageState=' + '2' 
+				// 	// });
+				// 	$router.push('hdb/personCenter/contractCar',{goodsBeanStr:JSON.stringify(obj),pageState:'2',giftCode:this.giftCode,giftUserId:this.giftUserId,userRelNum:this.list.userRelNum })
+				// 	// $router.push("hdb/personCenter/contractCar");
+				// }
 			},
 		}
 	}
@@ -421,34 +470,34 @@
 			padding: 2%;
 			margin-bottom: 100rpx;
 			flex-wrap: wrap;
+			overflow: hidden;
 		
 			view {
 				height: 510rpx;
 				width: 48%;
 				background-color: #FFFFFF;
 				margin-bottom: 10rpx;
-
 				p:nth-child(1) {
-					height: 50rpx;
+					height: 20rpx;
 					width: 100%
 				}
 
 				p:nth-child(2) {
 					text-align: center;
-					width: 100%;
-					height: 240rpx;
+					width: 95%;
+					height: 280rpx;
 					margin: 10rpx 0rpx 20rpx 0rpx;
-
+					text-align: center;
 					image {
-						height: 240rpx;
-						width: 250rpx;
+						height: 280rpx;
+						width: 290rpx;
 					}
 				}
 
 				p:nth-child(3) {
 					padding-left: 10rpx;
 					text-align: left;
-					width: 100%;
+					width: 95%;
 					line-height: 30rpx;
 					height: 60rpx;
 					margin: 10rpx 0rpx 10rpx 0rpx;
@@ -459,7 +508,7 @@
 				p:nth-child(4) {
 					padding-left: 10rpx;
 					text-align: left;
-					width: 100%;
+					width: 95%;
 					line-height: 42rpx;
 					height: 42rpx;
 					margin: 5rpx 0rpx 0rpx 0rpx;
@@ -469,7 +518,7 @@
 
 				p:nth-child(5) {
 					padding-left: 10rpx;
-					width: 100%;
+					width: 95%;
 					height: 42rpx;
 					margin: 5rpx 0rpx 0rpx 0rpx;
 					font-size: 24rpx;

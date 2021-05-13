@@ -270,8 +270,9 @@
 						userinfoPhone: this.userPhone
 					})
 					.then(res => {
-						console.log('权益值',res.rows[0].userinfoOcode)
-						this.userinfoOcode = res.rows[0].userinfoOcode
+						// console.log('权益值',res.rows[0].userinfoOcode)
+						if(res)this.userinfoOcode = res.rows[0].userinfoOcode || 1
+						
 						if(this.userinfoOcode == null || this.userinfoOcode ==''){
 							this.userinfoOcode = 1
 						}

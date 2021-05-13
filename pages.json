@@ -984,6 +984,13 @@
 						"navigationBarTextStyle": "white",
 						"navigationBarTitleText": "合约商城购物车"
 					}
+				},{
+					"path": "personCenter/contractCar/shopCar/main",
+					"style":{
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "确认订单页"
+					}
 				},
 
 				//hdb 我的合同

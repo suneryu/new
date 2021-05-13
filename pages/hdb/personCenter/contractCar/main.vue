@@ -1,1479 +1,1392 @@
 <template>
-	<view class="settle-account">
-		<!-- 结算页面 -->
-		<!-- 地址页面 -->
-	<!-- 	<view class="address" @click="addressClick">
-			<view class="address-detail" v-if="isHaveAddress">
-				<view class="address-tel">
-					<text>{{ address.addressMember }}</text>
-					<text>{{ address.addressPhone }}</text>
-				</view>
-				<text class="area">{{ address.provinceName }}{{ address.cityName }}{{ address.areaName }}{{ address.addressDetail }}</text>
-			</view>
-			<view class="address-detail" v-else>
-				<text>请先选择收货地址</text>
-			</view>
-			<i class="iconfont">&#xe61d;</i>
-		</view> -->
-		<div class="accounts-haveAddress" v-if="isHaveAddress" @click="addClass">
-			<div class="accounts-haveAddress-l">
-				<h5>
-					收货人：{{ address.addressMember }}
-					<span>{{ address.addressPhone }}</span>
-				</h5>
-				<p>
-					<span v-if="address.addressDefault == 1" :style="{ background: baseColor }">默认</span>
-					{{ address.provinceName }} {{ address.cityName }} {{ address.areaName }} {{ address.addressDetail }}
-				</p>
+	<view class="shop-cart">	
+	<div class="shopcart">
+		<template v-if="listItems.length > 0">
+			<div class="shopcart-save" @click="edited" v-if="delStatus">编辑</div>
+			<div class="shopcart-save" @click="finished" v-else>完成</div>
+		</template>
+		<!-- 循环遍历类购物车中商品类型 -->
+		<div v-if="listItems.length > 0"  style='margin-top: 100rpx;'>
+			<div v-for='(sanci,index1) in listItems' style='margin-top: 20rpx;'>
+			<ul :class="{addmargin:index1 === dataLength}">
+			<li v-for="(listItem, listIndex) in sanci" :key="listIndex">
+				<div v-for="(list, liIndex) in listItem.shoppingpackageList" :key="liIndex">
+					<div class="memberTit" @click="titCheckBox(list, liIndex)">  <!-- 点击全选按钮-->
+						<i class="iconfont" v-if="list.titChecked == 0" :style="{ color: baseColor }">&#xe671;</i>
+						<i class="iconfont" v-else :style="{ color: '#ededed' }">&#xe671;</i>
+						{{ listItem.warehouseName }} 
+					</div>
+
+					<div class="list_li">
+						<div class="list_pm list_p">
+							<div class="itemGoods" v-for="(item, index) in list.shoppingGoodsList" :key="index">
+								<div class="item-container">
+									<div class="list-l" @click.stop="listCheckBox(item)">
+										<i class="iconfont" :style="{ color: baseColor }" v-if="item.shoppingGoodsCheck == 0">&#xe671;</i>
+										<i class="iconfont" :style="{ color: '#ededed' }" v-else>&#xe671;</i>
+									</div>
+									<div class="list-img" @click.stop="goToGoodsDetail(item)">
+										<img :src="(domain +item.dataPic) || userImgurl" />  <!-- 商品图片-->
+										<span v-if="item.dataState == 2">已下架</span>
+										<span v-if="item.dataState == 3">已失效</span>
+										<span v-if="item.dataState == 1">库存不足</span>
+									</div>
+									<div class="list-r" :style="{ color: item.dataState !== 0 ? '#ccc' : '' }">
+										<p @click.stop="goToGoodsDetail(item)">{{ item.goodsName }}</p>
+										<h3 :style="{ color: item.dataState !== 0 ? '#ccc' : '' }" @click.stop="goToGoodsDetail(item)">
+											{{ item.skuName }}*{{ item.goodsCamount }}
+										</h3>
+										<div class="list-count">
+											<div :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }" style='font-size: 12px;'>
+												<span style='color: #000000;margin-right: 10rpx;'>{{ unitPrice.obpay }}{{ item.pricesetBaseprice }}{{ unitPrice.mapay }}</span>
+												<span>合同价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
+												<!-- <span style='margin-left: 5px;' v-if='item.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>采购价：{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span> -->
+											</div>
+											<view class="list-right-container">
+												<!-- <view
+													class="collect iconfont"
+													:class="{ 'icon-xihuan-xianxing': !item.isCollect, 'icon-xihuan': item.isCollect }"
+													v-bind:style="{ color: baseColor }"
+													@click="goodsItemCollect(item)"
+												></view> -->
+												<div class="list-add">
+													<div @click.stop="subtract(item, index)">
+														<i
+															class="iconfont"
+															:style="{ color: item.goodsCamount  <2 ? '#ccc' : '' }"
+														>
+															&#xe755;
+														</i>
+													</div>
+													<div><input type="text" v-model="item.goodsCamount" disabled /></div>
+													<div @click.stop="add(item, index)"><i class="iconfont">&#xe756;</i></div>
+												</div>
+											</view>
+										</div>
+									</div>
+								</div>
+								<div v-show="list.promotionCode && item.pmPromotionList && item.pmPromotionList.length > 0">
+									<div class="updatePm">
+										<p>
+											<i>促销</i>
+											{{ list.promotionName }}
+										</p>
+										<span @click="updateAction(index, item, list.promotionName)">修改</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			</ul>
+	</div>
+	</div>
+	<div class="shopcart-nulls" v-else><img :src="nullImg" /></div>  <!-- 购物车没有商品展示图片-->
+		
+		<view class="min-sale-num" v-if="listItems.length > 0 && shopSaleMinNum" v-bind:style="{ backgroundColor: baseColor }">{{ shopSaleMinNum }}</view>
+		<div v-if="listItems.length > 0">
+			<div class="shopcart-count">
+				<div @click="countCheckBox">
+					<i class="iconfont" :style="{ color: baseColor }" v-if="countChecked">&#xe671;</i>
+					<i class="iconfont" :style="{ color: '#ededed' }" v-else>&#xe671;</i>
+					全选
+				</div>
+				<div v-if="delStatus" class="addCount">
+					<view class="total-price-and-weight">
+						<view class="total-price">
+							总计：
+							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice }}{{ unitPrice.mapay }}</i>
+							<i :style="{ color: baseColor }" v-if="totalPrice && totalPointPrice">+</i>
+							<i :style="{ color: baseColor }" v-if="totalPrice > 0">{{ unitPrice.obpay }}{{ totalPrice }}{{ unitPrice.mapay }}</i>
+							<i :style="{ color: baseColor }" v-if="totalPrice == 0 && totalPointPrice == 0">{{ unitPrice.obpay }}0.00{{ unitPrice.mapay }}</i>
+						</view>
+						<view class="total-weight" v-if="totalGoodsWeight && totalGoodsWeight > 0">
+							总重：
+							<text>{{ totalGoodsWeight }}{{ weightUnit }}</text>
+						</view>
+					</view>
+
+					<div class="buy-btn" :style="{ background: baseColor }" @click="getTotalPrice">去结算</div>
+				</div>
+				<div class="del" v-else :style="{ color: baseColor, borderColor: baseColor }" @click="delCartShopping">删除</div>
 			</div>
-			<div class="accounts-haveAddress-r"><i class="iconfont">&#xe61d;</i></div>
 		</div>
-		<div class="accounts-noAddress" @click="addClass" v-else>
-			<i class="iconfont">&#xe752;</i>
-			添加收货地址
-		</div>
-
-		<!-- 商品列表 -->
-		<view class="goods-list">
-			<view class="shop" v-for="(shoppingItem, index) in shoppingItems" :key="index" v-if="shoppingItems && shoppingItems.length > 0">
-				<view class="shop-name">{{ shoppingItem.shoppingpackageList[0].shoppingGoodsList[0].memberCname }}</view>
-				<view class="shop-goods" v-for="(list, listIndex) in shoppingItem.shoppingpackageList" :key="listIndex">
-					<view class="shop-goods-item" v-for="(goods, goodsIndex) in list.shoppingGoodsList" :key="goodsIndex">
-						<image :src="goods.dataPic" mode=""></image>
-						<view class="info">
-							<view class="name">{{ goods.goodsName }}</view>
-							<view class="model">{{ goods.skuNo }}</view>
-							<view class="other">
-								<text class="price" :style="{ color: '#ec2b27' }">合同价：{{ goods.pricesetNprice }} 元</text>
-								<text class="num">×{{ goods.goodsCamount }}</text>
-							</view>
-							<!-- <view class="returnGoods">支持7天无理由退货</view> -->
-						</view>
-					</view>
-					<view class="shop-goods-item" v-for="(gift, giftIndex) in list.giftList" :key="giftIndex">
-						<view class="gift">
-							<image :src="gift.dataPic" mode=""></image>
-							<view class="gift-item">赠品</view>
-						</view>
-
-						<view class="info">
-							<view class="name">{{ gift.goodsName }}</view>
-							<view class="model">{{ gift.skuName }}</view>
-							<view class="other">
-								<text class="price">¥ {{ gift.pricesetNprice }}</text>
-								<text class="num">×{{ gift.goodsCamount }}</text>
-							</view>
-							<view class="returnGoods">赠品说明</view>
-						</view>
-					</view>
-
-					<!-- 配送 -->
-					<!-- <view class="distribution">
-						<view class="item">
-							<view class="left">
-								<view class="method">配送方式</view>
-								<view class="postage">邮费</view>
-							</view>
-							<view class="middle">
-								<view class="method">普通快递</view>
-								<view class="postage end">包邮</view>
-							</view>
-							<i class="iconfont">&#xe61d;</i>
-						</view>
-						<view class="item">
-							<view class="method">留言</view>
-							<input class="postage end other" type="text" v-model="list.packageRemark" placeholder="选填，给商家留言" />
-						</view>
-					</view> -->
-				</view>
-			</view>
-		</view>
-
-		<!-- 商品金额 -->
-		<view class="allPrice currency">
-			<view class="item">
-				<view class="title">商品总额</view>
-				<!-- <text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?shoppingCountPrice.toFixed(2):contractRealNum.toFixed(2) }}</text> -->
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{shoppingCountPrice.toFixed(2)}}</text>
-			</view>
-			<view class="item">
-				<view class="title">运费</view>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ totalFreight }}</text>
-			</view>
-			<view class="item">
-				<view class="title">合同额度抵扣</view>
-				<text class="price" :style="{ color: '#ec2b27' }">-¥{{ userRelNum>=accountsSumPrice?accountsSumPrice:userRelNum }}</text>
-			</view>
-			<!-- <view class="item" @click="isShowPreferential">
-				<view class="title" :style="{ color: baseColor }">优惠券</view>
-				<view class="right">
-					<text class="price">-¥{{ comDisMoney }}</text>
-					<i class="iconfont">&#xe61d;</i>
-				</view>
-			</view> -->
-			<view class="total">
-				<text>合计：</text>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:(accountsSumPrice-userRelNum).toFixed(2) }}</text>
-			</view>
-		</view>
-
-		<!-- 选择支付方式 -->
-		<view class="invoice currency" @click="isShowPayMethod">
-			<view class="item">
-				<view class="title">支付方式</view>
-				<view class="right">
-					<text>{{ scontractPmode == '0' ? '线上支付' : '线下支付' }}</text>
-					<i class="iconfont">&#xe61d;</i>
-				</view>
-			</view>
-		</view>
-
-		<!-- 发票 -->
-		<!-- <view class="invoice currency">
-			<view class="item">
-				<view class="title">发票</view>
-				<view class="right">
-					<text>商品明细-个人</text>
-					<i class="iconfont">&#xe61d;</i>
-				</view>
-			</view>
-		</view> -->
-
-		<!-- 底部  立即购买 -->
-		<view class="footer">
-			<text class="copyWith">应付：</text>
-			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:(accountsSumPrice-userRelNum).toFixed(2) }}</text>
-			<view class="buyNow" @click="savePayPrice" :style="{ background: '#004178' }">提交订单</view>
-		</view>
-
-		<!-- 地址弹出框 -->
-		<view class="detail--addressPopup">
-			<u-popup v-model="addressShow" mode="bottom" width="100%" height="966rpx" border-radius="24" closeable="true">
-				<view class="detail--addressPopup--position">配送至</view>
-				<scroll-view scroll-y class="detail--addressPopup--main">
-					<u-radio-group v-model="addressValue" wrap="true" active-color="red" >
-						<u-radio label-size="28" v-for="(item, index) in addressList" :key="index" :name="item.name" @change="radioGroupChange(item)">{{ item.name }}</u-radio>
-					</u-radio-group>
-				</scroll-view>
-
-				<view class="detail--addressPopup--shop"><view class="detail--addressPopup--shop--aside" @click="jumpToAddress">新增其他地址</view></view>
-			</u-popup>
-		</view>
-
-		<!-- 优惠弹出框 -->
-		<view class="detail--welfarePopup">
-			<u-popup v-model="welfareShow" mode="bottom" width="100%" height="966rpx" border-radius="24" closeable="true">
-				<view class="detail--welfarePopup--main">
-					<view class="detail--welfarePopup--main--title">优惠券</view>
-
-					<view class="detail--welfarePopup--main--receive">
-						<u-checkbox-group max="1">
-							<view
-								class="detail--welfarePopup--main--receive--item"
-								:class="item.isDisabled ? 'coupon-checked' : ''"
-								v-for="(item, index) in couponList"
-								:key="index"
-							>
-								<view class="tickets">
-									<view class="ticketItem">
-										<image src="../../static/car/ticketBox.png" mode="widthFix"></image>
-										<view>
-											<view class="ticketLeft">
-												<view>{{ item.pbName }}</view>
-												<view>{{ item.discName }}</view>
-											</view>
-											<view class="ticketRight">
-												<view>{{ item.promotionName }}</view>
-												<!-- <view>2020.12.10-2021.01.09</view> -->
-												<view class="ticketControl">
-													<view>{{ item.couponStart | timeFilter }}至{{ item.couponEnd | timeFilter }}</view>
-												</view>
-											</view>
-											<view class="ticketRightEnd">
-												<u-checkbox
-													shape="circle"
-													v-model="couponList[index].checkModel"
-													@change="checkCoupon(item, index)"
-													:name="item.usercouponId"
-													:disabled="item.isDisabled"
-												></u-checkbox>
-											</view>
-										</view>
-									</view>
-								</view>
-							</view>
-						</u-checkbox-group>
+		<div
+			class="shopcart-screenLeft"
+			v-show="isShow"
+			@click="
+				() => {
+					isShow = false;
+				}
+			"
+		></div>
+		<!-- <div class="shopcart-preferential" v-show="isShow">
+			<div class="shopcart-preferential-con">
+				<p
+					@click="
+						() => {
+							isShow = false;
+						}
+					"
+				>
+					修改促销
+					<i class="iconfont">&#xe609;</i>
+				</p>
+				<ol>
+					<li v-for="(op, opIndex) in options" :key="opIndex">
+						<h3>
+							{{ op.promotionName }}
+							<i class="iconfont" @click="checkPmPromotion(op)" :style="{ color: optionsIndex === opIndex ? baseColor : '#c6c6c6' }">
+								{{ optionsIndex === opIndex ? '&#xe671;' : '&#xe672;' }}
+							</i>
+						</h3>
+					</li>
+				</ol>
+				<div
+					class="pre-btn"
+					:style="{ background: baseColor }"
+					@click="
+						() => {
+							isShow = false;
+						}
+					"
+				>
+					确认
+				</div>
+			</div>
+		</div> -->
+		<u-popup class="quota-popup" v-model="quotaPopup" mode="center" length="90%" border-radius="20" :closeable="true">
+			<view class="popup-container">
+				<view class="quota-title">商品限额信息</view>
+				<view class="quota-info-list">
+					<view class="quota-item" v-for="(item, index) in quotaList" :key="index">
+						<text class="goods-name">{{ item.salequotaSproname }}</text>
+						<text class="quota-info">
+							限额
+							<text v-bind:style="{ color: baseColor }">{{ item.salequotaNuma }}</text>
+							已用
+							<text v-bind:style="{ color: baseColor }">{{ item.salequotaNumu }}</text>
+							剩余
+							<text v-bind:style="{ color: baseColor }">{{ item.salequotaNums }}</text>
+						</text>
 					</view>
 				</view>
-			</u-popup>
-		</view>
-
-		<!-- 支付方式弹框 -->
-		<view class="detail--payMethodPopup">
-			<u-popup v-model="payMethodShow" mode="bottom" width="100%" height="40%" border-radius="24" closeable="true">
-				<view class="detail--payMethodPopup--main">
-					<view class="detail--payMethodPopup--main--position">支付方式</view>
-					<u-radio-group wrap="true" active-color="red" v-model="scontractPmode">
-						<view class="method">
-							<text class="iconfont icon-wallet_icon"></text>
-							<text class="name">线上支付</text>
-							<u-radio label-size="28" name="0"></u-radio>
-						</view>
-						<!-- <view class="method">
-							<text class="iconfont icon-wallet_icon"></text>
-							<text class="name">线下支付</text>
-							<u-radio label-size="28" name="1"></u-radio>
-						</view> -->
-					</u-radio-group>
-				</view>
-			</u-popup>
-		</view>
+			</view>
+		</u-popup>
+	</div>
+	<qj-mini-bottom-nav-bar :selectNavIndex="navIndex" :footerMenu="footerMenu"></qj-mini-bottom-nav-bar>
 	</view>
 </template>
 
 <script>
-// import moment from 'moment';
-import http from '@/api/http.js';
-import { checkImgUrl } from '@/utils/checkImg.js';
-import { $storage, $router, $message } from '@/utils/prototype/vue.js';
 import {
-	addressList,
-	queryToContract,
-	calculateFreightFare,
-	queryShoppingToContract,
-	saveContract,
-	coupon,
-	detail,
-	updateAddress, 
-	getVopCarriageNew, // 获取京东运费
-	queryToContractCodeList,
-	syncContractPayState,
-	saveOrderToPay, //设置支付方式
-	saveOrderToBatchPay
+	getTopPerMenuList,
+	queryShoppingPage,
+	updateShoppingGoodsCheckState,
+	updateShoppingGoodsNum,
+	deleteShoppingGoodsBatch,
+	updateShoppingGoodsPmInfo,
+	checkBatchCollectExit,
+	saveCollect,
+	collection,
+	checkStSaleminnum,
+	queryShopsetByTypemap,
+	checkStSalequota,
+	checkSkuOne
+} from '@/node_modules/qj-mini-pages/libs/api/interface.js';
+import {
+	userapplyStateAndAuth
 } from '@/api/interface.js';
-import { formatTimes } from '@/utils/prototype/date.js';
+import {
+	queryShoppingPageNew,
+	queryNewUserinfoPageByDealerqt
+} from '@/api/interfaceHDB.js';
+import {
+	$storage,
+	$message,
+	$router
+} from '@/utils/prototype/vue.js'
 export default {
 	data() {
 		return {
-			checkImgUrl,
-			usercouponId: '', //优惠券名字
-			paymentList: [
-				{
-					name: '微信支付',
-					ischecked: false
-				},
-				{
-					name: '货到付款',
-					ischecked: false
-				}
-			],  
-			// 地址弹出层
-			addressShow: false,
-			isHaveAddress: false, //判断是否存在地址
-			address: {}, // 选择的地址
-			addressList: [], // 所有的地址列表
-			addressValue: '', // 显示的地址信息
-
-			shoppingItems: [],
-			totalDiscountPrice: 0.0, //权益差价
-			shoppingCountPrice: 0, //商品总金额
-
-			discount: 0.0, //优惠劵
-			freight: 0.0, // 普通商品运费
-			jdFreight: 0.0, // 京东商品运费
-			comDisMoney: 0.0, //优惠
-			copyComDisMoney: 0.0, // 复制一份优惠值
-			contractGoodsList: [], //结算时候需要将所有的商品信息传过去
-			scontractBlance: '', // 结算方式 0 全款 1 订金 2 分次 3 分期    多个用,分割
-			scontractPmode: 0, // 付款方式 0 线上、 1 线下  2 不付款  多个用,分割
-			orderDomainStr: [],
-			contractSubCode: '',
-			query: {},
+			sanci:[1,2,3],
+			title: '购物车',
+			leftIcon: false,
+			rightIcon: false,
+			titChecked: false,
+			countChecked: false,
+			isShow: false,
+			titCheckIndex: 0,
+			listItems: [],
+			userImgurl: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/img_default.jpg',
+			nullImg: this.$qj.imgDomain + '/paas/shop-master/c-static/images/wxminiImg/noCar.png',
 			baseColor: '',
-			couponList: [], //优惠劵列表
-			currentIndex: -1,
-			currentCoupon: {},
-			pmContractGoodsDomainListStr: [], // 获取优惠劵列表需要传所有商品的参数
-			selectPromotionName: '', // 选中的优惠劵名字
-			pageState: 1,
-			welfareShow: false, //优惠弹出框
-			//商品可使用的优惠券
-			discountList: [],
-			skuId: '',
-			goodsNum: '',
-			contractBlance: '',
-			payMethodShow: false, // 支付方式弹出框
-			addressParams: {}, //  jd地址获取运费传参数据
-			skuInfo: [],
-			goodsBeanStr: '',
-			shoppingGoodsIdStr: '',
-			giftCode:'',
-			giftUserId:'',
-			userRelNum:0,
-			contractRate:1,
-			contractRealNum:0
+			delStatus: true, // 是编辑还是完成
+			totalPointPrice: 0,
+			totalPrice: 0,
+			options: [], //点修改后的所有营销活动
+			optionsIndex: -1, //当前默认的营销活动名称index
+			shopIdAttr: [], //所有的商品id
+			shopSetInfo: '',
+			// 起送量
+			shopSaleMinNum: '',
+			totalGoodsWeight: 0,
+			weightUnit: '',
+			quotaPopup: false,
+			quotaList: [],
+			checkSkuMultipleData: [],
+			batchCollectData: [],
+			
+			navIndex: 2,
+			footerMenu: [],
+			typeList:[],   // 分好类的所有类型的商品
+			domain :"",
+			userinfoOcode:"", //权益值
+			userinfoType:"",   //用户类型
+			userPhone:"" ,  //手机号
+			checkModifyAudit:"",
+			userInfoCode:"",
+			dataLength:""
 		};
 	},
-	onLoad(options) {
-		this.goodsBeanStr = options.goodsBeanStr;
-		console.log(options, '3++3++3+3+33+3');
-		this.giftCode = options.giftCode;
-		this.giftUserId = options.giftUserId
-		this.shoppingGoodsIdStr = options.shoppingGoodsIdStr;
-		this.pageState = options.pageState;
-		this.skuId = options.skuId;
-		this.goodsNum = options.goodsNum;
-		this.userRelNum = options.userRelNum || 0
-		wx.setNavigationBarTitle({
-			title: '确认订单页'
-		});
+	computed: {
+		unitPrice() {
+			// mapay 主单位（后面）  mbpay 主单位（前面）  obpay 辅单位（前面）   oapay 辅单位（后面）
+			return this.$qj.state.unitPrice || this.$qj.storage.get('unitPrice');
+		}
 	},
 	onShow() {
-		// 初始化金额信息
-		this.shoppingCountPrice = 0.0;
-
-		// 初始化地址信息
-		// this.getAddressList();
-		this.initAddressData()
-
-		//地址接口
-		let shoppingGoodsIdStr = this.shoppingGoodsIdStr;
-		//商品总价+ 商品列表
-		// let params = this.pageState == 0 ? { skuId: this.skuId, goodsNum: this.goodsNum } : { shoppingGoodsIdStr: shoppingGoodsIdStr };
-		// let url = this.pageState == 0 ? queryToContract : queryShoppingToContract;
-
-		//-----------
-		let params = '';
-		let url = '';
-		if (this.pageState == 0) {
-			params = { skuId: this.skuId, goodsNum: this.goodsNum };
-			url = queryToContract;
-		}
-		if (this.pageState == 1) {
-			params = { shoppingGoodsIdStr: this.shoppingGoodsIdStr };
-			url = queryShoppingToContract;
-		}
-		if (this.pageState == 2) {
-			params = { goodsBeanStr: this.goodsBeanStr };
-			url = queryToContractCodeList;
-		}
-		//-----------
-		http.post('/web/oc/shopping/queryToContractCodeList.json', params).then(res => {
-			// 如果返回nologin，则return，避免请求并行造成的弹出多个授权框
-			if (res.errorCode == 'nologin') {
-				return;
-			}
-			if (res) {
-				this.shoppingItems = res;
-				this.shoppingItems.map(v => {
-					v.shoppingpackageList.map(vk => {
-						this.comDisMoney += vk.disMoney;
-						this.copyComDisMoney += vk.disMoney;
-
-						// 每个商家  京东商家
-						if (v.shoppingType == '40') {
-							this.addressParams = {
-								memberCode: v.memberCode,
-								tenantCode: v.tenantCode,
-								channelCode: 'jdvop'
-							};
-						}
-
-						vk.shoppingGoodsList.map(val => {
-							if (v.shoppingType == '40') {
-								this.skuInfo.push({
-									skuEocode: val.goodsShowno,
-									goodsNum: val.goodsCamount
-								});
-							}
-
-							val.dataPic =this.$domain+ val.dataPic;
-							this.contractGoodsList.push(val);
-							this.pmContractGoodsDomainListStr.push(val);
-						});
-						if (vk.giftList) {
-							vk.giftList.map(val => {
-								val.dataPic = val.dataPic;
-								this.contractGoodsList.push(val);
-							});
-						}
-					});
-				});
-				let itemBak = this.shoppingItems[0].shoppingpackageList[0].shoppingGoodsList[0]
-				this.contractRate = itemBak.pricesetNprice/itemBak.pricesetBaseprice
-				//运费接口
-				this.calculateFreight();
-				// 有京东商品才调用这个接口
-				if (JSON.stringify(this.addressParams) != '{}') {
-					this.calculateJdFreight();
-				}
-			} else {
-				$message.alert(res.msg);
-			}
-		});
+		this.domain=this.$domain ;
+		this.queryShopSet();
+		this.commonMounted(true, true);
 	},
-	filters: {
-		timeFilter(val) {
-		   let time = new Date(val)
-		   return time.getFullYear()+'-'+time.getMonth()+'-'+time.getDate()
-		  }
+	onLoad(options) {
+		// this.footerMenu = this.$qj.storage.get('footerMenu'); 
 	},
 	mounted() {
-		this.discount = 0;
-		this.currentIndex = -1;
-		this.freight = 0;
-		this.baseColor = '#' + this.$state.baseColor;
-		this.shoppingCountPrice = 0;
+		this.userinfoType = $storage.get('loginInfor').userinfoType;
+		this.userInfoCode = $storage.get('loginInfor').userInfoCode;
+		this.userPhone = $storage.get('loginInfor').userPhone;
+		this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
+		this.delStatus = true;
+		// this.commonMounted();
+		// 获取权益值
+		// this.getQY();
+		this.dataLength = this.sanci.length-1
 
-		if (this.$root.$mp.query.addressMember) {
-			this.isHaveAddress = true;
-			this.address = this.$root.$mp.query;
-		}
-	},
-	computed: {
-		accountsSumPrice() {
-			// 优惠券金额大于 商品金额  应付运费
-			if (this.comDisMoney > this.shoppingCountPrice) {
-				return this.freight.toFixed(2);
-			} else {
-				return parseFloat((this.shoppingCountPrice - this.totalDiscountPrice - this.comDisMoney + this.totalFreight).toFixed(2));
-			}
-		},
-		// 总运费
-		totalFreight() {
-			return this.freight + this.jdFreight;
-		}
 	},
 	methods: {
-		initAddressData() {
-			// 初始化地址信息
-			this.addressList = {};
-		
-			if (this.$qj.storage.get('changeaddress') && this.$qj.storage.get('changeaddress') != '') {
-				this.address = this.$qj.storage.get('changeaddress');
-				this.isHaveAddress = true;
-			} else {
-				this.$qj
-					.http(this.$qj.domain)
-					.get(addressList)
-					.then(res => {
-						if (res && res.length > 0 && res[0].addressDefault == '1') {
-							this.isHaveAddress = true;
-							this.address = res[0];
-						} else {
-							this.isHaveAddress = false;
-						}
-					});
-			}
-		},
-		//添加地址
-		addClass() {
-			this.$qj.router.push('user_modules/address/manage', {
-				json: 1
-			});
-		},
-		// 跳到地址页面
-		jumpToAddress() {
-			this.addressShow = false;
-			uni.navigateTo({
-				url: '/pages/address/list/index'
-			});
-		},
-		// 跳到支付方式页面
-		jumpToPayMethods(contractBillcode, contractBbillcode) {
-			if (contractBbillcode) {
-				uni.redirectTo({
-					url: `/pages/payMethods/payMethods?contractBbillcode=${contractBbillcode}`
-				});
-			} else {
-				uni.redirectTo({
-					url: `/pages/payMethods/payMethods?contractBillcode=${contractBillcode}`
-				});
-			}
-		},
-
-		// 计算运费
-		calculateFreight() {
-			//运费接口
-			this.shoppingCountPrice = 0;
-			this.contractRealNum = 0
-			let freightFare = '';
-			if (this.pageState == 0) {
-				freightFare = {
-					areaCode: this.address.areaCode,
-					skuIdStr: JSON.stringify([{ skuId: this.skuId, goodsNum: this.goodsNum }])
-				};
-			}
-
-			if (this.pageState == 1) {
-				freightFare = {
-					areaCode: this.address.areaCode,
-					shoppingGoodsIdStr: this.shoppingGoodsIdStr
-				};
-			}
-
-			if (this.pageState == 2) {
-				freightFare = {
-					areaCode: this.address.areaCode,
-					skuIdStr: this.goodsBeanStr
-				};
-			}
-
-			http.post(calculateFreightFare, freightFare)
+		// 查询 认证授权 状态
+		searchStatus() {
+			let that = this
+			let paramsStatus = {}
+			paramsStatus.userCode = this.userInfoCode
+			this.$qj
+				.http(this.$qj.domain)
+				.get(userapplyStateAndAuth, paramsStatus)
 				.then(res => {
-					if (res && res.success) {
-						this.freight = res.dataObj;
-					} else {
-						if ((res.errorCode = '-1')) {
-							$message.alert(res.msg);
-						}
+					console.log("认证授权状态，",res)
+					if (res.checkModifyAudit == '3') {
+						that.checkModifyAudit = "3"
 					}
+		
+				});
+		},
+		//查询权益
+		getQY(){
+			this.$qj
+				.http(this.$qj.domain)
+				.get(queryNewUserinfoPageByDealerqt, {
+					userinfoPhone: this.userPhone
 				})
-				.then(() => {
-					this.shoppingItems.map((v, k) => {
-						v.shoppingpackageList.map(vk => {
-							vk.shoppingGoodsList.map((val, index) => {
-								this.shoppingCountPrice += val.pricesetNprice * val.goodsCamount;
+				.then(res => {
+					console.log('权益值',res.rows[0].userinfoOcode)
+					this.userinfoOcode = res.rows[0].userinfoOcode
+				})
+		},
+		
+		onShareAppMessage(res) {
+			  return {
+			   title: '安得利',
+			   path: '/pages/shopcart/main'
+			  }
+		},
+		//查询购物车顶部提示
+		queryShopSet() {
+			this.$qj
+				.http(this.$qj.domain)
+				.get(queryShopsetByTypemap, {
+					shopsetType: '1'
+				})
+				.then(res => {
+					console.log('查询购物车顶部提示',res);
+					if (res.length > 0) {
+						this.shopSetInfo = res[0].shopsetInfo;
+					}
+				});
+		},
+
+		//查询购物车商品页
+		commonMounted(isCheckCollect = false, isCheckSkuMultiple = false) {
+			let that = this;
+			let a = {
+				shoppingType : '6',
+				memberBcode:$storage.get('loginInfor').userInfoCode
+			}
+			this.$qj
+				.http(this.$qj.domain)
+				.get(queryShoppingPageNew,a)
+				.then(res => {
+					console.log('查询购物车商品页',res)
+					if (res && res.rows) {
+						that.typeList=[];
+						this.listItems = []
+						// let listItemsBak = JSON.parse(JSON.stringify(res.rows))
+						// let listBak = []
+						// let wareName = []
+						// res.rows[0].shoppingpackageList[0].shoppingGoodsList.forEach(item=>{
+						// 	wareName.push(item.warehouseName)
+						// })
+						// let warehouseName = [...new Set(wareName)]
+						// warehouseName.forEach((item,index)=>{
+						// 	let aa = JSON.parse(JSON.stringify(res.rows))
+						// 	aa[0].warehouseName = item
+						// 	aa[0].shoppingpackageList[0].shoppingGoodsList = res.rows[0].shoppingpackageList[0].shoppingGoodsList.filter(items=>items.warehouseName== item)
+							res.list.map(v => {
+								if (v.shoppingpackageList) {
+									v.rowsCheck = 1;
+									v.shoppingpackageList.map(v1=>{
+										v1.titChecked = 1
+										if (v1.shoppingGoodsList.filter(vm => vm.shoppingGoodsCheck === 0).length === v1.shoppingGoodsList.length) {
+											v1.titChecked = 0;
+										}
+									})
+									if (v.shoppingpackageList.filter(vm => vm.titChecked === 0).length === v.shoppingpackageList.length) {
+										v.rowsCheck = 0;
+									}
+								}
+								this.listItems.push([v])
 							});
-						});
-					});
-					// if(Number(this.userRelNum)<Number(this.shoppingCountPrice + this.freight)){ //contractRealNum
-					// 	this.shoppingItems.map((v, k) => {
-					// 		v.shoppingpackageList.map(vk => {
-					// 			vk.shoppingGoodsList.map((val, index) => {
-					// 				let count = val.pricesetBaseprice/(val.goodsCamount*val.pricesetBaseprice)*this.userRelNum
-					// 				this.contractRealNum += ((val.pricesetNprice - count)/this.contractRate)* val.goodsCamount
-					// 			});
-					// 		});
-					// 	});
-					// 	this.contractRealNum = parseFloat(this.contractRealNum)
-					// }
-				});
-		},
-		// 计算京东商品运费
-		calculateJdFreight() {
-			this.addressParams.skuInfos = JSON.stringify(this.skuInfo);
-			this.addressParams.areaStr = this.address.provinceName + this.address.cityName + this.address.areaName + this.address.addressDetail;
+							// this.listItems = res.list
+						// 	listBak.push(aa)
+						// })
+						
+						if (this.listItems.filter(val => val[0].rowsCheck === 0).length === this.listItems.length) {
+							this.countChecked = true;
+						} else {
+							this.countChecked = false;
+						}
+						// this.listItems = [...this.listItems]
+						
+						// res.list.forEach(item=>{
+						// 	item.shoppingpackageList
+						// })
 
-			// 获取京东运费
-			http.post(getVopCarriageNew, this.addressParams).then(res => {
-				if (res.success) {
-					this.jdFreight = JSON.parse(res.dataObj).totalFreight;
-				}
-			});
-		},
-
-		// 选择地址
-		// 地址选框改变
-		radioGroupChange(e) {
-			var str = e;
-			let params = {
-				addressMember: str.addressMember,
-				addressPhone: str.addressPhone,
-				provinceCode: str.provinceCode,
-				provinceName: str.provinceName,
-				cityCode: str.cityCode,
-				cityName: str.cityName,
-				areaCode: str.areaCode,
-				areaName: str.areaName,
-				roadName: str.roadName,
-				roadCode: str.roadCode,
-				addressDefault: 1,
-				addressDetail: str.addressDetail,
-				addressId: str.addressId,
-				addressCode: str.addressCode,
-				dataState: 0
-			};
-			http.get(updateAddress, params).then(res => {
-				if (res && res.success) {
-					// this.getAddressList();
-
-					// 成功的话替换地址
-					this.address = this.addressList.find(val => val.addressId == str.addressId);
-
-					// 计算运费
-					this.calculateFreight();
-					// 有京东商品才调用这个接口
-					if (JSON.stringify(this.addressParams) != '{}') {
-						this.calculateJdFreight();
-					}
-				}
-			});
-		},
-
-		// 获取地址列表
-		getAddressList() {
-			http.get(addressList).then(res => {
-				if (res && res.length > 0) {
-					const arr = res.filter(item => {
-						return item.addressDefault == 1;
-					});
-					if (arr.length > 0) {
-						this.address = arr[0];
-					} else {
-						this.address = res[0];
-					}
-
-					this.isHaveAddress = true;
-				} else {
-					this.isHaveAddress = false;
-				}
-
-				this.addressList = res.map(item => {
-					if (item.roadName) {
-						return { name: item.provinceName + ' ' + item.cityName + ' ' + item.areaName + ' ' + item.addressDetail + ' ' + item.roadName, ...item };
-					} else {
-						return { name: item.provinceName + ' ' + item.cityName + ' ' + item.areaName + ' ' + item.addressDetail, ...item };
-					}
-				});
-				this.addressValue = this.addressList[0].name;
-			});
-		},
-		// 取消选择地址
-		cancelAddress() {
-			this.addressShow = false;
-		},
-		// 去选择地址
-		addressClick() {
-			this.addressShow = true;
-		},
-		goBack() {
-			$router.back(1, { stay: 500 });
-		},
-		addClass() {
-			$router.push('user_modules/address/manage', { json: 1 });
-		},
-		isShowPreferential() {
-			if (this.couponList.length > 0) {
-				return;
-			}
-			http.post(coupon.queryUserConByGoods, {
-				pmContractGoodsDomainListStr: JSON.stringify(this.pmContractGoodsDomainListStr)
-				// skuCode:this.pmContractGoodsDomainListStr[0].skuCode,
-				// skuNo:this.pmContractGoodsDomainListStr[0].skuNo,
-				// classtreeCode:this.pmContractGoodsDomainListStr[0].classtreeCode,
-				// brandCode:this.pmContractGoodsDomainListStr[0].brandCode,
-				// pntreeCode:this.pmContractGoodsDomainListStr[0].pntreeCode,
-				// memberCode:this.pmContractGoodsDomainListStr[0].memberCode,
-			}).then(res => {
-				// console.log(res,666)
-				if (res.length > 0) {
-					this.couponList = res.map(item => {
-						return {
-							...item,
-							checkModel: false
+						this.$forceUpdate();
+						let totalPrice = 0;
+						let totalPointPrice = 0;
+						let productPresentPriceAll = 0;
+						// // 商品选择操作数组
+						this.shopIdAttr = [];
+						// // 批量check商品收藏状态操作数组
+						let batchCheckCollectArr = [];
+						// // check起送量操作数组
+						let checkStSaleminnumObj = {
+							packageList: []
 						};
-					});
-					this.couponList.map(v => {
-						v.couponStart = formatTimes(v.couponStart);
-						v.couponEnd = formatTimes(v.couponEnd);
-						if (v.discStart > this.shoppingCountPrice) {
-							v.isDisabled = true;
-						} else {
-							v.isDisabled = false;
-						}
-					});
-					this.welfareShow = true;
-				} else {
-					// this.welfareShow = false;
-					$message.alert('暂无优惠卷!');
-				}
-			});
-		},
-		// 支付方式弹窗框
-		isShowPayMethod() {
-			this.payMethodShow = true;
-		},
-		checkCoupon(item, index) {
-			this.couponList[index].checkModel = !this.couponList[index].checkModel;
-
-			if (this.couponList[index].checkModel) {
-				this.currentCoupon = this.couponList[index];
-				this.couponOK();
-			} else {
-				this.currentCoupon = [];
-				this.discount = 0;
-				this.comDisMoney = 0;
-				this.selectPromotionName = ``;
-			}
-		},
-		couponOK() {
-			this.selectPromotionName = this.currentCoupon.promotionName;
-			if (Object.keys(this.currentCoupon).length > 0) {
-				if (this.currentCoupon.pbCode === '0003' || this.currentCoupon.pbCode === '0004') {
-					this.discount = this.currentCoupon.discAmount;
-					this.comDisMoney = (this.copyComDisMoney + this.discount).toFixed(2);
-				}
-				if (this.currentCoupon.pbCode === '0005') {
-					this.discount = this.shoppingCountPrice * parseFloat(1 - this.currentCoupon.discAmount / 100).toFixed(2);
-					this.comDisMoney = (this.copyComDisMoney + this.discount).toFixed(2);
-				}
-			}
-		},
-		// 保存订单
-		savePayPrice() {
-			if (JSON.stringify(this.address) === '{}') {
-				$message.alert('请选择地址');
-			} else {
-				let shoppingGoodsIdStr = this.shoppingGoodsIdStr;
-				this.orderDomainStr = [];
-				let _htmlMessage = [];
-				let pares = $storage.get('contractTypepro');
-				let code;
-				let typepro;
-
-				if (pares && pares == '01') {
-					code = $storage.get('goodsPmbillno');
-					typepro = '01';
-				} else {
-					code = $storage.get('promotionCode');
-					typepro = '0';
-				}
-				let dateTimes = new Date();
-				let minTimes = dateTimes.getMinutes();
-				dateTimes.setMinutes(minTimes + $storage.get('payTime'));
-				let htmlDomainStr = [
-					{
-						contractPaytime: new Date().getTime(),
-						// contractPaydate: null,
-						goodsPbillno: $storage.get('goodsPbillno'), // 成团人数
-						goodsPmbillno: code, // 团购 平团  描述营销单号
-						contractProperty: '0', //订单性质
-						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
-						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
-						contractPmode: this.userRelNum>=this.accountsSumPrice?0:1, //付款方式：场内、场外，即线上、线下
-						contractPumode: '0', //提货方式
-						goodsSupplierName: '', //配送商
-						goodsSupplierCode: '', //配送商Code
-						packageList: [],
-						contractEcurl:this.giftCode,
-						areaName:$storage.get('loginInfor').userPhone,
-						employeeCode:this.giftUserId,
-						employeeName:this.userRelNum,
-						packageMode: '', //配送方式
-						contractType: this.shoppingItems[0].shoppingType,
-						ocContractSettlList:
-							Object.keys(this.currentCoupon).length > 0
-								? [
-										{
-											contractSettlBlance: 'COP',
-											contractPmode: '0',
-											contractSettlGmoney: Number(this.currentCoupon.couponAmount),
-											contractSettlPmoney: Number(this.discount.toFixed(2)),
-											contractSettlOpno: this.currentCoupon.usercouponCode,
-											contractSettlOpemo: this.currentCoupon.promotionCode
+						// // check商品起订量倍数
+						let checkSkuMultipleArr = [];
+						// // 获取当前零配件商品权益的价格 1-权益值
+						let qyNumber = 0;
+						// if(aa[0].shoppingpackageList[0].shoppingGoodsList.length>0 && this.userinfoType == "2" && this.checkModifyAudit == "3"){
+						// 	aa[0].shoppingpackageList[0].shoppingGoodsList.map(price =>{
+						// 		qyNumber += price.pricesetNprice * (1-this.userinfoOcode)
+						// 	})
+						// }
+						res.rows.map(v => {
+							if (v.shoppingpackageList) {
+								v.shoppingpackageList.map((val, index) => {
+									checkStSaleminnumObj.packageList[index] = {
+										contractGoodsList: []
+									};
+									console.log(val.disMoney,'val.disMoney------')
+									productPresentPriceAll += Number(val.disMoney);
+									this.productPresentPriceAll = productPresentPriceAll;
+									totalPointPrice += Number(val.sumMoney);
+									totalPrice += Number(val.pricesetRefrice);
+									this.totalPointPrice = totalPointPrice - productPresentPriceAll;
+									this.totalPointPrice = this.totalPointPrice - qyNumber;
+									this.totalPrice = totalPrice;
+									val.shoppingGoodsList.map(vk => {
+										if (vk.shoppingGoodsCheck === 0) {
+											checkStSaleminnumObj.packageList[index].contractGoodsList.push(vk);
 										}
-								  ]
-								: [],
-						contractInmoney: (Number(this.shoppingCountPrice) - this.copyComDisMoney + Number(this.totalFreight.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)
-						contractMoney: (Number(this.shoppingCountPrice) - this.copyComDisMoney - Number(this.discount.toFixed(2))).toFixed(2), // 最终销售含税金额 (优惠后)
-						goodsReceiptMem: this.address.addressMember, //收货人
-						goodsReceiptPhone: this.address.addressPhone, //收货联系方式
-						goodsReceiptArrdess: this.address.provinceName + this.address.cityName + this.address.areaName + this.address.addressDetail,
-						areaCode: this.address.areaCode, //从地址上面带过来`
-						contractNbillcode: this.shoppingItems[0].contractNbillcode,
-						skuIdList: this.shoppingGoodsIdStr,
-						giftSkuIdList: []
-					}
-				];
-
-				this.shoppingItems.map((v, index) => {
-					this.orderDomainStr.push({
-						contractPaytime: new Date().getTime(),
-						// contractPaydate: null,
-						goodsPbillno: $storage.get('goodsPbillno'), // 成团人数
-						goodsPmbillno: code, // 团购 平团  描述营销单号
-						contractProperty: '0', //订单性质
-						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
-						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
-						contractPmode: this.userRelNum>=this.accountsSumPrice?0:1, //付款方式：场内、场外，即线上、线下
-						contractPumode: '0', //提货方式
-						goodsSupplierName: '', //配送商
-						goodsSupplierCode: '', //配送商Code
-						packageMode: '', //配送方式
-						contractType: v.shoppingType,
-						packageList: [],
-						contractEcurl:this.giftCode,
-						areaName:$storage.get('loginInfor').userPhone,
-						employeeCode:this.giftUserId,
-						employeeName:this.userRelNum,
-						//contractType: this.$state.shoppingType[index].shoppingType,
-						ocContractSettlList:
-							Object.keys(this.currentCoupon).length > 0
-								? [
-										{
-											contractSettlBlance: 'COP',
-											contractPmode: '0',
-											contractSettlGmoney: Number(this.currentCoupon.couponAmount),
-											contractSettlPmoney: Number(this.discount.toFixed(2)),
-											contractSettlOpno: this.currentCoupon.usercouponCode,
-											contractSettlOpemo: this.currentCoupon.promotionCode
+										this.shopIdAttr.push(vk.shoppingGoodsId);
+										console.log(isCheckCollect,'---isCheckCollect')
+										if (isCheckCollect) {
+											batchCheckCollectArr.push({
+												collectType: '0',
+												collectOpcode: vk.skuCode
+											});
 										}
-								  ]
-								: [],
-						// shoppingGoodsIdList:this.$state.shoppingGoodsIdStr,
-						contractInmoney: (Number(this.shoppingCountPrice) - this.copyComDisMoney + Number(this.totalFreight.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)
-						contractMoney: (Number(this.shoppingCountPrice) - this.copyComDisMoney - Number(this.discount.toFixed(2))).toFixed(2), // 最终销售含税金额 (优惠后)
-						goodsReceiptMem: this.address.addressMember, //收货人
-						goodsReceiptArrdess: this.address.provinceName + this.address.cityName + this.address.areaName + this.address.addressDetail, //收货地址
-						goodsReceiptPhone: this.address.addressPhone, //收货联系方式
-						areaCode: this.address.areaCode //从地址上面带过来`
-					});
-					v.shoppingpackageList.map(val => {
-						let list = [];
-						if (val.giftList) {
-							list = [...val.giftList, ...val.shoppingGoodsList];
-						} else {
-							list = val.shoppingGoodsList;
-						}
-						let shoppingGoodsIdList = [];
-						val.shoppingGoodsList.map(vk => {
-							shoppingGoodsIdList.push(vk.shoppingGoodsId);
-						});
-						if (val.disMoney && val.disMoney > 0) {
-							if (val.pmCalcBeanList && val.pmCalcBeanList.length > 0) {
-								val.pmCalcBeanList.map(els => {
-									this.orderDomainStr[index].ocContractSettlList.push({
-										contractSettlBlance: els.promotionInType == 0 ? 'PM' : 'COP',
-										contractPmode: '0',
-										contractSettlGmoney: Number(els.disMoney.toFixed(2)),
-										contractSettlPmoney: Number(els.disMoney.toFixed(2)),
-										contractSettlOpno: els.promotionCode,
-										contractSettlOpemo: els.promotionName
+										console.log(isCheckSkuMultiple,'---isCheckSkuMultiple')
+										if (isCheckSkuMultiple) {
+											checkSkuMultipleArr.push({
+												skuNo: vk.skuNo,
+												goodsNo: vk.goodsNo
+											});
+										}
 									});
 								});
 							}
-							htmlDomainStr[0].ocContractSettlList = this.orderDomainStr.ocContractSettlList;
-						}
-						this.orderDomainStr[index].packageList.push({
-							contractGoodsList: list,
-							shoppingGoodsIdList: shoppingGoodsIdList,
-							promotionCode: val.promotionCode,
-							packageRemark: val.packageRemark
 						});
-						htmlDomainStr[0].packageList.push({
-							contractGoodsList: list,
-							shoppingGoodsIdList: [],
-							promotionCode: val.promotionCode,
-							packageRemark: val.packageRemark
-						});
-					});
+						// })
+						//检查起送量
+						this.checkSaleMinNum(data => {
+							this.shopSaleMinNum = data;
+						}, checkStSaleminnumObj);
+						//批量检查商品收藏状态,在进行收藏操作之后必须调用
+						this.batchCheckCollect(batchCheckCollectArr);
+						// check商品起订量倍数（用户级
+						this.checkSkuMultiple(checkSkuMultipleArr);
+					} else {
+						this.listItems = [];
+					}
 				});
-				if (htmlDomainStr[0].ocContractSettlList.length) {
-					if (htmlDomainStr[0].ocContractSettlList[0].contractSettlPmoney > htmlDomainStr[0].contractInmoney) {
-						htmlDomainStr[0].ocContractSettlList[0].contractSettlPmoney = htmlDomainStr[0].contractInmoney;
-						htmlDomainStr[0].contractMoney = 0;
+				this.$forceUpdate();//在这里，强制刷新之后，页面的结果变为'小红'
+				
+		},
+
+		/**
+		 * check商品起订量倍数（用户级）
+		 */
+		checkSkuMultiple(data = []) {
+			if (data.length != 0) {
+				this.$qj.message.loading();
+				this.$qj
+					.http(this.$qj.domain)
+					.post(checkSkuOne, { rsSkuDomainListJson: JSON.stringify(data) })
+					.then(res => {
+						console.log('check商品起订量倍数',res);
+						if (res.success) {
+							this.checkSkuMultipleData = res.dataObj;
+							console.log('listItems----',this.listItems)
+							this.checkSkuMultipleData.map(item => {
+								this.listItems.map(vi => {
+									vi.shoppingpackageList.map(vj => {
+										vj.shoppingGoodsList.map(vk => {
+											if (item.skuNo == vk.skuNo) {
+												vk.skuOneNum = item.skuOneNum;
+											}
+										});
+									});
+								});
+							});
+						}
+					});
+			}
+		},
+
+		/**
+		 * 批量检查商品收藏状态
+		 * 在进行收藏操作之后必须调用
+		 */
+		batchCheckCollect(data = []) {
+			if (data.length != 0) {
+				this.$qj.message.loading();
+				this.$qj
+					.http(this.$qj.domain)
+					.post(checkBatchCollectExit, { collectListStr: JSON.stringify(data) })
+					.then(res => {
+						console.log(res);
+						if (res.length > 0) {
+							this.batchCollectData = [...this.batchCollectData, ...res];
+							res.map(k => {
+								this.listItems.map(v => {
+									v.shoppingpackageList.map(vi => {
+										vi.shoppingGoodsList.map(vk => {
+											if (k.collectOpcode == vk.skuCode) {
+												vk.collectObj = k;
+												vk.isCollect = true;
+											}
+										});
+									});
+								});
+							});
+
+							this.$forceUpdate();
+						}
+					});
+			}
+		},
+		// 点击选择购物车在当前下的商品
+		titCheckBox(list, liIndex) {
+			console.log('商品全选数据。。。',list,'--------',liIndex);
+			let ids = [];
+			list.shoppingGoodsList.map(v => {
+				ids.push(v.shoppingGoodsId);
+			});
+			let params = {
+				shoppingCode: list.shoppingCode,
+				checkState: list.titChecked === 0 ? 1 : 0,
+				shoppingGoodsIdStr: ids.join(','),
+				channelCode: 'channelCode'
+			};
+			console.log('点击全选，或者全部选，入参---',params)
+			console.log('查询商品是否勾选接口')
+			this.$qj
+				.http(this.$qj.domain)
+				.post(updateShoppingGoodsCheckState, params)
+				.then(res => {
+					console.log('返回数据',res)
+					if (res && res.success) {
+						// 查询购物车信息接口
+						this.commonMounted();
 					}
-				}
-
-				// let orderDomainStr = this.pageState == '0' ? JSON.stringify(htmlDomainStr) : JSON.stringify(this.orderDomainStr);
-
-				//----
-				let orderDomainStr = '';
-				if (this.pageState == 0) {
-					orderDomainStr = JSON.stringify(htmlDomainStr);
-				}
-
-				if (this.pageState == 1) {
-					orderDomainStr = JSON.stringify(this.orderDomainStr);
-				}
-
-				if (this.pageState == 2) {
-					orderDomainStr = JSON.stringify(htmlDomainStr);
-				}
-
-				//----
-				let params = { orderDomainStr: orderDomainStr };
-
-				http.post(saveContract, params).then(res => {
-					if (res.errorCode == 'nologin') {
-						return;
+				});
+		},
+		//对单个商品进行勾选操作
+		listCheckBox(item) {
+			console.log('勾选单个商品获取的参数',item)
+			let params = {
+				shoppingGoodsIdStr: item.shoppingGoodsId,
+				shoppingCode: item.shoppingCode,
+				checkState: item.shoppingGoodsCheck === 0 ? 1 : 0,
+				channelCode: 'channelCode'
+			};
+			this.$qj
+				.http(this.$qj.domain)
+				.post(updateShoppingGoodsCheckState, params)
+				.then(res => {
+					if (res && res.success) {
+						this.commonMounted();
 					}
-					
-					if (this.pageState == 2) {
-						http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res => {
-							if (res.success == true) {
-								if(Number(this.userRelNum) >= Number(this.accountsSumPrice)){
-									http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.accountsSumPrice,giftUserId:this.giftUserId})
-									.then(res4=>{
-									})
-									http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'payState' }).then(res3 => {
-										console.log(res3)
-									})
-									let json = {
-										dataBmoney: 0,
-										contractMoney: 0,
-										goodsMoney: 0,
-										contractBillcode: res.dataObj.contractBillcode,
-									}
-									//调价接口
-									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
-										$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
-									})
-								}else{
-									let json = {
-										// dataBmoney:Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight) ,
-										// contractMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
-										// goodsMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
-										dataBmoney:Number(this.accountsSumPrice)-Number(this.userRelNum) ,
-										contractMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
-										goodsMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
-										contractBillcode: res.dataObj.contractBillcode,
-									}
-									//调价接口
-									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
-										this.$state.set('contractBillcode', res.dataObj.contractBillcode);
-										$storage.set('contractGoodsPrice','')
-										http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'contract' }).then(res3 => {
-											$router.replace('pay/payMethods',{contractBillcode:res.dataObj.contractBillcode})
-										})
-									})
-									
+				});
+		},
+		//  点击选择全部，全选按钮
+		countCheckBox() {
+			console.log(this.shopIdAttr.join(','),"-------this.shopIdAttr.join(',')")
+			let params = {
+				shoppingGoodsIdStr: this.shopIdAttr.join(','),
+				channelCode: 'channelCode'
+			};
+			//判断有没有选中商品
+			console.log("判断是否选中商品，，，",this.countChecked)
+			if (this.countChecked) {
+				this.countChecked = false;
+				params.checkState = 1;
+			} else {
+				this.countChecked = true;
+				params.checkState = 0;
+			}
+			// 查询商品是否勾选接口
+			this.$qj
+				.http(this.$qj.domain)
+				.post(updateShoppingGoodsCheckState, params)
+				.then(res => {
+					console.log("查询结果是否勾选，",res)
+					if (res && res.success) {
+						this.commonMounted();
+					}
+				});
+		},
+		//删除商品数量
+		subtract(item, index) {
+			let goodsCamount = item.goodsCamount;
+			let params = {
+				shoppingGoodsId: item.shoppingGoodsId,
+				amount: goodsCamount,
+				goodWeight: 0
+			};
+			if (item.goodsMinnum && item.goodsMinnum > 0) {
+				if (item.goodsCamount < 2) {
+					this.$qj.message.alert('购买数量不能小于起订量');
+					return;
+				} else {
+					goodsCamount--;
+
+				}
+					params.amount = goodsCamount;
+					this.$qj
+						.http(this.$qj.domain)
+						.post(updateShoppingGoodsNum, params)
+						.then(res => {
+							if (res && res.success) {
+								this.commonMounted();
+							} else {
+								if (res.errorCode == '-1') {
+									item.goodsCamount = item.goodsSupplynum;
+									//购买商品数量不能超过商品库存
 								}
 							}
 						});
-						
-						return;
-					}
+				
+			} else {
+				if (goodsCamount > 1) {
+					goodsCamount--;
+					params.amount = goodsCamount;
+					this.$qj
+						.http(this.$qj.domain)
+						.post(updateShoppingGoodsNum, params)
+						.then(res => {
+							if (res && res.success) {
+								this.commonMounted();
+							} else {
+								if (res.errorCode == '-1') {
+									item.goodsCamount = item.goodsSupplynum;
+									//购买商品数量不能超过商品库存
+								}
+							}
+						});
+				}
+			}
+		},
+		add(item, index) {
+			console.log("添加商品数量")
+			console.log(item,'-----item',index,'------index')
+			console.log(item.goodsCamount)
+			console.log(item.skuOneNum);
+			let goodsCamount = item.goodsCamount;
+			let params = {
+				shoppingGoodsId: item.shoppingGoodsId,
+				amount: goodsCamount,
+				goodWeight: 0
+			};
+			// goodsTopnum
+			console.log(item);
 
-					if (this.scontractPmode == '0') {
-						// 成功之后  跳到订单页面
-						this.jumpToPayMethods(res.dataObj.contractBillcode, res.dataObj.contractBbillcode);
+			goodsCamount++;
+			params.amount = goodsCamount;
+			this.$qj
+				.http(this.$qj.domain)
+				.post(updateShoppingGoodsNum, params)
+				.then(res => {
+					if (res && res.success) {
+						this.commonMounted();
 					} else {
+						if (res.errorCode == '-1') {
+							this.$qj.message.alert(res.msg);
+						}
 					}
 				});
+		},
+		toGoodDetail(item){
+			console.log(item,'itme')
+				this.$qj.router.push('o2o/pages/goodsdetails_modules/o2o_goosDetail2',item);
+		},
+		goToGoodsDetail(item) {
+			console.log("item----",item)
+			// this.$qj.router.push('web', {
+			// 	defaultUrl: `${this.$qj.businessDomain}/paas/shop/${this.$qj.storage.get('hrefs')}${item.skuCode}.html`
+			// });
+			this.toGoodDetail({skuCode: item.skuCode});
+		},
+		
+		// 删除商品功能
+		delCartShopping() {
+			let attr = [];
+			// this.listItems.map((v, k) => {
+				this.listItems.map(delData => {
+				delData.map((v, k) => {
+				if (v.shoppingpackageList) {
+					v.shoppingpackageList.map((val, index) => {
+						val.shoppingGoodsList.map((vk, vt) => {
+							if (vk.shoppingGoodsCheck === 0) {
+								attr.push(vk.shoppingGoodsId);
+							}
+						});
+					});
+				}
+				})
+			});
+			if (attr.length === 0) {
+				this.$qj.message.alert('你还未选择删除的商品');
+			} else {
+				let shoppingGoodsIdStr = JSON.stringify(attr);
+				let params = {
+					shoppingGoodsIdStr: shoppingGoodsIdStr
+				};
+				this.$qj
+					.http(this.$qj.domain)
+					.post(deleteShoppingGoodsBatch, params)
+					.then(res => {
+						if (res && res.success) {
+							// this.$qj
+							// 	.http(this.$qj.domain)
+							// 	.post(updateShoppingGoodsCheckState, { checkState: 1 })
+							// 	.then(res => {
+							// 		if (res && res.success) {
+										this.commonMounted();
+								// 	}
+								// });
+						}
+					});
+			}
+		},
+		async getTotalPrice() {
+			let shoppingGoodsIdStr = [];
+			let shoppingType = [];
+			let giftUserCode  = ''
+			let giftUserCodeBak = []
+				this.listItems.map(buyer => {
+					buyer.map((v, k) => {
+					if (v.shoppingpackageList) {
+						v.shoppingpackageList.map((val, index) => {
+							val.shoppingGoodsList.map(vk => {
+								if (vk.shoppingGoodsCheck === 0) {
+									shoppingGoodsIdStr.push(vk.shoppingGoodsId);
+									giftUserCodeBak.push(v.warehouseCode)
+									if(vk.dataState == 0){
+										giftUserCode =  v.warehouseCode
+										shoppingType.push({
+										skuCode: vk.skuCode,
+										goodsContract: v.warehouseCode,
+										goodsName: vk.goodsName,
+										goodsNum: vk.goodsCamount,
+										selected: true,
+										shoppingType: "08",
+										})
+									}
+									
+								}
+							});
+						});
+					}
+				});
+				})
+				if(shoppingType.length == 0){
+					this.$qj.message.alert('您还未选择要结算的商品')
+					return;
+				}
+				giftUserCodeBak = [...new Set(giftUserCodeBak)]
+				if (this.listItems.filter(val => val[0].rowsCheck === 0).length > 1 || giftUserCodeBak.length >1 ) {
+					this.$qj.message.alert('一次只能结算同一合同商品')
+					return;
+				}
+				
+				$router.push('hdb/personCenter/contractCar/shopCar',{goodsBeanStr:JSON.stringify(shoppingType),pageState:'2',giftUserCode:giftUserCode,shoppingGoodsIdStr:shoppingGoodsIdStr})
+				// let a= []
+				// for(var i =0;i<type.length;i++){
+				// 	 if (a.indexOf(type[i]) === -1) {
+				// 	         a.push(type[i])
+				// 	        }
+				// }
+				// console.log('点击去结算-----商品信息长度',a)
+				// if(a.length != 1 ){
+					
+				// 	this.$qj.message.alert('不能同时结算不同类型的订单');
+				// 	return;		
+				// }
+				// if (shoppingGoodsIdStr.length == 0) {
+				// 	this.$qj.message.alert('您还未选择要结算的商品');
+				// 	return;
+				// }
+				
+				// // 限额检查
+				// let checkSaleQuotaRes = await this.requestCheckSaleQuota(checkStSaleminnumObj);
+				// if (checkSaleQuotaRes.errorCode == 2) {
+				// 	if (checkSaleQuotaRes.dataObj.length > 0) {
+				// 		this.quotaList = checkSaleQuotaRes.dataObj;
+				// 		this.quotaPopup = true;
+				// 		return;
+				// 	}
+				// }
+				// this.checkSaleMinNum(data => {
+				// 	// 达到起送量
+				// 	this.shopSaleMinNum = data;
+				// 	this.$state.set('shoppingType', shoppingType);
+				// 	this.$state.set('shoppingGoodsIdStr', shoppingGoodsIdStr);
+				// 	this.$state.set('rsSkuListStr', rsSkuListStr);
+				// 	// this.$qj.state.set('shoppingType', shoppingType);
+				// 	// this.$qj.state.set('shoppingGoodsIdStr', shoppingGoodsIdStr);
+				// 	// this.$qj.state.set('rsSkuListStr', rsSkuListStr);
+				// 	let b= a.toString()
+				// 	console.log('b------------',b)
+				// 	this.$qj.router.push('hdb/personCenter/contractCar/shopCar',b);
+				// }, checkStSaleminnumObj);
+			// }
+			
+		},
+
+		requestCheckSaleQuota(data) {
+			return this.$qj.http(this.$qj.domain).post(checkStSalequota, { ocContractDomainJson: JSON.stringify(data) });
+		},
+
+		/**
+		 * 检查起送量
+		 * @param {Object} data
+		 */
+		checkSaleMinNum(callback, data) {
+			// 检测是否达到起送量
+			let saleMinNumType = ['kg', '元'];
+			this.$qj
+				.http(this.$qj.domain)
+				.post(checkStSaleminnum, {
+					ocContractDomainJson: JSON.stringify(data)
+				})
+				.then(res => {
+					console.log(res);
+
+					if (res.success) {
+						if (res.errorCode == 2) {
+							// 未达起送量
+							this.shopSaleMinNum = `未达到${res.dataObj.saleminnumNum}起送量`;
+							// this.$qj.message.alert(`起送量要求达到${res.dataObj.saleminnumNum}${saleMinNumType[Number(res.dataObj.saleminnumNumtype)]}`);
+						} else {
+							console.log('111');
+							if (res.dataObj != null) {
+								callback(`已达到${res.dataObj.saleminnumNum}起送量`);
+							} else {
+								callback('');
+							}
+						}
+					} else {
+						this.$qj.message.alert(res.msg);
+					}
+				});
+		},
+
+		edited() {
+			this.delStatus = false;
+		},
+		finished() {
+			this.delStatus = true;
+		},
+		updateAction(itemIndex, itemGood, promotionName) {
+			this.options = [];
+			this.isShow = true;
+			this.options = itemGood.pmPromotionList; //当前商品的所有营销活动
+			this.promotionName = promotionName;
+			this.pmPromotionList = itemGood.pmPromotionList; //当前商品的所有营销活动
+			this.shoppingGoodsId = itemGood.shoppingGoodsId; //当前的商品id
+			this.optionsIndex = this.options.findIndex(op => op.promotionName == this.promotionName);
+			// this.options.map(v => {
+			//   v.value = v.promotionName;
+			//   v.label = v.promotionName;
+			// });
+
+			//console.log( itemGood.pmPromotionList);
+		},
+		checkPmPromotion(op) {
+			this.promotionName = op.promotionName; //当前选中的营销活动
+
+			this.$qj
+				.http(this.$qj.domain)
+				.post(updateShoppingGoodsPmInfo, {
+					shoppingGoodsId: this.shoppingGoodsId,
+					promotionCode: op.promotionCode
+				})
+				.then(res => {
+					this.isShow = false;
+					this.commonMounted();
+				});
+		},
+
+		specialRemind() {
+			uni.showModal({
+				showCancel: false,
+				title: '提示',
+				content: this.shopSetInfo,
+				confirmText: '确定',
+				confirmColor: this.baseColor
+			});
+		},
+		
+		//收藏按钮
+		goodsItemCollect(item) {
+			console.log('添加至收藏---',item);
+			if (!item.isCollect) {
+				this.$qj
+					.http(this.$qj.domain)
+					.get(saveCollect, {
+						collectType: '0',
+						collectOpcode: item.skuCode,
+						// 图片
+						collectOppic: item.dataPic,
+						// 内容
+						collectOpcont: item.goodsName,
+						collectOpmark: item.goodsProperty,
+						// 数量
+						collectOpnum: item.goodsMinnum != 0 ? item.goodsMinnum : 1,
+						// 价格
+						collectNum1:  item.pricesetNprice,
+						goodsOrigin: item.goodsOrigin,
+						// 商品的url
+						collectOpurl: '/paas/shop/' + this.$qj.storage.get('hrefs') + item.skuCode + '.html'
+					})
+					.then(res => {
+						console.log(res);
+						if (res.success && res.dataObj) {
+							this.batchCheckCollect([
+								{
+									collectType: '0',
+									collectOpcode: item.skuCode
+								}
+							]);
+							this.$qj.message.alert('收藏成功');
+						} else {
+							this.$qj.message.alert(res.msg);
+						}
+					});
+			} else {
+				if (item.collectObj) {
+					this.$qj
+						.http(this.$qj.domain)
+						.get(collection.deleteCollectByCode, {
+							collectCode: item.collectObj.collectCode,
+							collectType: '0'
+						})
+						.then(res => {
+							console.log(res);
+							if (res.success) {
+								item.isCollect = false;
+								this.$forceUpdate();
+								let len = this.batchCollectData.length;
+								while (len--) {
+									console.log(len, this.batchCollectData[len]);
+									if (this.batchCollectData[len].collectOpcode == item.skuCode) {
+										this.batchCollectData.splice(len, 1);
+									}
+								}
+								this.$qj.message.alert('取消成功');
+							}
+						});
+				}
 			}
 		}
 	}
 };
 </script>
 
-<style lang="scss" scoped>
-/deep/ .u-icon-plus.u-icon-plus,
-/deep/ .u-icon-minus.u-icon-minus {
-	background: none !important;
-}
-
-/deep/ .u-number-input.u-number-input {
-	width: 80rpx;
-	height: 40rpx;
-	background: #f6f6f6;
-	border-radius: 10rpx;
-}
-
-/deep/ .u-radio {
-	padding: 20rpx 0;
-	line-height: 108rpx;
-	border-bottom: 1rpx solid #f1f1f1;
-
-	.u-radio__label.u-radio__label {
-		color: #333;
+<style lang="less" scoped>
+@import '@/node_modules/qj-mini-pages/libs/css/common.less';
+.shop-cart{
+		height: 100%;
+		
 	}
-}
-
-.detail--addressPopup--check:last-child {
-	border-bottom: none;
-}
-
-.accounts-haveAddress {
-			height: 180rpx;
-			background: #fff;
-			padding: -10rpx;
-			border-bottom: 20rpx solid #fafafa;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-
-			.accounts-haveAddress-l {
-				font-size: 30rpx;
-				width: 618rpx;
-
-				h5 {
-					margin-bottom: 12rpx;
-
-					span {
-						margin-left: 112rpx;
-					}
-				}
-
-				p {
-					overflow: hidden;
-					-webkit-line-clamp: 3;
-					display: -webkit-box;
-					-webkit-box-orient: vertical;
-					width: 618rpx;
-					color: #666;
-					font-size: 24rpx;
-
-					span {
-						display: inline-block;
-						font-size: 18rpx;
-						padding: 3rpx 15rpx;
-						border-radius: 15rpx;
-						// background: #b79f77;
-						margin-right: 12rpx;
-						color: #fff;
-					}
-				}
-			}
-
-			.accounts-haveAddress-r {}
-		}
-.settle-account {
-	// min-height: 100%;
-	padding-bottom: 120rpx;
-	background-color: #f4f4f4;
-}
-.address {
-	padding: 0 24rpx;
+	.shop-cart /deep/ .u-drawer{
+		z-index: 999999 !important;
+	}
+	// .addmargin{margin-bottom: 70px}
+	.shopcart {
 	width: 100%;
-	height: 154rpx;
-	background-color: #ffffff;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	border-radius: 0px 0px 24rpx 24rpx;
-	&-detail {
-		font-size: 28rpx;
-		.address-tel {
-			font-weight: 700;
-			color: #000000;
-			margin-bottom: 24rpx;
-			text {
-				margin-right: 48rpx;
-			}
-		}
-		.area {
-			color: #333333;
-		}
-	}
-	i {
-		font-size: 16rpx;
-		font-weight: 400;
-		color: #a5a5a5;
-		-webkit-text-stroke: 1px #1d1d1d;
-		text-stroke: 1px #1d1d1d;
-	}
-}
+	// height: 100%;
+	margin-bottom: 170rpx;
+	background: #fafafa;
+	position: relative;
 
-.goods-list {
-	.shop {
-		padding: 40rpx 24rpx;
-		background: #ffffff;
-		border-radius: 26rpx;
-		margin-top: 24rpx;
-		&-name {
-			font-size: 28rpx;
-			font-weight: 500;
-			color: #000000;
-		}
-	}
-	.distribution {
-		padding-top: 24rpx;
-		.item {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 40rpx;
-			&:last-child {
-				margin-bottom: 0;
-			}
-			.method {
-				font-size: 28rpx;
-				color: #333333;
-			}
-			.middle {
-				margin-left: auto;
-				margin-right: 36rpx;
-			}
-			.postage {
-				font-size: 24rpx;
-				color: #999999;
-			}
-			.end {
-				text-align: right;
-			}
-			i {
-				font-size: 18rpx;
-				font-weight: 700;
-			}
-		}
-	}
-}
-.shop-goods-item {
-	display: flex;
-	padding: 40rpx 0;
-	border-bottom: 2rpx solid #f1f1f1;
-	image {
-		flex-shrink: 0;
-		width: 160rpx;
-		height: 160rpx;
-		border-radius: 10rpx;
-		margin-right: 24rpx;
-	}
-	.gift {
-		position: relative;
-		&-item {
-			position: absolute;
-			left: 0;
-			bottom: 0;
-			text-align: center;
-			width: 100%;
-			height: 40rpx;
-			background: rgba(0, 0, 0, 0.3);
-			line-height: 40rpx;
-			font-size: 24px;
-			font-family: PingFangSC-Medium, PingFang SC;
-			font-weight: 500;
-			color: #ffffff;
-		}
-	}
-	.info {
-		display: flex;
-		width: 518rpx;
-		height: 160rpx;
-		flex-direction: column;
-		justify-content: space-between;
-		.name {
-			font-size: 28rpx;
-			color: #1e1e1e;
-			line-height: 40rpx;
-			margin-bottom: 8rpx;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			white-space: nowrap;
-		}
-		.model {
-			font-size: 22rpx;
-			color: #696969;
-			margin-bottom: 20rpx;
-		}
-		.other {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			// margin: auto 0;
-			.price {
-				font-size: 28rpx;
-				font-weight: 500;
-				color: #EB2B27;
-			}
-			.num {
-				font-size: 24rpx;
-				color: #a5a5a5;
-			}
-		}
-		.returnGoods {
-			font-size: 20rpx;
-			color: #999999;
-		}
-	}
-	&:last-child {
-		border-bottom: 0;
-	}
-}
-
-.currency {
-	background-color: #ffffff;
-	margin-top: 24rpx;
-	border-radius: 26rpx;
-	padding: 0 24rpx;
-	.item {
-		display: flex;
-		align-items: center;
+	&-save {
+		position: fixed;
+		z-index: 9999;
 		height: 90rpx;
-	}
-	.title {
-		font-size: 24rpx;
-		font-weight: 500;
-		color: #1e1e1e;
-	}
-	.middle {
-		font-size: 24rpx;
-		color: #1e1e1e;
-		margin-left: 42rpx;
-	}
-	.right {
-		display: flex;
-		color: #000000;
-		align-items: center;
-		margin-left: auto;
-		text {
-			font-size: 24rpx;
-			margin-right: 36rpx;
-		}
-		i {
-			font-size: 18rpx;
-			font-weight: bold;
-		}
-	}
-	.price {
-		font-size: 24rpx;
-		font-weight: 600;
-		color: #EB2B27;
-		margin-left: auto;
-		margin-right: 53rpx;
-	}
-	.kong {
-		color: #999999;
-	}
-	.total {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		height: 100rpx;
-		border-top: 2rpx solid #f1f1f1;
-		font-size: 24rpx;
-		font-weight: 600;
-		color: #1e1e1e;
-		.price {
-			color: #EB2B27;
-			margin-left: 10rpx;
-		}
-	}
-}
-
-.pay-method {
-	padding: 10rpx 24rpx;
-	background-color: #ffffff;
-	font-size: 28rpx;
-	color: #333333;
-	margin-top: 24rpx;
-
-	border-radius: 24rpx;
-	.method {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		height: 78rpx;
-	}
-}
-.footer {
-	position: fixed;
-	left: 0;
-	bottom: 0;
-	width: 100%;
-	height: 100rpx;
-	background-color: #ffffff;
-	display: flex;
-	align-items: center;
-	color: #EB2B27;
-	font-weight: bold;
-	.copyWith {
-		color: #1e1e1e;
-		font-size: 28rpx;
-		margin: 0 10rpx 0 30rpx;
-	}
-	.buyNow {
-		width: 208rpx;
-		height: 74rpx;
-		background: #EB2B27;
-		border-radius: 37rpx;
-		font-size: 26rpx;
-		font-weight: 500;
-		color: #ffffff;
-		text-align: center;
-		line-height: 74rpx;
-		margin: 0 19rpx 0 auto;
-	}
-}
-
-// 地址弹出框
-.detail--addressPopup {
-	&--position {
-		padding: 12rpx 0;
-		font-size: 32rpx;
-		color: #000;
-		text-align: center;
-	}
-
-	&--main {
+		line-height: 90rpx;
+		text-align: right;
+		right: 34rpx;
+		top: 0;
+		font-size: @big-title;
 		width: 100%;
-		height: 734rpx;
-		padding: 0 24rpx;
-		border-bottom: 1rpx solid #f1f1f1;
-		// overflow-y: scroll;
+		background: #ffffff;
 	}
-
-	&--shop {
-		width: 100%;
-		height: 166rpx;
-		background-color: #fff;
-		padding: 8rpx 24rpx 0;
-		display: flex;
-		justify-content: space-between;
-
-		&--aside {
-			width: 100%;
-			height: 80rpx;
-			border-radius: 40rpx;
-			font-size: 24rpx;
-			color: #fff;
+	&-back {
+		a {
+			width: 70rpx;
+			height: 90rpx;
+			position: fixed;
+			z-index: 9999;
+			left: 30rpx;
+			top: 0;
+			display: inline-block;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			background-color: #EB2B27;
 		}
 	}
-}
-
-//优惠弹出框
-.detail--welfarePopup {
-	&--main {
+	.special-remind {
+		position: fixed;
+		top: 91rpx;
+		z-index: 9999;
 		width: 100%;
-		height: 966rpx;
-		background-color: #fff;
-		padding: 24rpx 0 0;
-
-		&--title {
-			font-size: 32rpx;
-			color: #000;
-			text-align: center;
-			margin-bottom: 20rpx;
+		background: @white-color;
+		padding: 0 30rpx;
+		display: flex;
+		align-items: center;
+		height: 64rpx;
+		text {
+			font-size: 24rpx;
+			flex: 1;
+			display: -webkit-box;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
 		}
-
-		&--receive {
-			&--title {
+		.iconfont {
+			font-size: 24rpx;
+		}
+	}
+	ul {
+		// margin-bottom: 256rpx;
+		// marg		        in-bottom: 256rpx;
+		li {
+			margin: 0rpx 30rpx 20rpx;
+			// background: @white-color;
+			// border-radius: 6rpx;
+			.memberTit {
 				display: flex;
-				padding: 0 24rpx;
-				align-items: flex-end;
-
-				&--left {
-					font-size: 28rpx;
-					color: #333;
-					margin-right: 8rpx;
-				}
-
-				&--right {
-					font-size: 20rpx;
-					color: #999;
+				align-items: center;
+				justify-content: flex-start;
+				height: 68rpx;
+				font-size: 28rpx;
+				font-weight: bold;
+				color: @color-333;
+				i {
+					padding-right: 15rpx;
 				}
 			}
-
-			&--item {
-				width: 100%;
-				padding: 6rpx 0;
-				// background: url('../../static/teaImg/youhuibg.png') no-repeat;
-				background-size: 738rpx 196rpx;
-
-				.tickets {
-					width: 100%;
-					.ticketItem {
-						width: 100%;
-						position: relative;
-						& > image {
-							width: 100%;
+			// .tit{
+			//   display: flex;
+			//   align-items: center;
+			//   justify-content: flex-start;
+			//   height: 68rpx;
+			//   margin:0 22rpx;
+			//   border-bottom: 1rpx solid #f6f6f8;
+			//   i{
+			//     margin-right: 15rpx;
+			//   }
+			// }
+			.list_li {
+				.list_p {
+					border-bottom: 20rpx solid #fafafa;
+				}
+				.list_pm {
+					background: @white-color;
+					border-radius: 6rpx;
+					.tit {
+						display: flex;
+						align-items: center;
+						justify-content: flex-start;
+						height: 68rpx;
+						margin: 0 22rpx;
+						font-size: 22rpx;
+						color: @color-666;
+						border-bottom: 1rpx solid #f6f6f8;
+						p {
+							padding: 5rpx 8rpx;
+							font-size: 18rpx;
+							color: @white-color;
+							background: #b79f77;
+							border-radius: 20rpx;
+							margin-right: 10rpx;
 						}
-						& > view {
-							position: absolute;
-							top: 0rpx;
-							width: 100%;
-							height: 100%;
+					}
+					.updatePm {
+						height: 66rpx;
+						padding: 0 22rpx;
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						p {
+							font-size: 22rpx;
+							color: @color-666;
 							display: flex;
-							justify-content: space-between;
 							align-items: center;
-							box-sizing: border-box;
-							padding: 12rpx 0rpx 24rpx;
-							.ticketLeft {
-								width: 34%;
-								display: flex;
-								flex-wrap: wrap;
-								align-content: center;
-								justify-content: center;
-								margin-left: 20rpx;
-								view {
-									width: 100%;
+							i {
+								font-size: 20rpx;
+								padding: 5rpx 10rpx;
+								border-radius: 20rpx;
+								text-align: center;
+								border: 1rpx solid #b79f77;
+								color: #b79f77;
+								margin-right: 15rpx;
+							}
+						}
+						span {
+							width: 66rpx;
+							text-align: right;
+							font-size: 22rpx;
+							color: @color-333;
+						}
+					}
+					.itemGoods {
+						.item-container {
+							display: flex;
+							align-items: center;
+							justify-content: space-between;
+							padding: 22rpx 22rpx 35rpx;
+							border-bottom: 1rpx solid #f6f6f8;
+							.list-l {
+								padding-right: 25rpx;
+							}
+							.list-img {
+								position: relative;
+								img {
+									width: 160rpx;
+									height: 160rpx;
+									margin-right: 25rpx;
+								}
+								span {
+									width: 160rpx;
+									height: 44rpx;
+									background: #b3b3b3;
+									color: @white-color;
+									font-size: 22rpx;
 									text-align: center;
-									&:first-child {
-										font-size: 40rpx;
-										font-family: DIN-Black, DIN;
-										font-weight: 900;
-										color: #333333;
-										background: linear-gradient(315deg, #d20000 0%, #ea4a4a 49%, #ff8d8d 100%);
-										-webkit-background-clip: text;
-										-webkit-text-fill-color: transparent;
-									}
-									&:last-child {
-										font-size: 24rpx;
-										font-family: PingFangSC-Regular, PingFang SC;
-										color: #999999;
-									}
+									line-height: 44rpx;
+									position: absolute;
+									bottom: 0;
+									left: 0;
 								}
 							}
-							.ticketRight {
-								width: 64%;
-								display: flex;
-								flex-wrap: wrap;
-								align-content: center;
-								justify-content: flex-start;
-								box-sizing: border-box;
-								padding-top: 10rpx;
-								margin-left: 40rpx;
-								& > view {
-									&:first-child {
-										font-size: 28rpx;
-										font-weight: 600;
-										color: #333333;
-									}
-									// &:nth-child(2){
-									// 	font-size: 24rpx;
-									// 	color: #999999;
-									// 	line-height: 30rpx;
-									// }
+							.list-r {
+								p {
+									width: 380rpx;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									white-space: nowrap;
+									font-size: @middle-title;
 								}
-								.ticketControl {
-									width: 100%;
-									margin-top: 15rpx;
+								h3 {
+									font-size: 22rpx;
+									color: @color-999;
+									margin: 10rpx 0 13rpx 0;
+								}
+								.list-count {
 									display: flex;
+									align-items: center;
 									justify-content: space-between;
-									font-size: 24rpx;
-									color: #999999;
-									box-sizing: border-box;
-									padding-right: 50rpx;
-									image {
-										width: 120rpx;
-										height: 40rpx;
-									}
-									view {
-										line-height: 40rpx;
+									.list-right-container {
+										display: flex;
+										align-items: center;
+										.collect {
+											font-size: 36rpx;
+										}
+										.list-add {
+											margin-left: 20rpx;
+											display: flex;
+											align-items: center;
+											input {
+												width: 50rpx;
+												text-align: center;
+												font-size: 22rpx;
+											}
+											div:last-child {
+												i {
+													font-size: 42rpx;
+												}
+											}
+										}
 									}
 								}
-							}
-							.ticketRightEnd {
-								margin-right: 10rpx;
 							}
 						}
 					}
 				}
 			}
-			.coupon-checked {
-				opacity: 0.6;
+		}
+		
+	}
+	.min-sale-num {
+		display: flex;
+		position: fixed;
+		z-index: 99;
+		width: 100%;
+		font-size: 24rpx;
+		color: @white-color;
+		align-items: center;
+		justify-content: center;
+		height: 55rpx;
+		bottom: 200rpx;
+	}
+	&-count {
+		display: flex;
+		width: 100%;
+		position: fixed;
+		z-index: 99;
+		bottom: 10rpx;
+		left: 0;
+		align-items: center;
+		justify-content: space-between;
+		height: 98rpx;
+		font-size: @middle-title;
+		color: @color-666;
+		background: #fff;
+		.del {
+			color: #b79f77;
+			font-size: @big-title;
+			width: 118rpx;
+			height: 58rpx;
+			border: 1rpx solid #b79f77;
+			border-radius: 30rpx;
+			text-align: center;
+			line-height: 60rpx;
+			margin-right: 30rpx;
+		}
+		div:first-child {
+			display: flex;
+			align-items: center;
+			margin-left: 30rpx;
+		}
+		.addCount:last-child {
+			display: flex;
+			align-items: center;
+			margin-right: 30rpx;
+			.total-price {
+				display: flex;
+				align-items: center;
+			}
+		}
+		i {
+			padding-right: 15rpx;
+		}
+		.buy-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 206rpx;
+			height: 60rpx;
+			color: @white-color;
+			border-radius: 5rpx;
+			background: #b79f77;
+			margin-left: 28rpx;
+		}
+	}
+	&-nulls {
+		height: calc(100% - 202rpx);
+		text-align: center;
+		img {
+			width: 349rpx;
+			height: 309rpx;
+			margin: 280rpx auto 0;
+		}
+	}
+	&-screenLeft {
+		position: fixed;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		left: 0;
+		background-color: rgba(0, 0, 0, 0.6);
+		z-index: 99;
+	}
+	&-preferential {
+		width: 100%;
+		height: 488rpx;
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		z-index: 99;
+		&-con {
+			background-color: #fff;
+			height: 488rpx;
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+			p {
+				height: 92rpx;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-bottom: 1rpx solid #f5f5f5;
+				padding: @padding-lr;
+			}
+			ol {
+				height: 300rpx;
+				overflow-y: auto;
+				overflow-x: hidden;
+				padding: @padding-30;
+				li {
+					border-bottom: 1rpx solid #f6f6f8;
+					height: 106rpx;
+					h3 {
+						height: 106rpx;
+						display: flex;
+						align-items: center;
+						justify-content: space-between;
+						font-size: @big-title;
+						color: @color-333;
+						h4 {
+							display: flex;
+							align-items: center;
+							span {
+								background: #b79f77;
+								font-size: 22rpx;
+								color: #fff;
+								padding: 4rpx 10rpx;
+								border-radius: 20rpx;
+								margin-left: 10rpx;
+							}
+						}
+					}
+				}
+			}
+			.pre-btn {
+				height: 96rpx;
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				text-align: center;
+				line-height: 96rpx;
+				color: @white-color;
+				font-size: @top-title;
+				background: #b79f77;
 			}
 		}
 	}
 }
-
-// 支付方式弹框
-.detail--payMethodPopup {
-	&--main {
-		width: 100%;
-		padding: 24rpx 24rpx 0;
-		&--position {
-			font-size: 32rpx;
-			color: #000;
-			text-align: center;
-		}
-		.method {
-			width: 100%;
+.quota-popup {
+	.popup-container {
+		display: flex;
+		flex-direction: column;
+		height: 600rpx;
+		.quota-title {
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-			border-bottom: 1rpx solid #f1f1f1;
-			.name {
-				margin-left: 24rpx;
-				margin-right: auto;
+			justify-content: center;
+			height: 84rpx;
+			width: 100%;
+			font-size: 30rpx;
+			color: #333333;
+		}
+		.quota-info-list {
+			flex: 1;
+			overflow: auto;
+			width: 580rpx;
+			margin: 0 auto;
+			margin-bottom: 25rpx;
+			.quota-item {
+				padding: 25rpx 0;
+				border-bottom: 1rpx solid #f5f5f5;
+				&:last-child {
+					border-bottom: none;
+				}
+				.goods-name {
+					font-size: 30rpx;
+					color: #333333;
+					display: -webkit-box;
+					-webkit-box-orient: vertical;
+					-webkit-line-clamp: 1;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				.quota-info {
+					display: block;
+					margin-top: 20rpx;
+					font-size: 26rpx;
+					color: #333333;
+					text {
+						padding: 0 10rpx;
+					}
+				} 
 			}
+		}
+		::-webkit-scrollbar {
+			display: none;
 		}
 	}
 }
 </style>
+
+
+
+

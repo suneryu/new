@@ -641,6 +641,7 @@
 									if(item.goodsPro == null ){
 										this.discountMoney += item.pricesetNprice*item.goodsNum
 									}else{
+										this.isContrat = true
 										this.discountMoney += item.goodsPro*item.goodsNum
 									}
 								}
