@@ -633,6 +633,9 @@
 						this.contractType = res.contractType
 						this.shoppingGoodsIdStr=[]
 						res.goodsList.forEach(item=>{
+							if (!RegExp(/http/).test(item.dataPic)) {
+								item.dataPic = this.$domain + item.dataPic;
+							}
 							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
@@ -920,95 +923,100 @@
 							if (res.errorCode == 'nologin') {
 								return;
 							}
-							//更新订单状态
-							let changeTotalMoney = 0
-							if(this.contractType == '41'){
-								this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
-								})
-							}
-								
-							//确认单改价
-							if(this.shoppingItems[0].contractType == 41){
-								this.$qj.http(this.$qj.domain).post('/web/oc/contract/syncContractState.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
-								if(res1.success){
-									// changeTotalMoney = Number(res.dataObj.dataBmoney) - Number(this.shoppingItems[0].contractInmoney) + Number(this.discountMoneyBak)
-									let json = {
-										dataBmoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
-										contractMoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
-										goodsMoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
-										contractBillcode: res.dataObj.contractBillcode,
-									}
-									//调价接口
-									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+							if(res.success){
+								//更新订单状态
+								let changeTotalMoney = 0
+								if(this.contractType == '41'){
+									this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
 									})
 								}
-							})
-							}
-							//合同单支付
-							if (this.isContrat) {
-								if(Number(this.userRealNum) >= (Number(this.discountMoney)+(this.freight || 0)) ){
-									http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res2 => {
-										if (res2.success == true) {
-											http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:(Number(this.discountMoney)+(this.freight || 0)),giftUserId:this.giftUserId})
-											.then(res4=>{
-												console.log(res4)
-											})
-											http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'payState' }).then(res3 => {
-												console.log(res3)
-											})
-											let json = {
-												dataBmoney:0,
-												contractMoney:0,
-												goodsMoney:0,
-												contractBillcode: res.dataObj.contractBillcode,
-											}
-											this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
-											})
-											$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
-										}
-									});
-								}else{
-									let json = {
-										dataBmoney:(Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum) ,
-										contractMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum),
-										goodsMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum),
-										contractBillcode: res.dataObj.contractBillcode,
-									}
-									//调价接口
-									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
-										this.$state.set('contractBillcode', res.dataObj.contractBillcode);
-										$storage.set('contractGoodsPrice','')
-										http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'contract' }).then(res3 => {
-											$router.replace('pay/payMethods',{contractBillcode:res.dataObj.contractBillcode})
-										})
-									})
-								}
-								
-								return;
-							}
-							
-							
-							if (res.dataObj.contractBillcode) {
-								this.contractBillcode = res.dataObj.contractBillcode;
-								this.$state.set('contractBillcode', this.contractBillcode);
-								if(this.goodsClass == '2'){ //耗材订单
-								console.log(111111)
-									   let options = {
-											url: 'pay/payhaocai',
-											query: {
-												// userPhone: this.userPhone || this.inputUserPhone 
-											}
-									   };
-									   this.$qj.router.replace('pay/payhaocai');
 									
-								}else{
-									if(this.contractPmode == '0'){ // 线上
-										this.$qj.router.replace('pay/paySelect');
+								//确认单改价
+								if(this.shoppingItems[0].contractType == 41){
+									this.$qj.http(this.$qj.domain).post('/web/oc/contract/syncContractState.json', {contractBillcode:res.dataObj.contractBillcode}).then(res1=>{
+									if(res1.success){
+										// changeTotalMoney = Number(res.dataObj.dataBmoney) - Number(this.shoppingItems[0].contractInmoney) + Number(this.discountMoneyBak)
+										let json = {
+											dataBmoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
+											contractMoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
+											goodsMoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
+											contractBillcode: res.dataObj.contractBillcode,
+										}
+										//调价接口
+										this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+										})
+									}
+								})
+								}
+								//合同单支付
+								if (this.isContrat) {
+									if(Number(this.userRealNum) >= (Number(this.discountMoney)+(this.freight || 0)) ){
+										http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res2 => {
+											if (res2.success == true) {
+												http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:(Number(this.discountMoney)+(this.freight || 0)),giftUserId:this.giftUserId})
+												.then(res4=>{
+													console.log(res4)
+												})
+												http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'payState' }).then(res3 => {
+													console.log(res3)
+												})
+												let json = {
+													dataBmoney:0,
+													contractMoney:0,
+													goodsMoney:0,
+													contractBillcode: res.dataObj.contractBillcode,
+												}
+												this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+												})
+												$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
+											}
+										});
 									}else{
-										this.$qj.router.replace('order_modules/order/index');
+										let json = {
+											dataBmoney:(Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum) ,
+											contractMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum),
+											goodsMoney: (Number(this.discountMoney)+(this.freight || 0))- Number(this.userRealNum),
+											contractBillcode: res.dataObj.contractBillcode,
+										}
+										//调价接口
+										this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
+											this.$state.set('contractBillcode', res.dataObj.contractBillcode);
+											$storage.set('contractGoodsPrice','')
+											http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'contract' }).then(res3 => {
+												$router.replace('pay/payMethods',{contractBillcode:res.dataObj.contractBillcode})
+											})
+										})
+									}
+									
+									return;
+								}
+								
+								
+								if (res.dataObj.contractBillcode) {
+									this.contractBillcode = res.dataObj.contractBillcode;
+									this.$state.set('contractBillcode', this.contractBillcode);
+									if(this.goodsClass == '2'){ //耗材订单
+									console.log(111111)
+										   let options = {
+												url: 'pay/payhaocai',
+												query: {
+													// userPhone: this.userPhone || this.inputUserPhone 
+												}
+										   };
+										   this.$qj.router.replace('pay/payhaocai');
+										
+									}else{
+										if(this.contractPmode == '0'){ // 线上
+											this.$qj.router.replace('pay/paySelect');
+										}else{
+											this.$qj.router.replace('order_modules/order/index');
+										}
 									}
 								}
+							}else{
+								this.$qj.message.alert(res.message || '生成订单失败')
 							}
+							
 						});	
 				}
 			}

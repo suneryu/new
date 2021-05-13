@@ -250,6 +250,9 @@
 						this.shoppingGoodsIdStr=[]
 						res.goodsList.forEach(item=>{
 							item.itemChecked = false
+							if (!RegExp(/http/).test(item.dataPic)) {
+								item.dataPic = this.$domain + item.dataPic;
+							}
 							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
 								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
 								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
