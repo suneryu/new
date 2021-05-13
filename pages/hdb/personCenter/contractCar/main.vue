@@ -735,9 +735,9 @@ export default {
 						v.shoppingpackageList.map((val, index) => {
 							val.shoppingGoodsList.map(vk => {
 								if (vk.shoppingGoodsCheck === 0) {
-									shoppingGoodsIdStr.push(vk.shoppingGoodsId);
 									giftUserCodeBak.push(v.warehouseCode)
 									if(vk.dataState == 0){
+										shoppingGoodsIdStr.push(vk.shoppingGoodsId);
 										giftUserCode =  v.warehouseCode
 										shoppingType.push({
 										skuCode: vk.skuCode,

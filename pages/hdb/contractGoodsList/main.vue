@@ -54,7 +54,7 @@
 			<u-search placeholder="输入商品编号" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
 		</view>
 		<view class="getCoupon-content">
-			<view v-for="(item,index) in giftCoupon" :key="index" @click="goodsDetail(item.skuCode)">
+			<view v-for="(item,index) in giftCoupon" :key="index" @click="goodsDetail(item)">
 				<p>
 					<!-- <checkbox color="blue" style="transform:scale(0.7) " :checked="item.ischecked" @click.stop="singelCheck(item,itemIndex)" /> -->
 				</p>
@@ -213,9 +213,10 @@
 				})
 			},
 			goodsDetail(skuCode) {
+				$storage.set('pricesetBaseprice',skuCode.pricesetBaseprice)
 				let params ={
-					skuCode: skuCode,
-					isGift:false
+					skuCode: skuCode.skuCode,
+					isGift:false,
 				};
 				this.$qj.router.push("o2o/pages/goodsdetails_modules/o2o_goosDetail2", params)
 			},

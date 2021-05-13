@@ -375,6 +375,7 @@
 			  console.log('onUnload监听页面卸载');
 			$storage.set('contractGoodsPrice','')
 			$storage.set('isGift','')
+			$storage.set('pricesetBaseprice','')
 		},
 		computed: {
 			unitPrice() {

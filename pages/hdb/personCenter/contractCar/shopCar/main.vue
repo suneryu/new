@@ -915,9 +915,11 @@ export default {
 						http.post(syncContractPayState, { contractBillcode: res.dataObj.contractBillcode }).then(res => {
 							if (res.success == true) {
 								if(Number(this.userRelNum) >= Number(this.accountsSumPrice)){
+									//更新额度接口
 									http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:$storage.get('loginInfor').userPhone,orderPrice:this.accountsSumPrice,giftUserId:this.giftUserId})
 									.then(res4=>{
 									})
+									//更新合同状态
 									http.post('web/oc/contract/updateContractNew.json', { contractBillcode: res.dataObj.contractBillcode,tempState:'payState' }).then(res3 => {
 										console.log(res3)
 									})
