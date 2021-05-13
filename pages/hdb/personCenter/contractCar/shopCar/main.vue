@@ -142,7 +142,7 @@
 		<!-- 底部  立即购买 -->
 		<view class="footer">
 			<text class="copyWith">应付：</text>
-			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:(accountsSumPrice-userRelNum).toFixed(2) }}</text>
+			<text class="price" :style="{ color: '#ec2b27' }">¥ {{ userRelNum>=accountsSumPrice?0:contractRealNum.toFixed(2) }}</text>
 			<view class="buyNow" @click="savePayPrice" :style="{ background: '#004178' }">提交订单</view>
 		</view>
 
@@ -555,17 +555,17 @@ export default {
 							});
 						});
 					});
-					// if(Number(this.userRelNum)<Number(this.shoppingCountPrice + this.freight)){ //contractRealNum
-					// 	this.shoppingItems.map((v, k) => {
-					// 		v.shoppingpackageList.map(vk => {
-					// 			vk.shoppingGoodsList.map((val, index) => {
-					// 				let count = val.pricesetBaseprice/(val.goodsCamount*val.pricesetBaseprice)*this.userRelNum
-					// 				this.contractRealNum += ((val.pricesetNprice - count)/this.contractRate)* val.goodsCamount
-					// 			});
-					// 		});
-					// 	});
-					// 	this.contractRealNum = parseFloat(this.contractRealNum)
-					// }
+					if(Number(this.userRelNum)<Number(this.shoppingCountPrice + this.freight)){ //contractRealNum
+						// this.shoppingItems.map((v, k) => {
+						// 	v.shoppingpackageList.map(vk => {
+						// 		vk.shoppingGoodsList.map((val, index) => {
+						// 			let count = val.pricesetBaseprice/(val.goodsCamount*val.pricesetBaseprice)*this.userRelNum
+						// 			this.contractRealNum += ((val.pricesetNprice - count)/this.contractRate)* val.goodsCamount
+						// 		});
+						// 	});
+						// });
+						this.contractRealNum = parseFloat((Number(this.shoppingCountPrice)-this.userRelNum)/this.contractRate + this.freight)
+					}
 				});
 		},
 		// 计算京东商品运费
@@ -938,9 +938,9 @@ export default {
 										// dataBmoney:Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight) ,
 										// contractMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
 										// goodsMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
-										dataBmoney:Number(this.accountsSumPrice)-Number(this.userRelNum) ,
-										contractMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
-										goodsMoney: Number(this.accountsSumPrice)-Number(this.userRelNum),
+										dataBmoney:Number(this.contractRealNum).toFixed(2) ,
+										contractMoney: Number(this.contractRealNum).toFixed(2),
+										goodsMoney: Number(this.contractRealNum).toFixed(2),
 										contractBillcode: res.dataObj.contractBillcode,
 									}
 									//调价接口
