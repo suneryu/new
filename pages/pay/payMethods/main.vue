@@ -253,6 +253,7 @@ export default {
 							})
 							.then(res => {
 								if (res.success) {
+									$storage.set('goodsType','08')
 									http.post('/web/gt/gift/updateContract.json',{giftCode:this.giftCode,giftUserPhone:this.giftUserPhone,orderPrice:this.accountsSumPrice,giftUserId:this.giftUserId})
 									.then(res4=>{
 										this.$qj.router.replace('pay/paySuccess', {
