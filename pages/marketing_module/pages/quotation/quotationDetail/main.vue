@@ -246,6 +246,7 @@
 					.post(getContractByContractBillcode, {
 						contractBillcode: code
 					}).then(res => {
+						console.log('查询结果---',res)
 						this.discountMoney = 0
 						this.shoppingGoodsIdStr=[]
 						res.goodsList.forEach(item=>{
@@ -329,7 +330,8 @@
 							})
 							.then(res => {
 								if (res && res.success) {
-									this.getContract(this.contractBillcode);
+									// this.getContract(this.contractBillcode);
+									this.dataHandle()
 								} else {
 									if (res.errorCode == '-1') {
 										item.goodsCamount = item.goodsSupplynum;
@@ -349,7 +351,8 @@
 							})
 							.then(res => {
 								if (res && res.success) {
-									this.getContract(this.contractBillcode);
+									// this.getContract(this.contractBillcode);
+									this.dataHandle()
 								} else {
 									if (res.errorCode == '-1') {
 										item.goodsCamount = item.goodsSupplynum;
@@ -361,6 +364,7 @@
 				}
 			},
 			add(index) {
+				console.log('‘【【【【【',index)
 				let item = this.listItems[0].goodsList[index]
 				let goodsCamount = item.goodsNum;
 				if (item.goodsMinnum && item.goodsMinnum > 0) {
@@ -389,7 +393,8 @@
 					})
 					.then(res => {
 						if (res && res.success) {
-							this.getContract(this.contractBillcode);
+							// this.getContract(this.contractBillcode);
+							this.dataHandle()
 						} else {
 							if (res.errorCode == '-1') {
 								this.$qj.message.alert(res.msg);
@@ -416,21 +421,71 @@
 			},
 			//删除商品
 			deleteItem(index){
+				console.log('报价单数据---',this.listItems)
 				//deleteOcContractGoods
-				let json = {
-					contractGoodsId:this.listItems[0].goodsList[index].contractGoodsId
+				// let json = {
+				// 	contractGoodsId:this.listItems[0].goodsList[index].contractGoodsId
+				// }
+				let id = this.listItems[0].goodsList[index].contractGoodsId
+				console.log('json------',id)
+				for(let i = 0; i<this.listItems[0].goodsList.length;i++){
+					console.log('-----'+i+'----',this.listItems[0].goodsList[i].contractGoodsId)
+					if(this.listItems[0].goodsList[i].contractGoodsId == id){
+						console.log(this.listItems[0].goodsList,'0')
+						// this.listItems[0].goodsList.remove(i);
+						this.listItems[0].goodsList.splice(i,1);
+						console.log(this.listItems[0].goodsList,'1')
+						this.dataHandle()
+					}
 				}
-				this.$qj
-					.http(this.$qj.domain)
-					.post(deleteOcContractGoods, json)
-					.then(res => {
-						if (res && res.success) {
-							this.getContract(this.contractBillcode);
-							this.$qj.message.alert('商品删除成功');
-						} else {
-							this.$qj.message.alert('商品删除失败');
-						}
-					});
+				
+				console.log('eeeeee',this.listItems)
+				// this.$qj
+				// 	.http(this.$qj.domain)
+				// 	.post(deleteOcContractGoods, json)
+				// 	.then(res => {
+				// 		if (res && res.success) {
+				// 			this.getContract(this.contractBillcode);
+				// 			this.$qj.message.alert('商品删除成功');
+				// 		} else {
+				// 			this.$qj.message.alert('商品删除失败');
+				// 		}
+				// 	});
+			},
+			dataHandle(){
+				// console.log('查询结果---',res)
+										this.discountMoney = 0
+										this.shoppingGoodsIdStr=[]
+										this.listItems[0].goodsList.forEach(item=>{
+											item.itemChecked = false
+											if (!RegExp(/http/).test(item.dataPic)) {
+												item.dataPic = this.$domain + item.dataPic;
+											}
+											if(item.goodsClass==1 && this.listItems[0].contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
+												// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+												this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
+											}else{
+												if(this.listItems[0].contractType == 39){
+													if(item.goodsPro == null ){
+														this.discountMoney += item.pricesetNprice*item.goodsNum
+													}else{
+														this.discountMoney += item.goodsPro*item.goodsNum
+													}
+												}
+											}
+											this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
+										})
+										if(this.listItems[0].contractType == 39){
+											this.getFreightFare()
+										}else{
+											this.discountMoney = this.listItems[0].contractMoney
+											this.freight = Number(this.listItems[0].employeeCode) || 0
+										}
+										
+										this.discountMoney = this.discountMoney.toFixed(2)
+										// this.listItems = []
+										// this.listItems.push(res)
+										this.totalPrice = this.listItems[0].contractType == 39?this.listItems[0].contractInmoney:this.listItems[0].contractMoney
 			},
 			//去结算
 			toSettle(){
