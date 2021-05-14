@@ -458,6 +458,7 @@ export default {
 			});
 		},
 		cancelOrder(order) {
+			console.log('order----',order)
 			let that = this;
 			wx.showModal({
 				content: '取消订单',
@@ -471,6 +472,13 @@ export default {
 								console.log('res取消接口----',res)
 								if (res.success) {
 									that.$qj.message.alert('取消成功!');
+									if(order.memberGcode != null && order.memberGcode != ''){
+										// 恢复剩余额度
+										http.post('/web/gt/gift/cancelContract.json',{giftUserCode:order.memberGcode})
+										.then(res4=>{
+											console.log('aaa2222aa',res4)
+										})
+									}
 								}
 							})
 							.then(res => {

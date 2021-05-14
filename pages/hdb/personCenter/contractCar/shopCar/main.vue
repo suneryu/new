@@ -499,6 +499,7 @@ export default {
 		},
 		// 跳到支付方式页面
 		jumpToPayMethods(contractBillcode, contractBbillcode) {
+			console.log('跳转---',contractBillcode,'----',contractBbillcode)
 			if (contractBbillcode) {
 				uni.redirectTo({
 					url: `/pages/payMethods/payMethods?contractBbillcode=${contractBbillcode}`
@@ -768,6 +769,7 @@ export default {
 						goodsSupplierCode: '', //配送商Code
 						packageList: [],
 						contractEcurl:this.giftCode,
+						memberGcode:this.giftUserCode,
 						areaName:$storage.get('loginInfor').userPhone,
 						employeeCode:this.giftUserId,
 						employeeName:this.userRelNum,
@@ -815,6 +817,7 @@ export default {
 						contractType: v.shoppingType,
 						packageList: [],
 						contractEcurl:this.giftCode,
+						memberGcode:this.giftUserCode,
 						areaName:$storage.get('loginInfor').userPhone,
 						employeeCode:this.giftUserId,
 						employeeName:this.userRelNum,
@@ -934,6 +937,11 @@ export default {
 										$router.replace('pay/paySuccess',{pageState:1,contractBillcode:res.dataObj.contractBillcode})
 									})
 								}else{
+									// 更新剩余额度为0
+									http.post('/web/gt/gift/updateContractNew.json',{giftUserCode:this.giftUserCode})
+									.then(res4=>{
+										console.log('aaaaa',res4)
+									})
 									let json = {
 										// dataBmoney:Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight) ,
 										// contractMoney: Number(this.contractRealNum)-Number(this.userRelNum)+Number(this.totalFreight),
@@ -960,6 +968,7 @@ export default {
 					}
 
 					if (this.scontractPmode == '0') {
+						console.log('混合支付---',)
 						// 成功之后  跳到订单页面
 						this.jumpToPayMethods(res.dataObj.contractBillcode, res.dataObj.contractBbillcode);
 					} else {

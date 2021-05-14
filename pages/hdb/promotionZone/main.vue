@@ -169,7 +169,7 @@
 			this.batchGetSkuMinSaleMultiple();
 		},
 		onShow() {
-			this.userinfoType = this.$qj.storage.get('userdetailsInfo').userinfoType
+			this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
 			if(this.userinfoType == 2){
 				this.showArea = false
 			}else{
@@ -179,6 +179,7 @@
 		},
 
 		onLoad(options) {
+			this.aaa()
 			this.initSearchParams();
 			// wx.setNavigationBarTitle({
 			// 	title: "促销专区"
@@ -238,6 +239,20 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			//获取促销分类信息
+			aaa(){
+				// let params ={
+				// 	promotionName: "20210428测试"
+				// }
+				this.$qj
+					.http(this.$qj.domain)
+					.get('/web/pm/promotion/queryPromotionAllPage.json')
+					.then(res => {
+						console.log('促销类型res------',res)
+				
+					});
+			},
+			// 
 			chooseCity() {
 				this.cityPicker = true;
 			},
@@ -278,6 +293,7 @@
 			initSearchParams(classtreeCode) {
 				this.params = {
 				sortField: '',				order: 'desc',				page: 1,				rows: this.rows,				// goodsOrigin:13,				channelCode:"132457",				// temp:"SFA/SDAF/ASFS"				goodsOrigin:26,
+				// ginfoCode: "2021042800000020"
 					// searchParam: this.searchParam || this.$qj.storage.get('searchParam')
 				};
 

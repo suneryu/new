@@ -190,27 +190,32 @@
 			},
 			//添加购物车
 			addShoppingGoodsCode(item){
-				let goodsList = [{
-					skuCode:item.skuCode,
-					goodsNum:item.giftNum,
-					shoppingType:"6",
-					// channelCode:this.channelCode,
-					goodsContract:item.pricesetBaseprice,
-					warehouseCode: this.giftUserCode,
-					warehouseName: this.list.giftName,
-					giftCode:this.list.giftCode
-				}]
-				let params = {
-					memberBcode:$storage.get('loginInfor').userInfoCode,
-					goodsBeanStr:JSON.stringify(goodsList)
-				}
-				this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/addShoppingGoodsCode.json',params ).then(res => {
-					if(res.success){
-						this.$qj.message.alert('商品加入购物车成功！');
-					}else{
-						this.$qj.message.alert(res.msg);
+				if(this.list.userRelNum == 0){
+					this.$qj.message.alert('合同额度已使用完，无法加入购物车');
+				}else{
+					let goodsList = [{
+						skuCode:item.skuCode,
+						goodsNum:item.giftNum,
+						shoppingType:"6",
+						// channelCode:this.channelCode,
+						goodsContract:item.pricesetBaseprice,
+						warehouseCode: this.giftUserCode,
+						warehouseName: this.list.giftName,
+						giftCode:this.list.giftCode
+					}]
+					let params = {
+						memberBcode:$storage.get('loginInfor').userInfoCode,
+						goodsBeanStr:JSON.stringify(goodsList)
 					}
-				})
+					this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/addShoppingGoodsCode.json',params ).then(res => {
+						if(res.success){
+							this.$qj.message.alert('商品加入购物车成功！');
+						}else{
+							this.$qj.message.alert(res.msg);
+						}
+					})
+				}
+				
 			},
 			goodsDetail(skuCode) {
 				$storage.set('pricesetBaseprice',skuCode.pricesetBaseprice)
