@@ -104,6 +104,10 @@
 				<view class="title">合同额度抵扣</view>
 				<text class="price" :style="{ color: '#ec2b27' }">-¥{{ userRelNum>=accountsSumPrice?accountsSumPrice:userRelNum }}</text>
 			</view>
+			<view class="item" v-if='userRelNum<accountsSumPrice'>
+				<view class="title">合同折扣</view>
+				<text class="price" :style="{ color: '#ec2b27' }">{{ ((accountsSumPrice-userRelNum)/contractRealNum).toFixed(2) }}</text>
+			</view>
 			<!-- <view class="item" @click="isShowPreferential">
 				<view class="title" :style="{ color: baseColor }">优惠券</view>
 				<view class="right">
@@ -113,7 +117,8 @@
 			</view> -->
 			<view class="total">
 				<text>合计：</text>
-				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:(accountsSumPrice-userRelNum).toFixed(2) }}</text>
+				<!-- <text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:(accountsSumPrice-userRelNum).toFixed(2) }}</text> -->
+				<text class="price" :style="{ color: '#ec2b27' }">¥{{ userRelNum>=accountsSumPrice?0:contractRealNum.toFixed(2) }}</text>
 			</view>
 		</view>
 

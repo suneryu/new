@@ -314,11 +314,17 @@
 						// 用户维度的起订量倍数，优先级最高
 						if (item.skuOneNum) {
 							goodsCamount = goodsCamount - item.goodsMinnum * item.skuOneNum;
+							item.contractGoodsInmoney = item.contractGoodsInmoney - item.pricesetNprice * item.goodsMinnum * item.skuOneNum
+							this.listItems[0].contractInmoney = this.listItems[0].contractInmoney - item.pricesetNprice * item.goodsMinnum * item.skuOneNum
 						} else {
 							if (item.goodsTopnum == 1) {
 								goodsCamount = goodsCamount - item.goodsMinnum;
+								item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+								this.listItems[0].contractInmoney = this.listItems[0].contractInmoney - item.pricesetNprice * item.goodsMinnum 
 							} else {
 								goodsCamount--;
+								item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+								this.listItems[0].contractInmoney = this.listItems[0].contractInmoney - item.pricesetNprice
 							}
 						}
 
@@ -368,14 +374,22 @@
 				console.log('‘【【【【【',index)
 				let item = this.listItems[0].goodsList[index]
 				let goodsCamount = item.goodsNum;
+				console.log('‘---',goodsCamount)
+				console.log('‘--item-',item)
 				if (item.goodsMinnum && item.goodsMinnum > 0) {
 					if (item.skuOneNum) {
 						goodsCamount = goodsCamount + item.goodsMinnum * item.skuOneNum;
+						item.contractGoodsInmoney = item.contractGoodsInmoney + item.pricesetNprice * item.goodsMinnum * item.skuOneNum
+						this.listItems[0].contractInmoney = this.listItems[0].contractInmoney + item.pricesetNprice * item.goodsMinnum * item.skuOneNum
 					} else {
 						if (item.goodsTopnum == 1) {
 							goodsCamount = goodsCamount + item.goodsMinnum;
+							item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+							this.listItems[0].contractInmoney = this.listItems[0].contractInmoney + item.pricesetNprice * item.goodsMinnum 
 						} else {
 							goodsCamount++;
+							item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+							this.listItems[0].contractInmoney = this.listItems[0].contractInmoney + item.pricesetNprice 
 						}
 					}
 
@@ -383,6 +397,8 @@
 				} else {
 					if (goodsCamount < 1000) {
 						goodsCamount++;
+						item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+						this.listItems[0].contractInmoney = this.listItems[0].contractInmoney + item.pricesetNprice 
 						item.goodsNum = goodsCamount;
 					}
 				}

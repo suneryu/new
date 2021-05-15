@@ -113,6 +113,7 @@ export default {
 			this.commonHistory();
 		},
 		searchItems(item, index) {
+			console.log('ppppp----',item)
 			let query = {
 				searchParam: item
 			};

@@ -15,7 +15,7 @@
 			<div class='constractName2' @click='parts("2")' id="constractName3" :style="{ color: fontColor3 }">线下销售合同
 			</div>
 			<div class='constractName3' @click="select()">
-				<i class="iconfont icon-arrfill_l" v-if='iconShow1'></i>
+				<i class="iconfont icon-arrfill_l" style='font-size: 25px;' v-if='iconShow1'></i>
 				<i class="iconfont icon-xialakuangjiantou" v-if='iconShow2'></i>
 			</div>
 		</div>
@@ -775,9 +775,9 @@
 
 <style lang="less" scoped>
 	@import '@/node_modules/qj-mini-pages/libs/css/common.less';
-
+	
 	.icon-xialakuangjiantou:before {
-		font-size: 12rpx !important;
+		font-size: 20rpx !important;
 		margin-left: 8rpx;
 		vertical-align: middle;
 	}
@@ -1001,7 +1001,7 @@
 	}
 
 	.constractName0 {
-		width: 34%;
+		width: 30%;
 		height: 80rpx;
 		text-align: center;
 		line-height: 80rpx;
@@ -1014,7 +1014,7 @@
 	}
 
 	.constractName1 {
-		width: 34%;
+		width: 30%;
 		height: 80rpx;
 		text-align: center;
 		line-height: 80rpx;
@@ -1026,7 +1026,7 @@
 	}
 
 	.constractName2 {
-		width: 25%;
+		width: 30%;
 		height: 80rpx;
 		text-align: right;
 		line-height: 80rpx;
@@ -1038,9 +1038,9 @@
 	}
 
 	.constractName3 {
-		width: 8%;
+		width: 10%;
 		height: 80rpx;
-		text-align: left;
+		text-align: center;
 		line-height: 80rpx;
 	}
 
