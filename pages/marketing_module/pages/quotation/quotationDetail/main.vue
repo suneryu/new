@@ -82,7 +82,7 @@
 						<div class='goodsPrice'>
 							<div class='goodsPrice-item'>
 								<span>商品总额：</span>
-								<span>{{ unitPrice.obpay }}{{itemList.contractType == 39?itemList.contractInmoney:itemList.contractMoney}}{{ unitPrice.mapay }}</span>
+								<span>{{ unitPrice.obpay }}{{itemList.contractType == 39?itemList.contractInmoney.toFixed(2):itemList.contractMoney.toFixed(2)}}{{ unitPrice.mapay }}</span>
 							</div>
 							<div class='goodsPrice-item'>
 								<span>运费：</span>
@@ -323,22 +323,23 @@
 						}
 
 						item.goodsNum = goodsCamount;
-						this.$qj
-							.http(this.$qj.domain)
-							.post(updateOcContractGoodsGoodNum, {
-								occontractgoodsStr: JSON.stringify(item)
-							})
-							.then(res => {
-								if (res && res.success) {
-									// this.getContract(this.contractBillcode);
-									this.dataHandle()
-								} else {
-									if (res.errorCode == '-1') {
-										item.goodsCamount = item.goodsSupplynum;
-										//购买商品数量不能超过商品库存
-									}
-								}
-							});
+						this.dataHandle()
+						// this.$qj
+						// 	.http(this.$qj.domain)
+						// 	.post(updateOcContractGoodsGoodNum, {
+						// 		occontractgoodsStr: JSON.stringify(item)
+						// 	})
+						// 	.then(res => {
+						// 		if (res && res.success) {
+						// 			// this.getContract(this.contractBillcode);
+						// 			this.dataHandle()
+						// 		} else {
+						// 			if (res.errorCode == '-1') {
+						// 				item.goodsCamount = item.goodsSupplynum;
+						// 				//购买商品数量不能超过商品库存
+						// 			}
+						// 		}
+						// 	});
 					}
 				} else {
 					if (goodsCamount > 1) {
@@ -385,22 +386,22 @@
 						item.goodsNum = goodsCamount;
 					}
 				}
-
-				this.$qj
-					.http(this.$qj.domain)
-					.post(updateOcContractGoodsGoodNum, {
-						occontractgoodsStr: JSON.stringify(item)
-					})
-					.then(res => {
-						if (res && res.success) {
-							// this.getContract(this.contractBillcode);
-							this.dataHandle()
-						} else {
-							if (res.errorCode == '-1') {
-								this.$qj.message.alert(res.msg);
-							}
-						}
-					});
+				this.dataHandle()
+				// this.$qj
+				// 	.http(this.$qj.domain)
+				// 	.post(updateOcContractGoodsGoodNum, {
+				// 		occontractgoodsStr: JSON.stringify(item)
+				// 	})
+				// 	.then(res => {
+				// 		if (res && res.success) {
+				// 			// this.getContract(this.contractBillcode);
+				// 			this.dataHandle()
+				// 		} else {
+				// 			if (res.errorCode == '-1') {
+				// 				this.$qj.message.alert(res.msg);
+				// 			}
+				// 		}
+				// 	});
 			},
 			//取消报价单
 			cancleList(index) {
@@ -431,10 +432,11 @@
 				for(let i = 0; i<this.listItems[0].goodsList.length;i++){
 					console.log('-----'+i+'----',this.listItems[0].goodsList[i].contractGoodsId)
 					if(this.listItems[0].goodsList[i].contractGoodsId == id){
-						console.log(this.listItems[0].goodsList,'0')
 						// this.listItems[0].goodsList.remove(i);
+						this.listItems[0].goodsNum = this.listItems[0].goodsNum - this.listItems[0].goodsList[i].goodsNum
+						this.listItems[0].contractInmoney = this.listItems[0].contractInmoney - this.listItems[0].goodsList[i].contractGoodsInmoney
 						this.listItems[0].goodsList.splice(i,1);
-						console.log(this.listItems[0].goodsList,'1')
+						
 						this.dataHandle()
 					}
 				}
@@ -489,11 +491,13 @@
 			},
 			//去结算
 			toSettle(){
-				let params = {
-					contractBillcode:this.contractBillcode
-				}
+				$storage.set('optionsInfo',this.listItems)
+				$router.replace("marketing_module/pages/quotation/orderline")
+				// let params = {
+				// 	contractBillcode:this.contractBillcode
+				// }
 				// this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', params).then(res=>{
-					$router.replace("marketing_module/pages/quotation/orderline",params)
+					// $router.replace("marketing_module/pages/quotation/orderline",params)
 				// })
 			}
 		}

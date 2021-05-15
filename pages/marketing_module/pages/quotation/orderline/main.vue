@@ -67,7 +67,7 @@
 				</div>
 				<div class="accounts-info-money">
 					共{{ shoppingItem.goodsNum }}件，小计：
-					<span :style="{ color: baseColor }" v-if="shoppingItem.goodsMoney">{{ unitPrice.obpay }}{{shoppingItem.contractType == 39 ?shoppingItem.contractInmoney:shoppingItem.contractMoney }}{{ unitPrice.mapay }}</span>
+					<span :style="{ color: baseColor }" v-if="shoppingItem.goodsMoney">{{ unitPrice.obpay }}{{shoppingItem.contractType == 39 ?shoppingItem.contractInmoney.toFixed(2):shoppingItem.contractMoney.toFixed(2) }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
@@ -274,10 +274,13 @@
 				giftCode:'',
 				giftUserId:'',
 				userRealNum:0,
-				contractType:0
+				contractType:0,
+				listItems:[]
 			};
 		},
 		onLoad(options) {
+			console.log('缓存里取数---，',$storage.get('optionsInfo'))
+			this.listItems = $storage.get('optionsInfo');
 			this.goodsClass = options.goodsClass
 			this.temp = options;
 			console.log('传来的option是啥，', this.temp)
@@ -620,54 +623,98 @@
 					})
 			},
 			initOrderData(options) {
-				this.$qj
-					.http(this.$qj.domain)
-					.post(getContractByContractBillcode, options).then(res => {
-						// this.goodsClass = res.goodsClass
-						this.shoppingItems = []
-						this.discountMoney = 0
-						this.shoppingGoodsIdStr = []
-						this.getGoodsDetial(res.goodsList[0].skuCode)
-						this.giftCode = res.goodsList[0].goodsProperty5
-						this.giftUserId = res.goodsList[0].goodsProperty4
-						this.contractType = res.contractType
-						this.shoppingGoodsIdStr=[]
-						res.goodsList.forEach(item=>{
-							if (!RegExp(/http/).test(item.dataPic)) {
-								item.dataPic = this.$domain + item.dataPic;
-							}
-							if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
-								// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
-								this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
+				this.shoppingItems = []
+				this.discountMoney = 0
+				this.shoppingGoodsIdStr = []
+				this.getGoodsDetial(this.listItems[0].goodsList[0].skuCode)
+				this.giftCode = this.listItems[0].goodsList[0].goodsProperty5
+				this.giftUserId = this.listItems[0].goodsList[0].goodsProperty4
+				this.contractType = this.listItems[0].contractType
+				this.shoppingGoodsIdStr=[]
+				this.listItems[0].goodsList.forEach(item=>{
+					if (!RegExp(/http/).test(item.dataPic)) {
+						item.dataPic = this.$domain + item.dataPic;
+					}
+					if(item.goodsClass==1 && this.listItems[0].contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
+						// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+						this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
+					}else{
+						if(this.listItems[0].contractType == 39){
+							if(item.goodsPro == null ){
+								this.discountMoney += item.pricesetNprice*item.goodsNum
 							}else{
-								if(res.contractType == 39){
-									if(item.goodsPro == null ){
-										this.discountMoney += item.pricesetNprice*item.goodsNum
-									}else{
-										this.isContrat = true
-										this.discountMoney += item.goodsPro*item.goodsNum
-									}
-								}
+								this.isContrat = true
+								this.discountMoney += item.goodsPro*item.goodsNum
 							}
+						}
+					}
+					
+					// if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){
+					// 	this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+					// }
+					this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
+				})
+				if(this.isContrat){
+					this.getGift(this.listItems[0].goodsList[0].goodsProperty2)
+				}
+				if(this.listItems[0].contractType == 39){
+					this.getFreightFare()
+				}else{
+					this.discountMoney = this.listItems[0].contractMoney
+					this.freight = Number(this.listItems[0].employeeCode) || 0
+				}
+				this.discountMoney = this.discountMoney.toFixed(2)
+				this.shoppingItems.push(this.listItems[0])
+				this.allPrice = this.listItems[0].contractType == 39?this.listItems[0].contractInmoney:this.listItems[0].contractMoney
+				this.allPrice = this.allPrice.toFixed(2)
+				// this.$qj
+				// 	.http(this.$qj.domain)
+				// 	.post(getContractByContractBillcode, options).then(res => {
+				// 		// this.goodsClass = res.goodsClass
+				// 		this.shoppingItems = []
+				// 		this.discountMoney = 0
+				// 		this.shoppingGoodsIdStr = []
+				// 		this.getGoodsDetial(res.goodsList[0].skuCode)
+				// 		this.giftCode = res.goodsList[0].goodsProperty5
+				// 		this.giftUserId = res.goodsList[0].goodsProperty4
+				// 		this.contractType = res.contractType
+				// 		this.shoppingGoodsIdStr=[]
+				// 		res.goodsList.forEach(item=>{
+				// 			if (!RegExp(/http/).test(item.dataPic)) {
+				// 				item.dataPic = this.$domain + item.dataPic;
+				// 			}
+				// 			if(item.goodsClass==1 && res.contractType == 39 && this.checkModifyAudit == 3 && item.goodsPro == null){
+				// 				// this.discountMoney += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+				// 				this.discountMoney += item.pricesetNprice*Number(this.userinfoOcode)*item.goodsNum
+				// 			}else{
+				// 				if(res.contractType == 39){
+				// 					if(item.goodsPro == null ){
+				// 						this.discountMoney += item.pricesetNprice*item.goodsNum
+				// 					}else{
+				// 						this.isContrat = true
+				// 						this.discountMoney += item.goodsPro*item.goodsNum
+				// 					}
+				// 				}
+				// 			}
 							
-							// if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){
-							// 	this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
-							// }
-							this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
-						})
-						if(this.isContrat){
-							this.getGift(res.goodsList[0].goodsProperty2)
-						}
-						if(res.contractType == 39){
-							this.getFreightFare()
-						}else{
-							this.discountMoney = res.contractMoney
-							this.freight = Number(res.employeeCode) || 0
-						}
-						this.discountMoney = this.discountMoney.toFixed(2)
-						this.shoppingItems.push(res)
-						this.allPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
-					})
+				// 			// if(item.goodsClass==1 && res.contractType == 41 && this.checkModifyAudit == 3){
+				// 			// 	this.discountMoneyBak += item.pricesetNprice*(1-Number(this.userinfoOcode))*item.goodsNum
+				// 			// }
+				// 			this.shoppingGoodsIdStr.push({skuId:item.goodsProperty3,goodsNum:item.goodsNum})
+				// 		})
+				// 		if(this.isContrat){
+				// 			this.getGift(res.goodsList[0].goodsProperty2)
+				// 		}
+				// 		if(res.contractType == 39){
+				// 			this.getFreightFare()
+				// 		}else{
+				// 			this.discountMoney = res.contractMoney
+				// 			this.freight = Number(res.employeeCode) || 0
+				// 		}
+				// 		this.discountMoney = this.discountMoney.toFixed(2)
+				// 		this.shoppingItems.push(res)
+				// 		this.allPrice = res.contractType == 39?res.contractInmoney:res.contractMoney
+				// 	})
 			},
 
 			addClass() {
