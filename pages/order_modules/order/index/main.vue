@@ -144,7 +144,8 @@ export default {
 			},
 			isContract:true,
 			serachPhone:'',
-			searchGiftcode:''
+			searchGiftcode:'',
+			searchGiftUserCode:''
 		};
 	},
 	onLoad(options) {
@@ -152,6 +153,7 @@ export default {
 			this.isContract = false,
 			this.serachPhone = options.serachPhone,
 			this.searchGiftcode = options.searchGiftcode
+			this.searchGiftUserCode = options.giftUserCode
 		}
 		console.log('跳转页面---',options)
 		this.getQY();
@@ -236,7 +238,8 @@ export default {
 				delete params.memberBcode
 				params.contractType='08'
 				params.areaName=this.serachPhone
-				params.contractEcurl = this.searchGiftcode
+				// params.contractEcurl = this.searchGiftcode
+				params.memberGcode = this.searchGiftUserCode
 			}
 		
 				
