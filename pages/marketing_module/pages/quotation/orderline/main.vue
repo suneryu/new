@@ -831,7 +831,7 @@
 						sklist.push(this.skuDataByDetail)
 					}
 
-
+					console.log('this.shppingItems---',this.shoppingItems)
 					this.shoppingItems.map((v, index) => {
 						this.orderDomainStr.push({
 							goodsClass:this.goodsClass, //商品类型

@@ -423,15 +423,23 @@ export default {
 		},
 		queryExpressInfo(order) {
 			console.log('查看物流---',order)
-			let params = {
-				expressType: order.packageList[0].expressCode,
-				expressNo: order.packageList[0].packageBillno,
-				expressName: order.packageList[0].expressName,
-				address: order.goodsReceiptArrdess,
-				img: order.goodsList[0].dataPic,
-				num: order.goodsList.length
-			};
-			this.$qj.router.push('logistics_modules/infor', params);
+			this.$qj
+				.http(this.$qj.domain)
+				.get('/web/oc/contract/getContractCForUser.json', {
+					contractId:order.contractId
+				})
+				.then(res => {
+						let params = {
+							expressType: res.packageList[0].expressCode,
+							expressNo: res.packageList[0].packageBillno,
+							expressName: res.packageList[0].expressName,
+							address: order.goodsReceiptArrdess,
+							img: order.goodsList[0].dataPic,
+							num: order.goodsList.length
+						};
+						this.$qj.router.push('logistics_modules/infor', params);
+				})
+			
 		},
 		confirmReceive(order) {
 			let that = this;

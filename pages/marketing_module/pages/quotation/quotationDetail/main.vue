@@ -305,6 +305,7 @@
 			},
 			//删除商品数量
 			subtract(index) {
+				this.subtractWithin(index)
 				let item = this.listItems[0].goodsList[index]
 				let goodsCamount = item.goodsNum;
 				if (item.goodsMinnum && item.goodsMinnum > 0) {
@@ -370,7 +371,54 @@
 					}
 				}
 			},
+			//删除内层商品数据
+			subtractWithin(index) {
+				let item = this.listItems[0].packageList[0].contractGoodsList[index]
+				let goodsCamount = item.goodsNum;
+				if (item.goodsMinnum && item.goodsMinnum > 0) {
+					if (goodsCamount <= item.goodsMinnum) {
+						this.$qj.message.alert('购买数量不能小于起订量');
+					} else if (goodsCamount > item.goodsMinnum && goodsCamount > 1) {
+						// 用户维度的起订量倍数，优先级最高
+						if (item.skuOneNum) {
+							goodsCamount = goodsCamount - item.goodsMinnum * item.skuOneNum;
+							item.contractGoodsInmoney = item.contractGoodsInmoney - item.pricesetNprice * item.goodsMinnum * item.skuOneNum
+						} else {
+							if (item.goodsTopnum == 1) {
+								goodsCamount = goodsCamount - item.goodsMinnum;
+								item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+							} else {
+								goodsCamount--;
+								item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+							}
+						}
+			
+						item.goodsNum = goodsCamount;
+					}
+				} else {
+					if (goodsCamount > 1) {
+						goodsCamount--;
+						item.goodsNum = goodsCamount;
+						this.$qj
+							.http(this.$qj.domain)
+							.post(updateOcContractGoodsGoodNum, {
+								occontractgoodsStr: JSON.stringify(item)
+							})
+							.then(res => {
+								if (res && res.success) {
+
+								} else {
+									if (res.errorCode == '-1') {
+										item.goodsCamount = item.goodsSupplynum;
+										//购买商品数量不能超过商品库存
+									}
+								}
+							});
+					}
+				}
+			},
 			add(index) {
+				this.addWithin(index);
 				console.log('‘【【【【【',index)
 				let item = this.listItems[0].goodsList[index]
 				let goodsCamount = item.goodsNum;
@@ -419,6 +467,36 @@
 				// 		}
 				// 	});
 			},
+			//添加内层数量
+			addWithin(index) {
+				console.log('‘nei----',index)
+				let item = this.listItems[0].packageList[0].contractGoodsList[index]
+				let goodsCamount = item.goodsNum;
+				console.log('‘-neipppp--',goodsCamount)
+				console.log('‘-nei----item-',item)
+				if (item.goodsMinnum && item.goodsMinnum > 0) {
+					if (item.skuOneNum) {
+						goodsCamount = goodsCamount + item.goodsMinnum * item.skuOneNum;
+						item.contractGoodsInmoney = item.contractGoodsInmoney + item.pricesetNprice * item.goodsMinnum * item.skuOneNum
+					} else {
+						if (item.goodsTopnum == 1) {
+							goodsCamount = goodsCamount + item.goodsMinnum;
+							item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+						} else {
+							goodsCamount++;
+							item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+						}
+					}
+			
+					item.goodsNum = goodsCamount;
+				} else {
+					if (goodsCamount < 1000) {
+						goodsCamount++;
+						item.contractGoodsInmoney = item.pricesetNprice * item.goodsCamount
+						item.goodsNum = goodsCamount;
+					}
+				}
+			},
 			//取消报价单
 			cancleList(index) {
 				let json = {
@@ -445,6 +523,14 @@
 				// }
 				let id = this.listItems[0].goodsList[index].contractGoodsId
 				console.log('json------',id)
+				// 内层===
+				for(let j = 0; j<this.listItems[0].packageList[0].contractGoodsList.length;j++){
+					console.log('-----'+j+'----',this.listItems[0].packageList[0].contractGoodsList[j].contractGoodsId)
+					if(this.listItems[0].packageList[0].contractGoodsList[j].contractGoodsId == id){
+						this.listItems[0].packageList[0].contractGoodsList.splice(j,1);
+					}
+				}
+				//外层==
 				for(let i = 0; i<this.listItems[0].goodsList.length;i++){
 					console.log('-----'+i+'----',this.listItems[0].goodsList[i].contractGoodsId)
 					if(this.listItems[0].goodsList[i].contractGoodsId == id){
@@ -456,6 +542,8 @@
 						this.dataHandle()
 					}
 				}
+				
+				// contractGoodsList
 				
 				console.log('eeeeee',this.listItems)
 				// this.$qj
