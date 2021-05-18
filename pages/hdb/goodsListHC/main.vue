@@ -30,19 +30,21 @@
 							:class="{ 'icon-weixuanzhongkuang': !item.itemChecked, 'icon-xuanzhongkuang': item.itemChecked }"
 							v-bind:style="{ color: baseColor }"
 						></view> -->
-						<img :src="item.dataPic || userImgurl" />
+						<!-- <img :src="item.dataPic || userImgurl" /> -->
 						<div class="list-box">
-							<p style='text-overflow: ellipsis;'>{{ item.goodsName }}</p>
+							<p style='margin-top: 20rpx;'>{{ item.goodsName }}</p>
 							<p>{{ item.goodsNo }}</p>
 							<p v-if="userinfoType =='1' " class="noPrice">认证为企业用户可查看价格</p>
-							<h3 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#d66377' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h3>
-							<div style="text-align: center;" v-if="item.goodsClass != '1' && userinfoType=='2' && checkModifyAudit == '3' ">
+							<h4 v-if="userinfoType=='2' && checkModifyAudit != '3'" :style="{ color: '#d66377',marginLeft:'10rpx' }">{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</h4>
+							<div style="text-align: left;margin-left: 10rpx;" v-if="item.goodsClass != '1' && userinfoType=='2' && checkModifyAudit == '3' ">
 								<span class="originalPrice11">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
 							</div>
 							<div style="text-align: left;" v-if="item.goodsClass == '1' && userinfoType=='2' && checkModifyAudit == '3' ">
 							<!-- <div style="text-align: left;" v-if=" userinfoType=='2' && checkModifyAudit == '3' "> -->
-								<span class="originalPrice">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} </span>
-								<span class="purchasePrice" style='display: block;' :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
+								<p class="originalPrice">原价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }} 
+								<span class="purchasePrice" :style="{ color: '#d66377',marginLeft:'40rpx' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</span>
+								</p>
+								<!-- <p class="purchasePrice" :style="{ color: '#d66377' }"> 采购价：{{ unitPrice.obpay }}{{ item.pricesetMakeprice.toFixed(2) }}{{ unitPrice.mapay }}</p> -->
 							</div>
 						</div>
 						<!-- <view class="icon-container">
@@ -145,7 +147,7 @@
 				items: [],
 				total: 0,
 				page: 1,
-				rows: 20,
+				rows: 10,
 				current: 0,
 				colorCurrent: null,
 				brandCode: '',
@@ -186,20 +188,20 @@
 			};
 		},
 		onShow() {
-			// this.userPhone = this.$qj.storage.get('loginInfor').userPhone;
-			// console.log(this.$qj.storage.get('userInfo'))
-			// console.log(this.$qj.storage.get('userdetailsInfo'))
-			// this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
-			// this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
-			
-			// console.log(this.userinfoType)
-			// 	this.searchStatus();
+			this.userPhone = this.$qj.storage.get('loginInfor').userPhone;
+			console.log(this.$qj.storage.get('userInfo'))
+			console.log(this.$qj.storage.get('userdetailsInfo'))
+			this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
+			this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
+			$storage.set('contractGoodsPrice','')
+			console.log(this.userinfoType)
+				this.searchStatus();
 				
-			// this.batchCheckCollect();
-			// this.batchGetSkuMinSaleMultiple();
+			this.batchCheckCollect();
+			this.batchGetSkuMinSaleMultiple();
 		},
 		onLoad(options) {
-	
+			
 			this.searchParams = options.searchParams;
 			this.goodsClass = options.goodsClass;
 			// if (options.json && JSON.parse(options.json).classtreeCode) {
@@ -211,17 +213,6 @@
 			 	// this.searchParams.classtreeCode = JSON.parse(options.json).classtreeCode;
 			 }
 			 this.searchParam = options.searchParam
-			 this.userPhone = this.$qj.storage.get('loginInfor').userPhone;
-			 console.log(this.$qj.storage.get('userInfo'))
-			 console.log(this.$qj.storage.get('userdetailsInfo'))
-			 this.userinfoType = this.$qj.storage.get('loginInfor').userinfoType
-			 this.userInfoCode =this.$qj.storage.get('loginInfor').userInfoCode;
-			 
-			 console.log(this.userinfoType)
-			 	this.searchStatus();
-			 	
-			 this.batchCheckCollect();
-			 this.batchGetSkuMinSaleMultiple();
 		},
 		onReachBottom() {
 			this.loadMore();
@@ -279,8 +270,9 @@
 						userinfoPhone: this.userPhone
 					})
 					.then(res => {
-						console.log('权益值',res.rows[0].userinfoOcode)
-						this.userinfoOcode = res.rows[0].userinfoOcode
+						// console.log('权益值',res.rows[0].userinfoOcode)
+						if(res)this.userinfoOcode = res.rows[0].userinfoOcode || 1
+						
 						if(this.userinfoOcode == null || this.userinfoOcode ==''){
 							this.userinfoOcode = 1
 						}
@@ -317,13 +309,14 @@
 					order: 'desc',
 					page: 1,
 					rows: this.rows,
-					goodsClassStr:"2",
 					// goodsClassCode:'2020072100000145',
 					classtreeShopcode:  this.goodsClassCode || goodsClassCode || '',
 					goodsOrigin:"0",
 					// goodsClassCode:this.classtreeCode || classtreeCode,
 					goodsType: "00",
+					goodsClassStr:"2",
 					likeGoodsName: this.searchParam || '',
+					searchType:'match_phrase',
 					// classtreeCode:"2020072100000130",
 					channelCode: "1526",
 					// searchParam: this.searchParam || this.$qj.storage.get('searchParam')
@@ -961,7 +954,8 @@
 				zoom: 1;
 
 				li {
-					width: calc(50% - 2rpx);
+					// width: calc(50% - 2rpx);
+					width: 100%;
 					float: left;
 					border-right: 2rpx solid #f5f5f5;
 					border-bottom: 2rpx solid #f5f5f5;
@@ -974,7 +968,7 @@
 						// width: 100%;
 						height: 100%;
 						font-size: @middle-title;
-						text-align: center;
+						text-align: left;
 
 						.checked {
 							display: flex;
@@ -990,7 +984,7 @@
 
 						.list-box {
 							padding: 0 30rpx;
-							height: 150rpx;
+							height: 180rpx;
 
 							h3 {
 								font-size: 32rpx;
@@ -1003,8 +997,8 @@
 								-webkit-line-clamp: 2;
 								overflow: hidden;
 								text-overflow: ellipsis;
-								margin: 10rpx;
 								white-space: nowrap;
+								margin: 10rpx;
 								// height: 70rpx;
 								line-height: 35rpx;
 							}
