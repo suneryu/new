@@ -26,6 +26,18 @@
 							<div v-else-if="order.dataState == 3">已完成</div>
 							<button class="buttonClass" @click="toQuotaDetail(order.contractBillcode)" v-if="order.dataState == 2 || order.dataState == 9">查看编辑</button>
 						</div>
+						<div class="order-status" style='justify-content: flex-start;'>
+							<div class="order-info">确认有效期：</div>
+							<u-count-down
+								:timestamp='orderList[index].validPeriod'
+								separator="zn"
+								font-size="24"
+								color="#fa4f4f"
+								separator-color="#fa4f4f"
+								separator-size="24"
+							></u-count-down>
+							<div style='color: #fa4f4f;margin-left: 5rpx;'>秒</div>
+						</div>
 						<div class="order-status" >
 							<div>创建时间：{{ order.gmtCreate | format}}</div>
 							<div v-if='order.employeeName != null'>销售员：{{ order.employeeName}}</div>
@@ -190,6 +202,11 @@ export default {
 								});
 								
 								list.map(v => {
+									let date1 = new Date(v.gmtCreate);
+									let date2 = new Date(date1);
+									date2.setDate(date1.getDate() + 30);
+									v.validPeriod = (date2.getTime()-new Date().getTime()) / 1000
+									console.log(date2.getTime(),66666)
 									if(v.goodsList != null){
 										v.goodsList.map(val => {
 										if (!RegExp(/http/).test(val.dataPic)) {
@@ -208,7 +225,7 @@ export default {
 									this.orderList = [...this.orderList, ...list];
 								}
 							}
-			
+							console.log(this.orderList,'------ssss')
 							this.total = res.total;
 						}
 					});

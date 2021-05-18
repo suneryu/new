@@ -484,7 +484,7 @@ export default {
     },
     order(scontractObillcode) {
       this.$router.push("order_modules/order/index", {
-        isContract:false,serachPhone:$storage.get("loginInfor").userPhone,searchGiftcode:scontractObillcode.giftCode
+        isContract:false,serachPhone:$storage.get("loginInfor").userPhone,searchGiftcode:scontractObillcode.giftCode,giftUserCode:scontractObillcode.giftUserCode
       });
     },
   },

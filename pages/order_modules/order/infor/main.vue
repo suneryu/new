@@ -106,11 +106,11 @@
 		<div class="orderDetail-price">
 			<p>
 				商品总额
-				<span>{{ unitPrice.obpay }}{{ items.dataBmoney }}{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{ items.contractInmoney }}{{ unitPrice.mapay }}</span>
 			</p>
 			<p>
 				运费
-				<span>{{ unitPrice.obpay }}{{ items.goodsLogmoney }}{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{ items.departShortname }}{{ unitPrice.mapay }}</span>
 			</p>
 		</div>
 		<div class="orderDetail-count">
@@ -184,6 +184,7 @@ export default {
 		};
 		http.get(getContractByCode, code).then(res => {
 			if (res) {
+				console.log('合同订单---',res)
 				this.items = res;
 				this.items.goodsList.map(val => {
 					if (!RegExp(/http/).test(val.dataPic)) {

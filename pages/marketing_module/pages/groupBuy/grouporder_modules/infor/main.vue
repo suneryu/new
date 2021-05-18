@@ -119,7 +119,7 @@
     <div class="orderDetail-info">
       <p>订单编号：{{items.contractBillcode}}</p>
       <p>下单时间：{{gmtCreate}}</p>
-      <p>支付方式：{{items.contractPmode == '0' ? '在线支付' : items.contractPmode=='1'?'线下支付':'信用支付'}}</p>
+      <p>支付方式：{{items.contractPmode == '0' ? '在线支付' : items.contractPmode=='1'?'线下支付':items.contractPmode=='3'?'混合支付':'信用支付'}}</p>
       <!-- <p>支付时间：2018-10-9  00:10:20</p> -->
       <!-- <p>配送方式：圆通快递</p> -->
       <!-- <p>发票类型：不开发票</p> -->
@@ -135,7 +135,8 @@
 	  </p>
       <p>
         运费
-        <span>{{unitPrice.obpay}}{{items.goodsLogmoney}}{{unitPrice.mapay}}</span>
+        <!-- <span>{{unitPrice.obpay}}{{items.departShortname?items.departShortname:items.goodsLogmoney?:items.goodsLogmoney:0}}{{unitPrice.mapay}}</span> -->
+        <span>{{unitPrice.obpay}}{{items.goodsLogmoney || 0}}{{unitPrice.mapay}}</span>	
       </p>
     </div>
     <div class="orderDetail-count">
@@ -228,6 +229,12 @@ export default {
         }
         res.gmtCreate = formatDate(res.gmtCreate);
         this.items = res;
+		console.log('this.items====',this.items)
+		if(res.goodsLogmoney == 0){
+			if(Number(res.departShortname) >= 0){
+				res.goodsLogmoney = res.departShortname
+			}
+		}
         this.items.goodsList.map(val => {
           if (!RegExp(/http/).test(val.dataPic)) {
             val.dataPic = this.$domain + val.dataPic;

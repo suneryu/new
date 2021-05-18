@@ -734,6 +734,7 @@
 			},
 			//商品数量++ 判断是否加倍
 			goodsAdd() {
+				console.log('this.goodsTopnum=====',this.goodsTopnum)
 				if(this.goodsTopnum  == 1 ){
 					this.goodsnum = this.goodsnum + this.goodsMinnum ;
 				}else{

@@ -106,7 +106,7 @@
 			</view>
 			<view class="item" v-if='userRelNum<accountsSumPrice'>
 				<view class="title">合同折扣</view>
-				<text class="price" :style="{ color: '#ec2b27' }">{{ ((accountsSumPrice-userRelNum)/contractRealNum).toFixed(2) }}</text>
+				<text class="price" :style="{ color: '#ec2b27' }">{{ ((shoppingCountPrice-userRelNum)/(contractRealNum-totalFreight)).toFixed(2) }}</text>
 			</view>
 			<!-- <view class="item" @click="isShowPreferential">
 				<view class="title" :style="{ color: baseColor }">优惠券</view>
@@ -768,13 +768,14 @@ export default {
 						contractProperty: '0', //订单性质
 						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
 						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
-						contractPmode: this.userRelNum>=this.accountsSumPrice?0:1, //付款方式：场内、场外，即线上、线下
+						contractPmode: this.userRelNum>=this.accountsSumPrice?0:3, //付款方式：场内、场外，即线上、线下
 						contractPumode: '0', //提货方式
 						goodsSupplierName: '', //配送商
 						goodsSupplierCode: '', //配送商Code
 						packageList: [],
 						contractEcurl:this.giftCode,
 						memberGcode:this.giftUserCode,
+						departShortname:this.totalFreight,
 						areaName:$storage.get('loginInfor').userPhone,
 						employeeCode:this.giftUserId,
 						employeeName:this.userRelNum,
@@ -823,6 +824,7 @@ export default {
 						packageList: [],
 						contractEcurl:this.giftCode,
 						memberGcode:this.giftUserCode,
+						departShortname:this.totalFreight,
 						areaName:$storage.get('loginInfor').userPhone,
 						employeeCode:this.giftUserId,
 						employeeName:this.userRelNum,
