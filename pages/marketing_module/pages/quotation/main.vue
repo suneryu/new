@@ -39,7 +39,11 @@
 							<div style='color: #fa4f4f;margin-left: 5rpx;'>秒</div>
 						</div>
 						<div class="order-status" >
-							<div>创建时间：{{ order.gmtCreate | format}}</div>
+							<div style='display: flex;width: 100%;'>
+								<div style='width: 70%'>创建时间：{{ order.gmtCreate | format}}</div>
+								<div style='width: 30%;text-align: right;'>{{order.contractType=="39"?'报价咨询单':'报价确认单'}}</div>
+							</div>
+							
 							<div v-if='order.employeeName != null'>销售员：{{ order.employeeName}}</div>
 						</div>
 						<div class="order-msg" v-for="(goods, goodsIndex) in order.goodsList" :key="goodsIndex">
@@ -47,7 +51,7 @@
 							<div>
 								<div>
 									<p class="currentP">{{ goods.goodsName }}</p>
-									<h6>{{ goods.skuName }}</h6>
+									<h6>{{ goods.skuNo }}</h6>
 								</div>
 								<div style="text-align:right;">
 									<p style="width:160rpx;color: #ff557f;">{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p>

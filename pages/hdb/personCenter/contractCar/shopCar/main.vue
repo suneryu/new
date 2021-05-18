@@ -44,6 +44,7 @@
 							<view class="name">{{ goods.goodsName }}</view>
 							<view class="model">{{ goods.skuNo }}</view>
 							<view class="other">
+								<text class="price" :style="{ color: '#000' }">原价  ：{{ goods.pricesetBaseprice }} 元</text>
 								<text class="price" :style="{ color: '#ec2b27' }">合同价：{{ goods.pricesetNprice }} 元</text>
 								<text class="num">×{{ goods.goodsCamount }}</text>
 							</view>
@@ -107,6 +108,10 @@
 			<view class="item" v-if='userRelNum<accountsSumPrice'>
 				<view class="title">合同折扣</view>
 				<text class="price" :style="{ color: '#ec2b27' }">{{ ((shoppingCountPrice-userRelNum)/(contractRealNum-totalFreight)).toFixed(2) }}</text>
+			</view>
+			<view class="item" v-if='userRelNum<accountsSumPrice'>
+				<view class="title">合同余额抵扣完毕，剩余货款需按商品原价进行补足</view>
+				<!-- <text class="price" :style="{ color: '#ec2b27' }">{{ ((shoppingCountPrice-userRelNum)/(contractRealNum-totalFreight)).toFixed(2) }}</text> -->
 			</view>
 			<!-- <view class="item" @click="isShowPreferential">
 				<view class="title" :style="{ color: baseColor }">优惠券</view>
@@ -769,6 +774,7 @@ export default {
 						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
 						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
 						contractPmode: this.userRelNum>=this.accountsSumPrice?0:3, //付款方式：场内、场外，即线上、线下
+						// ddTypeCurrency:this.userRelNum>=this.accountsSumPrice?0:this.accountsSumPrice,
 						contractPumode: '0', //提货方式
 						goodsSupplierName: '', //配送商
 						goodsSupplierCode: '', //配送商Code
@@ -778,7 +784,7 @@ export default {
 						departShortname:this.totalFreight,
 						areaName:$storage.get('loginInfor').userPhone,
 						employeeCode:this.giftUserId,
-						employeeName:this.userRelNum,
+						employeeName:this.userRelNum, //使用额度
 						packageMode: '', //配送方式
 						contractType: this.shoppingItems[0].shoppingType,
 						ocContractSettlList:
@@ -816,6 +822,7 @@ export default {
 						contractTypepro: typepro, //订单类型属性(引合同、发货/中转)
 						contractBlance: this.scontractBlance || 0, //结算方式:全款、订金、融资
 						contractPmode: this.userRelNum>=this.accountsSumPrice?0:1, //付款方式：场内、场外，即线上、线下
+						ddTypeCurrency:this.userRelNum>=this.accountsSumPrice?0:this.accountsSumPrice,
 						contractPumode: '0', //提货方式
 						goodsSupplierName: '', //配送商
 						goodsSupplierCode: '', //配送商Code

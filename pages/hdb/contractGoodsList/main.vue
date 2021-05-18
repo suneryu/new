@@ -15,7 +15,7 @@
 					<span>兑换</span>
 					<span>须知</span>
 				</view>
-				<u-popup v-model="isshowCustomBtnTxt" mode="center" height="240rpx" width="90%">
+				<u-popup v-model="isshowCustomBtnTxt" mode="center" height="320rpx" width="90%">
 					<view style="
 						height:80rpx;
 						line-height: 80rpx;
@@ -24,20 +24,20 @@
 						font-size: 32rpx;
 						width: 100%;
 						font-weight: bold;">兑换须知</view>
-					<view v-if="giftInfo!=null" style="
-						height:80rpx;
+					<view style="
+						height:160rpx;
 						line-height: 80rpx;
 						color:#999999;
 						text-align: center;
-						font-size: 32rpx; 
-						width: 100%;">{{giftInfo}}</view>
-					<view v-else style="
+						font-size: 28rpx; 
+						width: 100%;">当订单金额超出合同可用抵扣额度，剩余货款以商品原价进行补足。运费不享受合同中的商品折扣。</view>
+					<!-- <view v-else style="
 							height:80rpx;
 							line-height: 80rpx;
 							color:#999999;
 							text-align: center;
 							font-size: 32rpx; 
-							width: 100%;">暂无兑换需知</view>
+							width: 100%;">暂无兑换需知</view> -->
 					<view style="
 						height:80rpx; 
 						line-height: 80rpx;
@@ -54,11 +54,11 @@
 			<u-search placeholder="输入商品编号" :show-action="true" v-model='searchValue' bg-color='#f1f5f8' clearabled animation @blur='serarchGoods' ></u-search>
 		</view>
 		<view class="getCoupon-content">
-			<view v-for="(item,index) in giftCoupon" :key="index" @click="goodsDetail(item)">
+			<view v-for="(item,index) in giftCoupon" :key="index">
 				<p>
 					<!-- <checkbox color="blue" style="transform:scale(0.7) " :checked="item.ischecked" @click.stop="singelCheck(item,itemIndex)" /> -->
 				</p>
-				<p>
+				<p  @click="goodsDetail(item)">
 					<image :src="item.dataPic" mode="" :prop="skuCode"></image>
 				</p>
 				<p >
@@ -73,14 +73,14 @@
 					<span @click.stop="showBox(index)">+</span>
 				</p> -->
 				<div style='display: flex;justify-content: space-around;height: 50rpx;width: 100%;overflow: hidden;padding: 10rpx;box-sizing: border-box;'>
-					<div style='height: 100%;display: flex;flex-direction: row;'>
+					<div style='height:30rpx;width: 100%;display: flex;flex-direction: row;'>
 						<div @click.stop="subtract(item, index)">
 							<i class="iconfont"
 								:style="{ color: item.giftNum > 0 ? '#ccc' : '' }">
 								&#xe755;
 							</i>
 						</div>
-						<div style='z-index: 0;height: 20rpx;'><input type="text" v-model="item.giftNum == null?1:item.giftNum" disabled /></div>
+						<div style='z-index: 0;height: 20rpx;'><input type="text" v-model="item.giftNum == null?1:item.giftNum" /></div>
 						<div @click.stop="add(item, index)" style='margin-right: 20rpx;'><i class="iconfont" style='font-size: 18px;'>&#xe756;</i></div>
 					</div>
 					<div @click.stop="addShoppingGoodsCode(item)" style='margin-right: 10rpx;border-radius: 50%;height: 20rpx;' ><i class="iconfont icon-gouwuche" style='color: #004178;font-size: 18px;'></i></div>
@@ -188,6 +188,11 @@
 				item.giftNum += 1
 				this.$forceUpdate()
 			},
+			//直接输入商品数量
+			// num(item){
+				
+			// 	console.log('========',giftNum)
+			// },
 			//添加购物车
 			addShoppingGoodsCode(item){
 				if(this.list.userRelNum == 0){

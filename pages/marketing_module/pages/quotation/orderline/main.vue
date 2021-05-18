@@ -974,8 +974,12 @@
 								//更新订单状态
 								let changeTotalMoney = 0
 								if(this.contractType == '41'){
-									this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
+									console.log('33333334444444-----',this.temp)
+									//改变报价单状态
+									this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateOcContractState.json', {contractId:this.listItems[0].contractId,dataState:'3',oldDataState:this.listItems[0].dataState}).then(resq=>{
 									})
+									// this.$qj.http(this.$qj.domain).get('/web/oc/contractEngine/sendContractNext.json', this.temp).then(res=>{
+									// })
 								}
 									
 								//确认单改价
@@ -989,6 +993,9 @@
 											goodsMoney: (Number(this.freight) + Number(this.discountMoney)).toFixed(2),
 											contractBillcode: res.dataObj.contractBillcode,
 										}
+										
+										
+										
 										//调价接口
 										this.$qj.http(this.$qj.domain).get('/web/oc/contract/updateContractNew.json', json).then(resq=>{
 										})
