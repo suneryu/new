@@ -38,7 +38,7 @@
 							<div>
 								<div>
 									<p class="currentP">{{ goods.goodsName }}</p>
-									<h6>{{ goods.skuName }}</h6>
+									<h6>{{ goods.skuNo==null?'默认':goods.skuNo }}</h6>
 								</div>
 								<div style="text-align:right;">
 									<!-- <p style="width:160rpx;" >{{ unitPrice.obpay }}{{ goods.pricesetNprice }}{{ unitPrice.mapay }}</p> -->

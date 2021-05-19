@@ -110,7 +110,7 @@
 			</p>
 			<p>
 				运费
-				<span>{{ unitPrice.obpay }}{{ items.departShortname }}{{ unitPrice.mapay }}</span>
+				<span>{{ unitPrice.obpay }}{{ items.departShortname==null?0:items.departShortname }}{{ unitPrice.mapay }}</span>
 			</p>
 		</div>
 		<div class="orderDetail-count">
