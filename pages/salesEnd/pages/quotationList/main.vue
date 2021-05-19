@@ -164,7 +164,7 @@ export default {
 					page: this.page,
 					rows: this.rows,
 					childFlag: true,
-					contractType: '39',
+					contractType: '39,41',
 					employeeCode: this.$qj.storage.get('loginInfor').userCode
 					// memberBcode:this.$qj.storage.get('loginInfor').userInfoCode
 				};

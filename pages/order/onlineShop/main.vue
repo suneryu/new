@@ -122,7 +122,7 @@
 		</div>
 
 
-		<u-popup class="pay-methods-popup" v-model="payMethodsPopup" mode="bottom" height="427rpx">
+		<u-popup class="pay-methods-popup" v-model="payMethodsPopup" mode="bottom">
 			<view class="pay-methods-title">
 				<text>支付方式</text>
 				<view class="iconfont icon-guanbi" @click="closePayMethodsPopup"></view>
