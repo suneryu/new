@@ -41,7 +41,7 @@
 						</div>
 						<div class="contractType">{{!qyBut?items.memberGname:items.classtreeName}}</div>
 					</div>
-					<!-- <div class='miaoshu'>合同描述: <span>{{!qyBut?items.contractRemark:items.skuName}}</span></div> -->
+					<div class='miaoshu'>合同描述: <span>{{!qyBut?items.contractRemark:items.skuName}}</span></div>
 					<div class='money'>
 						<div v-if='qyBut && userinfoType != "1"'>合同金额:<span>￥{{!qyBut?items.goodsMoney:items.pricesetNprice}}</span></div>
 						<div v-if='qyBut && userinfoType == "1"'><span>认证为企业可查看金额</span></div>

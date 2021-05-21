@@ -948,6 +948,33 @@
 						"navigationBarTitleText": "耗材专区"
 					}
 				},
+				//促销购物车
+				{
+					"path": "promotionClass/shopCar/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "促销专区购物车"
+					}
+				},
+				//促销商品页
+				{
+					"path": "promotionClass/goodsList/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "促销商品"
+					}
+				},
+				//促销活动分类页
+				{
+					"path": "promotionClass/main",
+					"style": {
+						"navigationBarBackgroundColor": "#374e80",
+						"navigationBarTextStyle": "white",
+						"navigationBarTitleText": "促销活动"
+					}
+				},
 				//促销专区
 				{
 					"path": "promotionZone/main",

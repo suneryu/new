@@ -61,7 +61,7 @@
 				</div>
 				<div class="accounts-info-money">
 					共{{ list.goodsNum }}件，小计：
-					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span>
+					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.sumMoney }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
