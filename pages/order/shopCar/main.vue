@@ -62,7 +62,8 @@
 				<div class="accounts-info-money">
 					共{{ list.goodsNum }}件，小计：
 					<!-- <span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span> -->
-					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ shoppingCountPrice.toFixed(2) }}{{ unitPrice.mapay }}</span>
+					<!-- <span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ shoppingCountPrice.toFixed(2) }}{{ unitPrice.mapay }}</span> -->
+					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{list.goodsClass=='1' && checkModifyAudit == '3'? (list.sumMoney*userinfoOcode).toFixed(2):list.sumMoney.toFixed(2) }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
@@ -641,75 +642,34 @@
 				};
 				this.$qj
 					.http(this.$qj.domain)
-					.post(queryShoppingToContract, requestParams)
+					.post(this.orderWay === 0 ? queryToContract : queryShoppingToContract, requestParams)
 					.then(res => {
-						console.log("获取购物车商品信息",res)
+						console.log("获取商品信息",res)
 						// 如果返回nologin，则return，避免请求并行造成的弹出多个授权框
 						if (res.errorCode == 'nologin') {
 							return;
 						}
 						if (res && res instanceof Array) {
-							let baseArr = [];
-							let shopObj = {};
 							this.shoppingItems = res;
-							let  dataList = [];
-							let dataMap = new Map();
-							// dataList.push(this.shoppingItems)
-							// console.log('dataList----',dataList)
-							//分类
 							// console.log(this.shoppingItems,"就是你")
-							// dataList.map( (data, index) =>{
 							this.shoppingItems.map(v => {
 								v.shoppingpackageList.map(vk => {
 									this.copyComDisMoney += vk.disMoney;
 									this.sumPoints += vk.pricesetRefrice;
 									vk.shoppingGoodsList.map(val => {
-										if (baseArr.indexOf(val.goodsClass) == -1) {
-											baseArr.push(val.goodsClass);
-										}
-										dataList = [];
 										val.dataPic = this.$domain + val.dataPic;
-										let key = v.shoppingId + vk.shoppingpackgeId + val.goodsClass;
-										if (dataMap.has(key)) {
-											dataMap.get(key).push(val);
-										} else {
-											dataList.push(val);
-											dataMap.set(key, dataList);
-										}
-										// this.contractGoodsList.push(val);
-										// this.pmContractGoodsDomainListStr.push(val);
+										this.contractGoodsList.push(val);
+										this.pmContractGoodsDomainListStr.push(val);
 									});
 									if (vk.giftList) {
+										console.log(vk.giftList,"xxxxxx")
 										vk.giftList.map(val => {
 											val.dataPic = this.$domain + val.dataPic;
-											// this.contractGoodsList.push(val);
+											this.contractGoodsList.push(val);
 										});
 									}
 								});
 							});
-							this.shoppingItems.map(v => {
-								dataList = [];
-								shopObj = {...v};
-								let packageList = [];
-								v.shoppingpackageList.map(vk => {
-									let packageObj = {...vk};
-									baseArr.map((b, i) => {
-										packageList = [];
-										let key = v.shoppingId + vk.shoppingpackgeId + b;
-										if (dataMap.has(key)) {
-											packageObj.shoppingGoodsList = dataMap.get(key);
-											packageList.push(packageObj);
-											shopObj.shoppingpackageList = packageList;
-											dataList.push(JSON.parse(JSON.stringify(shopObj)));
-										}
-									})
-								});
-							});
-							// })
-				
-							this.shoppingItems = dataList;
-							console.log(this.shoppingItems,'-----=====')
-
 							// 获取运费
 							let freightFare =
 								this.orderWay === 0 ? {

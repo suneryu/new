@@ -27,8 +27,8 @@
 		<!-- <Evaluate :goodsCode="goodsCode"></Evaluate> -->
 		<proInfor :goodsRemark="goodsRemark"></proInfor>
 		<!-- 普通 -->
-		<Footers :goodsCode="goodsCode" :indexs="indexs" :skuList="skuList" :userImgurl="userImgurl" :baseColor="baseColor"
-		 @addcollectGoods="addcollectGoods" @getSpec="getSpec" @showSpec="showSpec"  @goBuy="goBuy"></Footers>
+	<!-- 	<Footers :goodsCode="goodsCode" :indexs="indexs" :skuList="skuList" :userImgurl="userImgurl" :baseColor="baseColor"
+		 @addcollectGoods="addcollectGoods" @getSpec="getSpec" @showSpec="showSpec"  @goBuy="goBuy"></Footers> -->
 		<!-- 团购 -->
 		<!-- <groupFooters :couponOnceNumd="couponOnceNumd" :getgoodtypes="getgoodtypes" :goodsCode="goodsCode" :indexs="indexs"
 		 :skuList="skuList" :userImgurl="userImgurl" @addcollectGoods="addcollectGoods" @getSpec="getSpec" @goBuy="goBuy" @showSpec="showSpec"

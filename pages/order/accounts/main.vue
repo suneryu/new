@@ -244,6 +244,14 @@
 		Add
 	} from '@/node_modules/qj-mini-pages/libs/util/prototype/number.js';
 	import {
+			userapplyStateAndAuth
+	
+	} from '@/api/interface.js';
+	import {
+		queryNewUserinfoPageByDealerqt
+	
+	} from '@/api/interfaceHDB.js';
+	import {
 		$storage,
 		$router,
 		$message
@@ -311,6 +319,9 @@
 			};
 		},
 		onLoad(options) {			this.temp = options;
+			this.getQY()
+			this.query = this.$state.order;
+			this.searchStatus()
 			console.log('传来的option是啥，',this.temp)		},		onShow() {			// 初始化价格数据			this.initPriceData();			// 初始化地址数据			this.initAddressData();			// 初始化订单数据			this.initOrderData(this.temp);		},
 		mounted() {
 			this.currentIndex = -1;
@@ -367,6 +378,45 @@
 			}
 		},
 		methods: {
+			// 查询 认证授权 状态
+			searchStatus() {
+				let that = this
+				let paramsStatus = {}
+				paramsStatus.userCode = $storage.get('loginInfor').userInfoCode
+				that.$qj
+					.http(that.$qj.domain)
+					.get(userapplyStateAndAuth, paramsStatus)
+					.then(res => {
+						console.log("认证授权状态4444444，",res)
+						// that.channelCode = res.userinfoChannelcode
+						that.partnerType = res.partnerType
+						console.log(that.partnerType,'that.partnerType')
+						if (res.checkModifyAudit == '3') {
+							that.checkModifyAudit = "3"
+						}
+					// 初始化订单数据
+						that.initOrderData(that.temp);
+						this.initPayMethods();
+					});
+			},
+			//查询权益
+			getQY(){
+				this.$qj
+					.http(this.$qj.domain)
+					.get(queryNewUserinfoPageByDealerqt, {
+						userinfoPhone:$storage.get('loginInfor').userPhone
+					})
+					.then(res => {
+							console.log("用户信息-----",res)
+						if(res.rows[0].userinfoOcode == null || res.rows[0].userinfoOcode ==''){
+							this.userinfoOcode = 1;
+						}else{
+							this.userinfoOcode = res.rows[0].userinfoOcode
+						}
+						console.log('权益值',this.userinfoOcode)
+						
+					})
+			},
 		/* 	showUpload(){
 				if(contractType != '06'){
 					this.isupload=true

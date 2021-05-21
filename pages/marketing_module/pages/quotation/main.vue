@@ -37,11 +37,12 @@
 								separator-size="24"
 							></u-count-down>
 							<div style='color: #fa4f4f;margin-left: 5rpx;'>秒</div>
+							<div style='width: 30%;text-align: right;'>{{order.contractType=="39"?'报价咨询单':'报价确认单'}}</div>
 						</div>
 						<div class="order-status" >
 							<div style='display: flex;width: 100%;'>
 								<div style='width: 70%'>创建时间：{{ order.gmtCreate | format}}</div>
-								<div style='width: 30%;text-align: right;'>{{order.contractType=="39"?'报价咨询单':'报价确认单'}}</div>
+								
 							</div>
 							
 							<div v-if='order.employeeName != null'>销售员：{{ order.employeeName}}</div>
@@ -205,11 +206,17 @@ export default {
 									return contractType != '28';
 								});
 								
+								console.log('0000----0000----',list)
 								list.map(v => {
 									let date1 = new Date(v.gmtCreate);
 									let date2 = new Date(date1);
 									date2.setDate(date1.getDate() + 30);
-									v.validPeriod = (date2.getTime()-new Date().getTime()) / 1000
+									if(v.dataState != 3 && v.dataState != -1){
+										v.validPeriod = (date2.getTime()-new Date().getTime()) / 1000
+									}else{
+										v.validPeriod = 0;
+									}
+									
 									console.log(date2.getTime(),66666)
 									if(v.goodsList != null){
 										v.goodsList.map(val => {

@@ -49,14 +49,14 @@
 						</div>
 						<div style='display: flex;justify-content: space-around;height: 58rpx;width: 100%;overflow: hidden;padding: 10rpx;box-sizing: border-box;'>
 							<div style='height:40rpx;width: 60%;display: flex;flex-direction: row;'>
-								<div @click.stop="subtract(item, index)">
+								<div @click.stop="subtract(item, index)" style='margin-right: 10rpx;'>
 									<i class="iconfont"
 										:style="{ color: item.giftNum > 0 ? '#ccc' : '' }">
 										&#xe755;
 									</i>
 								</div>
 								<div style='z-index: 0;height: 40rpx;border: 1rpx solid #333333;line-height: 40rpx;'><input type="text" v-model="goodsNum" /></div>
-								<div @click.stop="add(item, index)" style='margin-right: 20rpx;'><i class="iconfont" style='font-size: 18px;'>&#xe756;</i></div>
+								<div @click.stop="add(item, index)" style='margin-left: 10rpx;'><i class="iconfont" style='font-size: 18px;'>&#xe756;</i></div>
 							</div>
 							<div @click.stop="addShoppingGoodsCode(item)" style='margin-right: 30rpx;border-radius: 50%;height: 40rpx;' ><i class="iconfont icon-gouwuche" style='color: #004178;font-size: 18px;'></i></div>
 						</div>
