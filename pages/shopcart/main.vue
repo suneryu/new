@@ -14,10 +14,11 @@
 					<div class="memberTit" @click="titCheckBox(list, liIndex)"  v-if = 'list.shoppingGoodsList.length>0'>
 						<i class="iconfont" v-if="list.titChecked == 0" :style="{ color: baseColor }">&#xe671;</i>
 						<i class="iconfont" v-else :style="{ color: '#ededed' }">&#xe671;</i>
-						{{ list.memberCname }} - <span v-if='list.goodsClass==1 && list.disNextMsg == null'>设备零件</span>
-						<span v-if='list.goodsClass==1 && list.pbCode == "0009" && list.disNextMsg'>包邮商品</span>
-						<span v-if='list.goodsClass=="2"'> 印刷耗品</span> 
-						<span v-if='list.goodsClass=="3"'>其他</span>
+						{{ list.memberCname }}  <span v-if='list.goodsClass==1 && list.disNextMsg == null'>-设备零件</span>
+					<!-- 	<span v-if='list.goodsClass==1 && list.pbCode == "0009" '>包邮商品</span>
+						<span v-if='list.goodsClass==1 && list.pbCode == "0022" '>特价商品</span> -->
+						<span v-if='list.goodsClass=="2"'> -印刷耗品</span> 
+						<span v-if='list.goodsClass=="3"'>-其他</span>
 					</div>
 
 					<div class="list_li">
@@ -27,7 +28,7 @@
 									<p :style="{ background: baseColor }" :key="pbIndex">{{ list.pbName }}</p>
 									<span class="f-s22">
 										<!-- {{ list.promotionName ? list.promotionName : '' }}{{ list.disMsg ? list.disMsg : '' }}{{ list.disNextMsg ? list.disNextMsg : '' }} -->
-									</span>
+										{{ list.promotionName ? list.promotionName : '' }}
 								</div>
 							</div>
 							<div class="itemGoods" v-for="(item, index) in list.shoppingGoodsList" :key="index">
@@ -104,7 +105,7 @@
 					<view class="total-price-and-weight">
 						<view class="total-price">
 							总计：
-							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
+							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPrice.toFixed(2)==undefined?totalPrice:totalPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
 							<!-- <i :style="{ color: baseColor }" v-if="totalPrice && totalPointPrice">+</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice > 0">{{ unitPrice.obpay }}{{ totalPrice }}{{ unitPrice.mapay }}</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice == 0 && totalPointPrice == 0">{{ unitPrice.obpay }}0.00{{ unitPrice.mapay }}</i> -->
@@ -341,7 +342,7 @@ export default {
 						shopCartData.map(v => {
 							if (v.shoppingpackageList) {
 								v.shoppingpackageList.map((val,i) => {
-									if (val.pbCode && val.disNextMsg) {
+									if (val.pbCode && val.promotionCode) {
 										val.goodsClass = 1;
 										shopCartObj[0].shoppingpackageList.push(val);
 									}else {
@@ -430,6 +431,7 @@ export default {
 											this.totalPointPrice += Number(v.pricesetNprice1) * v.goodsCamount
 										}else{
 											this.totalPointPrice += Number(v.pricesetNprice) * v.goodsCamount
+											console.log('00000-----',this.totalPointPrice)
 										}
 									}
 									})
@@ -439,6 +441,7 @@ export default {
 								
 						// })
 						this.totalPrice = this.totalPointPrice
+						console.log('this.totalPrice===',this.totalPrice)
 						this.$forceUpdate();
 						// 商品选择操作数组
 						this.shopIdAttr = [];
