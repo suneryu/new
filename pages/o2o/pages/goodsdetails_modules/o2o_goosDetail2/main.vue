@@ -100,7 +100,7 @@
 					<div style='display: flex;'>
 						<div class="sel-goods-num-btn t-box">
 							<button @click="goodsReduce" type="button">-</button>
-							<p class="t-box-flex1" id="goodsNum">{{ goodsnum }}</p>
+							<div class="t-box-flex1" id="goodsNum"><input type="text" v-model="goodsnum" @input="countInput($event,index)" /></div>
 							<button @click="goodsAdd" type="button">+</button>
 						</div>
 						<div styl='color: #bfbaba;margin-left: 15px;'>(起订量{{goodsMinnum}}个)</div>
@@ -427,6 +427,11 @@
 			}
 		},
 		methods: {
+			// 输入数字实时监听
+			countInput(e,index){
+				console.log('ppppp=',e)
+				this.goodsnum = e.detail.value; //输入的值		
+			},
 			//查询权益
 			getQY(){
 				this.$qj
