@@ -133,10 +133,10 @@
 				积分抵扣
 				<span>-{{ sumPoints }}积分</span>
 			</p>
-			<p v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
+			<!-- <p v-if="shoppingItems[0].shoppingType != '06' && shoppingItems[0].shoppingType != '28'">
 				会员权益
 				<span>{{ unitPrice.obpay }}{{ totalDiscountPrice }}{{ unitPrice.mapay }}</span>
-			</p>
+			</p> -->
 		</div>
 		<div class="accounts-sum">
 			<p>

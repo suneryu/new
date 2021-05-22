@@ -55,7 +55,7 @@
 										&#xe755;
 									</i>
 								</div>
-								<div style='z-index: 0;height: 40rpx;border: 1rpx solid #333333;line-height: 40rpx;'><input type="text" v-model="goodsNum<=0?1:goodsNum" /></div>
+								<div style='z-index: 0;height: 40rpx;border: 1rpx solid #B6B8BB;line-height: 40rpx;'><input type="text" v-model="goodsNum<=0?1:goodsNum" /></div>
 								<div @click.stop="add(item, index)" style='margin-left: 10rpx;'><i class="iconfont" style='font-size: 18px;'>&#xe756;</i></div>
 							</div>
 							<div @click.stop="addShoppingGoodsCode(item)" style='margin-right: 30rpx;border-radius: 50%;height: 40rpx;' ><i class="iconfont icon-gouwuche" style='color: #004178;font-size: 18px;'></i></div>
@@ -721,7 +721,12 @@
 				let cansole = 0;
 				this.promotionGoodList.forEach( val =>{
 					if(val.skuNo == item.skuNo){
-						xianBuy = val.couponOnceUnum;
+						if(val.couponOnceUnum == 0){ //0表示不限购
+							xianBuy = 2100000000;
+						}else{
+							xianBuy = val.couponOnceUnum;
+						}
+						
 					}
 				})
 				console.log('商品限购数量---',xianBuy)

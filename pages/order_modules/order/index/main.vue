@@ -535,7 +535,8 @@ export default {
 				// expressType: order.packageList[0].expressCode,
 				// expressNo: order.packageList[0].packageBillno
 			};
-			if(this.isContract)$router.push("marketing_module/pages/groupBuy/grouporder_modules/infor",params)
+			// if(this.isContract)
+			$router.push("marketing_module/pages/groupBuy/grouporder_modules/infor",params)
 			
 			// this.$state.orderMenu.map(v => {
 			// 	if (v.menuAction == 'orderInfor') {

@@ -3,12 +3,16 @@
 	<view class="goodsList" :style="{ height: items.length === 0 ? '100%' : 'auto' }">
 		
 		<div v-if='items.length > 0'>
-		<div  v-for='(item,index) in items' :key="index" style='width: 85%;height: 300rpx;;margin: 20rpx auto;border-radius: 20px;background: #F1F1F1;display: flex;'>
+		<div  v-for='(item,index) in items' :key="index" style='width: 90%;height: 300rpx;;margin: 20rpx auto;border-radius: 20px;background: #F1F1F1;display: flex;'>
 			<div style='width: 50%;height: 300rpx;line-height: 300rpx;margin-left: 15rpx;'>
 				
-				<div style='margin-top: 80rpx;'>
-					<p style='height: 60rpx;line-height: 60rpx;'>活动名称： {{item.promotionName}}</p>
-					<p style='height: 20rpx;line-height: 60rpx;'></p>
+				<div style='margin-top: 40rpx;'>
+					<p style='height: 60rpx;line-height: 60rpx;font-weight: 900;'>活动名称： {{item.promotionName}}</p>
+					
+					<div style='margin-top: 23rpx;'>
+						<p style='height: 30rpx;line-height: 30rpx;font-size: 22rpx;'>活动时间：</p>
+						<p style='height: 60rpx;line-height: 60rpx;font-size: 22rpx;'>{{item.promotionBegintime}} - {{item.promotionEndtime}}</p>
+					</div>
 					
 					<div style='height: 60rpx;width: 100%;margin-top: 20rpx;'>
 						<button class='butClass' @click="goGoodsInfo(item)">去逛逛</button>
@@ -44,6 +48,7 @@
 		checkSkuOne,
 		userapplyStateAndAuth
 	} from '@/api/interface.js';
+	import { formatDate } from "@/utils/prototype/date.js";
 	export default {
 		data() {
 			return {
@@ -136,6 +141,8 @@
 							if (!RegExp(/http/).test(v.promotionUrl)) {
 								v.promotionUrl = this.$domain + v.promotionUrl;
 							}
+							v.promotionBegintime = (formatDate(v.promotionBegintime)).substr(0,10);
+							v.promotionEndtime = (formatDate(v.promotionEndtime)).substr(0,10);
 						});
 					});
 			},

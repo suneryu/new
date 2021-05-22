@@ -268,7 +268,7 @@ export default {
 		this.getQY();
 		// this.dataLength = this.sanci.length - 1
 		this.searchStatus()
-		this.commonMounted();
+		// this.commonMounted();
 	},
 	mounted() {
 		this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
@@ -337,14 +337,14 @@ export default {
 						let shopCartObj = [];
 						shopCartObj = JSON.parse(JSON.stringify(shopCartData));
 						shopCartObj[0].shoppingpackageList = [];
-						
+						console.log('[[[[[[]]]]]]',shopCartData)
 						shopCartData.map(v => {
 							if (v.shoppingpackageList) {
 								v.shoppingpackageList.map((val,i) => {
 									if (val.pbCode && val.disNextMsg) {
 										val.goodsClass = 1;
 										shopCartObj[0].shoppingpackageList.push(val);
-									} else {
+									}else {
 										if (val.areaCode) {
 											let packageObj = JSON.parse(JSON.stringify(val));
 											packageObj.shoppingGoodsList = JSON.parse(val.areaCode);
@@ -367,8 +367,9 @@ export default {
 								});
 							}
 						});
+						console.log('组装好的购物车----',shopCartObj)
 						shopCartData = shopCartObj;
-						console.log('组装好的购物车----',shopCartData)
+						
 						shopCartData.map(v => {
 							if (v.shoppingpackageList) {
 								v.shoppingpackageList.map((val,i) => {
