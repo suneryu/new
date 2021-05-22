@@ -29,7 +29,7 @@
 		</div>
 		<u-picker mode="region" v-model="cityPicker" :area-code="['11', '1101', '110101']" @confirm="cityPickerConfirm">
 		</u-picker>
-		<div class="goodsList-list" v-if="items.length > 0" :style="{marginTop:showArea?'190rpx':'100rpx'}">
+		<div class="goodsList-list" style='margin-bottom: 100rpx;' v-if="items.length > 0" :style="{marginTop:showArea?'190rpx':'100rpx'}">
 			<ul>
 				<li v-for="(item, index) in items" :key="index">
 					<div @click="goodsDetail(item.skuCode)">
@@ -55,7 +55,7 @@
 										&#xe755;
 									</i>
 								</div>
-								<div style='z-index: 0;height: 40rpx;border: 1rpx solid #B6B8BB;line-height: 40rpx;'><input type="text" v-model="goodsNum<=0?1:goodsNum" /></div>
+								<div style='z-index: 0;height: 40rpx;border: 1rpx solid #B6B8BB;line-height: 40rpx;'><input type="text" v-model="goodsNum<=0?1:goodsNum" @input="countInput($event,index)" /></div>
 								<div @click.stop="add(item, index)" style='margin-left: 10rpx;'><i class="iconfont" style='font-size: 18px;'>&#xe756;</i></div>
 							</div>
 							<div @click.stop="addShoppingGoodsCode(item)" style='margin-right: 30rpx;border-radius: 50%;height: 40rpx;' ><i class="iconfont icon-gouwuche" style='color: #004178;font-size: 18px;'></i></div>
@@ -271,6 +271,11 @@
 			this.$qj.storage.set('searchParam', '');
 		},
 		methods: {
+			// 输入数字实时监听
+			countInput(e,index){
+				console.log('ppppp=',e)
+				this.goodsNum = e.detail.value; //输入的值		
+			},
 			receiveCar(){
 				let options = {
 					url: 'hdb/promotionClass/shopCar',
