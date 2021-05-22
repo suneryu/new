@@ -137,6 +137,7 @@
 					.then(res => {
 						console.log('促销类型res------',res)
 						this.items = res.rows;
+						this.total = res.total;
 						this.items.map(v => {
 							if (!RegExp(/http/).test(v.promotionUrl)) {
 								v.promotionUrl = this.$domain + v.promotionUrl;
@@ -175,14 +176,31 @@
 			
 			
 
-			loadMore() {
+			loadMore() {		
 				let num = Math.ceil(this.total / 10);
-				this.page++;
-				let params = Object.assign(this.params, {
-					page: this.page
-				});
-				if (params.page <= num) {
-					this.getPromotionClass()
+				
+				if (this.page <= num) {
+					this.page++;
+					let params ={
+						page: this.page,
+						rows: this.rows,
+						dataState:1
+					}
+					this.$qj
+						.http(this.$qj.domain)
+						.get('/web/pm/promotionuser/queryPromotionBargainPriceHdbs.json',params)
+						.then(res => {
+							console.log('促销类型res------',res)
+							let list = res.rows;
+							list.map(v => {
+								if (!RegExp(/http/).test(v.promotionUrl)) {
+									v.promotionUrl = this.$domain + v.promotionUrl;
+								}
+								v.promotionBegintime = (formatDate(v.promotionBegintime)).substr(0,10);
+								v.promotionEndtime = (formatDate(v.promotionEndtime)).substr(0,10);
+							});
+							this.items = [...this.items, ...list];
+						});
 				} else {
 					this.lastPageLine = true;
 				}
