@@ -49,7 +49,7 @@
 										</h3>
 										<div class="list-count">
 											<div :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }">
-												<span style='color: #000000;margin-right: 10rpx;'>{{ unitPrice.obpay }}{{ item.pricesetAsprice }}{{ unitPrice.mapay }}</span>
+												<span style='color: #000000;margin-right: 10rpx;'>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
 												<span style='margin-left: 5px;'
 													v-if='list.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>采购价：{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span>
 											</div>
@@ -378,7 +378,7 @@ export default {
 										val.titChecked = 0;
 									}
 									val.shoppingGoodsList.map(vk => {
-											if (val.goodsClass == '1') {
+											if (val.goodsClass == '1' && this.userinfoType == '2' && that.checkModifyAudit == '3') {
 												vk.pricesetNprice1 = (Number(vk.pricesetNprice) * this.userinfoOcode).toFixed(2)
 											}
 										vk.dataPic = this.$domain + vk.dataPic;

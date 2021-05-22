@@ -315,6 +315,7 @@
 					// goodsClassCode:this.classtreeCode || classtreeCode,
 					goodsType: "00",
 					likeGoodsName: this.searchParam || '',
+					searchType:'match_phrase',
 					// classtreeCode:"2020072100000130",
 					channelCode: "1526",
 					// searchParam: this.searchParam || this.$qj.storage.get('searchParam')
