@@ -3,7 +3,7 @@
 	<view class="goodsList" :style="{ height: items.length === 0 ? '100%' : 'auto' }">
 		
 		<div v-if='items.length > 0'>
-		<div  v-for='(item,index) in items' :key="index" style='width: 90%;height: 300rpx;;margin: 20rpx auto;border-radius: 20px;background: #F1F1F1;display: flex;'>
+		<div  v-for='(item,index) in items' :key="index" style='width: 90%;height: 300rpx;;margin: 20rpx auto;border-radius: 20px;background: #fff;display: flex;border: 1rpx solid #F1F1F1;box-shadow:0px 0px 4rpx #000;'>
 			<div style='width: 50%;height: 300rpx;line-height: 300rpx;margin-left: 15rpx;'>
 				
 				<div style='margin-top: 40rpx;'>
