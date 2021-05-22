@@ -42,11 +42,11 @@
 									<div class="list-r" :style="{ color: item.dataState !== 0 ? '#ccc' : '' }">
 										<p @click.stop="goToGoodsDetail(item)">{{ item.goodsName }}</p>
 										<h3 :style="{ color: item.dataState !== 0 ? '#ccc' : '' }" @click.stop="goToGoodsDetail(item)">
-											{{ item.skuName }}*{{ item.goodsCamount }}
+											{{ item.skuNo }}
 										</h3>
 										<div class="list-count">
 											<div :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }">
-												<span style='color: #000000;margin-right: 10rpx;text-decoration:line-through;'>{{ unitPrice.obpay }}{{ item.pricesetAsprice }}{{ unitPrice.mapay }}</span>
+												<span style='color: #000000;margin-right: 10rpx;text-decoration:line-through;'>{{ unitPrice.obpay }}{{ item.pricesetMakeprice }}{{ unitPrice.mapay }}</span>
 												<span>促销价：{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
 											</div>
 											<view class="list-right-container">
@@ -66,7 +66,7 @@
 														</i>
 													</div>
 													<div><input type="text" v-model="item.goodsCamount" disabled /></div>
-													<div @click.stop="add(item, index)"><i class="iconfont">&#xe756;</i></div>
+													<!-- <div @click.stop="add(item, index)"><i class="iconfont">&#xe756;</i></div> -->
 												</div>
 											</view>
 										</div>
@@ -100,7 +100,7 @@
 					<view class="total-price-and-weight">
 						<view class="total-price">
 							总计：
-							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice }}{{ unitPrice.mapay }}</i>
+							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice && totalPointPrice">+</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice > 0">{{ unitPrice.obpay }}{{ totalPrice }}{{ unitPrice.mapay }}</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice == 0 && totalPointPrice == 0">{{ unitPrice.obpay }}0.00{{ unitPrice.mapay }}</i>
@@ -178,6 +178,7 @@
 				</view>
 			</view>
 		</u-popup>
+		
 	</div>
 </template>
 
@@ -631,14 +632,7 @@ export default {
 					.post(deleteShoppingGoodsBatch, params)
 					.then(res => {
 						if (res && res.success) {
-							this.$qj
-								.http(this.$qj.domain)
-								.post(updateShoppingGoodsCheckState, { checkState: 1 })
-								.then(res => {
-									if (res && res.success) {
-										this.commonMounted();
-									}
-								});
+							this.commonMounted();
 						}
 					});
 			}

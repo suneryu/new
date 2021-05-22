@@ -63,7 +63,7 @@
 					共{{ list.goodsNum }}件，小计：
 					<!-- <span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span> -->
 					<!-- <span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ shoppingCountPrice.toFixed(2) }}{{ unitPrice.mapay }}</span> -->
-					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{list.goodsClass=='1' && checkModifyAudit == '3'? (list.sumMoney*userinfoOcode).toFixed(2):list.sumMoney.toFixed(2) }}{{ unitPrice.mapay }}</span>
+					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{list.shoppingGoodsList[0].goodsClass=='1' && checkModifyAudit == '3'? (list.sumMoney*userinfoOcode).toFixed(2):list.sumMoney.toFixed(2) }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
@@ -327,18 +327,19 @@
 				goodsClass:''  //商品类型
 			};
 		},
-		onLoad(options) {			this.temp = options;
+		onLoad(options) {
+			this.getQY()
+			this.query = this.$state.order;
+						this.temp = options;
 			console.log('传来的option是啥，',this.temp)
 			this.goodsClass = this.temp[0]
 			console.log(this.goodsClass,'-------订单类型')
-			this.initPayMethods();		},		onShow() {			// 初始化价格数据			this.initPriceData();			// 初始化地址数据			this.initAddressData();			// 初始化订单数据			this.initOrderData(this.temp);		},
+			// this.initPayMethods();		},		onShow() {			// 初始化价格数据			this.initPriceData();			// 初始化地址数据			this.initAddressData();			// 初始化订单数据			this.initOrderData(this.temp);		},
 		mounted() {
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
 			this.secondaryColor = `#${this.$qj.storage.get('secondaryColor')}` || this.baseColor;
-			this.getQY()
-			this.query = this.$state.order;
-			this.searchStatus()
+			
 			
 		},
 		computed: {
@@ -424,7 +425,7 @@
 							this.userinfoOcode = res.rows[0].userinfoOcode
 						}
 						console.log('权益值',this.userinfoOcode)
-						
+						this.searchStatus()
 					})
 			},
 			navigateTo(options) {

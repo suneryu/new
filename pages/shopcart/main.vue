@@ -14,8 +14,8 @@
 					<div class="memberTit" @click="titCheckBox(list, liIndex)"  v-if = 'list.shoppingGoodsList.length>0'>
 						<i class="iconfont" v-if="list.titChecked == 0" :style="{ color: baseColor }">&#xe671;</i>
 						<i class="iconfont" v-else :style="{ color: '#ededed' }">&#xe671;</i>
-						{{ list.memberCname }} - <span v-if='list.goodsClass==1 && list.pbCode == ""'>设备零件</span>
-						<span v-if='list.goodsClass==1 && list.pbCode == "0009"'>包邮商品</span>
+						{{ list.memberCname }} - <span v-if='list.goodsClass==1 && list.disNextMsg == null'>设备零件</span>
+						<span v-if='list.goodsClass==1 && list.pbCode == "0009" && list.disNextMsg'>包邮商品</span>
 						<span v-if='list.goodsClass=="2"'> 印刷耗品</span> 
 						<span v-if='list.goodsClass=="3"'>其他</span>
 					</div>
@@ -26,7 +26,7 @@
 								<div class="tit">
 									<p :style="{ background: baseColor }" :key="pbIndex">{{ list.pbName }}</p>
 									<span class="f-s22">
-										{{ list.promotionName ? list.promotionName : '' }}{{ list.disMsg ? list.disMsg : '' }}{{ list.disNextMsg ? list.disNextMsg : '' }}
+										<!-- {{ list.promotionName ? list.promotionName : '' }}{{ list.disMsg ? list.disMsg : '' }}{{ list.disNextMsg ? list.disNextMsg : '' }} -->
 									</span>
 								</div>
 							</div>
@@ -94,7 +94,7 @@
 		<div class="shopcart-nulls" v-else><img :src="nullImg" /></div>
 		<view class="min-sale-num" v-if="listItems.length > 0 && shopSaleMinNum" v-bind:style="{ backgroundColor: baseColor }">{{ shopSaleMinNum }}</view>
 		<div v-if="listItems.length > 0">
-			<div class="shopcart-count" style='margin-bottom: -80rpx;'>
+			<div class="shopcart-count">
 				<div @click="countCheckBox">
 					<i class="iconfont" :style="{ color: baseColor }" v-if="countChecked">&#xe671;</i>
 					<i class="iconfont" :style="{ color: '#ededed' }" v-else>&#xe671;</i>
@@ -104,7 +104,7 @@
 					<view class="total-price-and-weight">
 						<view class="total-price">
 							总计：
-							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice }}{{ unitPrice.mapay }}</i>
+							<i :style="{ color: baseColor }" v-if="totalPointPrice > 0">{{ unitPrice.obpay }}{{ totalPointPrice.toFixed(2) }}{{ unitPrice.mapay }}</i>
 							<!-- <i :style="{ color: baseColor }" v-if="totalPrice && totalPointPrice">+</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice > 0">{{ unitPrice.obpay }}{{ totalPrice }}{{ unitPrice.mapay }}</i>
 							<i :style="{ color: baseColor }" v-if="totalPrice == 0 && totalPointPrice == 0">{{ unitPrice.obpay }}0.00{{ unitPrice.mapay }}</i> -->
@@ -182,7 +182,9 @@
 				</view>
 			</view>
 		</u-popup>
+			<qj-mini-bottom-nav-bar :selectNavIndex="navIndex" :footerMenu="footerMenu"></qj-mini-bottom-nav-bar>
 	</div>
+
 </template>
 
 <script>
@@ -247,7 +249,9 @@ export default {
 			userPhone: "", //手机号
 			checkModifyAudit: "",
 			userInfoCode: "",
-			dataLength: ""
+			dataLength: "",
+			navIndex: 2,
+			footerMenu: [],
 		};
 	},
 	computed: {
@@ -257,6 +261,7 @@ export default {
 		}
 	},
 	onLoad(){
+		this.footerMenu = this.$qj.storage.get('footerMenu');
 		this.userinfoType = $storage.get('loginInfor').userinfoType;
 		this.userInfoCode = $storage.get('loginInfor').userInfoCode;
 		this.userPhone = $storage.get('loginInfor').userPhone;
@@ -327,6 +332,7 @@ export default {
 				.get(queryShoppingPageNew,a)
 				.then(res => {
 					if (res && res.rows) {
+						this.listItems = []
 						let shopCartData = res.rows;
 						let shopCartObj = [];
 						shopCartObj = JSON.parse(JSON.stringify(shopCartData));
@@ -335,7 +341,7 @@ export default {
 						shopCartData.map(v => {
 							if (v.shoppingpackageList) {
 								v.shoppingpackageList.map((val,i) => {
-									if (val.pbCode) {
+									if (val.pbCode && val.disNextMsg) {
 										val.goodsClass = 1;
 										shopCartObj[0].shoppingpackageList.push(val);
 									} else {
@@ -408,7 +414,7 @@ export default {
 							this.countChecked = false;
 						}
 						this.listItems = shopCartData;
-						
+						console.log('噢噢噢噢哦哦哦哦哦哦====',this.listItems)
 						let totalPrice = 0;
 						let totalPointPrice = 0;
 						 this.totalPointPrice = 0;
@@ -485,6 +491,7 @@ export default {
 						this.listItems = [];
 					}
 				});
+				// this.$forceUpdate(); //在这里，强制刷新之后，页面的结果变为'小红'
 		},
 
 		/**
@@ -550,7 +557,7 @@ export default {
 		},
 
 		titCheckBox(list, liIndex) {
-			console.log(list);
+			console.log('ggggg======',list);
 			let ids = [];
 			list.shoppingGoodsList.map(v => {
 				ids.push(v.shoppingGoodsId);
@@ -715,6 +722,7 @@ export default {
 			this.$emit('toGoodDetail', {skuCode: item.skuCode})
 		},
 		delCartShopping() {
+			
 			let attr = [];
 			this.listItems.map((v, k) => {
 				if (v.shoppingpackageList) {
@@ -739,14 +747,15 @@ export default {
 					.post(deleteShoppingGoodsBatch, params)
 					.then(res => {
 						if (res && res.success) {
-							this.$qj
-								.http(this.$qj.domain)
-								.post(updateShoppingGoodsCheckState, { checkState: 1 })
-								.then(res => {
-									if (res && res.success) {
-										this.commonMounted();
-									}
-								});
+							this.commonMounted();
+							// this.$qj
+							// 	.http(this.$qj.domain)
+							// 	.post(updateShoppingGoodsCheckState, { checkState: 1 })
+							// 	.then(res => {
+							// 		if (res && res.success) {
+							// 			this.commonMounted();
+							// 		}
+							// 	});
 						}
 					});
 			}

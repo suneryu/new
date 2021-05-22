@@ -322,7 +322,7 @@
 			this.getQY()
 			this.query = this.$state.order;
 			this.searchStatus()
-			console.log('传来的option是啥，',this.temp)		},		onShow() {			// 初始化价格数据			this.initPriceData();			// 初始化地址数据			this.initAddressData();			// 初始化订单数据			this.initOrderData(this.temp);		},
+			console.log('传来的option是啥，',this.temp)		},		onShow() {			// 初始化价格数据			this.initPriceData();			// 初始化地址数据			this.initAddressData();			// 初始化订单数据			// this.initOrderData(this.temp);		},
 		mounted() {
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
@@ -613,6 +613,7 @@
 								.http(this.$qj.domain)
 								.post(calculateFreightFare, freightFare)
 								.then(res => {
+									
 									if (res && res.success) {
 										this.freight = res.dataObj;
 										// console.log(this.freight,"哈哈哈")
@@ -941,7 +942,8 @@
 							goodsSupplierName: '', //配送商
 							goodsSupplierCode: '', //配送商Code
 							packageMode: '', //配送方式
-							contractType: v.shoppingType,
+							// contractType: v.shoppingType,
+							contractType: '00',
 							packageList: [],
 							ocContractSettlList: [],
 							contractInmoney: (Number(this.shoppingCountPrice) + Number(this.freight.toFixed(2))).toFixed(2), //  销售含税金额 (优惠前)

@@ -55,7 +55,7 @@
 										&#xe755;
 									</i>
 								</div>
-								<div style='z-index: 0;height: 40rpx;border: 1rpx solid #333333;line-height: 40rpx;'><input type="text" v-model="goodsNum" /></div>
+								<div style='z-index: 0;height: 40rpx;border: 1rpx solid #333333;line-height: 40rpx;'><input type="text" v-model="goodsNum<=0?1:goodsNum" /></div>
 								<div @click.stop="add(item, index)" style='margin-left: 10rpx;'><i class="iconfont" style='font-size: 18px;'>&#xe756;</i></div>
 							</div>
 							<div @click.stop="addShoppingGoodsCode(item)" style='margin-right: 30rpx;border-radius: 50%;height: 40rpx;' ><i class="iconfont icon-gouwuche" style='color: #004178;font-size: 18px;'></i></div>
@@ -715,25 +715,84 @@
 			addShoppingGoodsCode(item){
 				console.log('t添加购物车---',item)
 				
-					let goodsList = [{
-						skuId:item.skuId,
-						goodsNum:this.goodsNum,
-						shoppingType:"01",
-	
-					}]
-					let params = {
-						memberBcode:$storage.get('loginInfor').userInfoCode,
-						goodsBeanStr:JSON.stringify(goodsList)
+				// 商品的限购数量
+				let xianBuy = 0;
+				let sunGoodsNum = 0;
+				let cansole = 0;
+				this.promotionGoodList.forEach( val =>{
+					if(val.skuNo == item.skuNo){
+						xianBuy = val.couponOnceUnum;
 					}
-					this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/addShoppingGoodsCode.json',params ).then(res => {
-						if(res.success){
-							this.$qj.message.alert('商品加入购物车成功！');
-						}else{
-							this.$qj.message.alert(res.msg);
+				})
+				console.log('商品限购数量---',xianBuy)
+				
+	
+				this.$qj.http(this.$qj.domain).get('/web/oc/contract/queryContractGoodsPage.json',{skuNo:item.skuNo,dataState:'0'} ).then(res => {
+					console.log('-----',res)
+					
+						if(res.rows.length>0){
+							
+							res.rows.forEach( v =>{
+								// 查询用户对该商品下买了多少
+								// this.$qj.http(this.$qj.domain).get('/web/oc/contract/queryContractPagePlat.json',{contractType:'00',memberBcode:'23101090393043',contractBillcode:v.contractBillcode} ).then(vk => {
+									
+								// 	console.log('res[[[[]]]]---',vk)
+								// 	if(vk.rows.length>0){
+								// 	if(vk.rows[0].dataState == -1){
+								// 		cansole = cansole + vk.rows[0].goodsNum
+									
+								// 	}
+										
+								// 	}
+								// })
+								
+								sunGoodsNum = sunGoodsNum + v.goodsNum	
+							})
+							sunGoodsNum = sunGoodsNum - cansole
+						}	
+					
+					console.log('订单数量---',sunGoodsNum);
+					
+					let param= {
+						skuNo:item.skuNo,
+						shoppingType:'01',
+						memberBcode:$storage.get('loginInfor').userInfoCode
+					}
+					//查看购物车里面已经添加该商品数量
+					this.$qj.http(this.$qj.domain).get('/web/oc/shopping/queryShoppingGoodsPage.json',param).then(res => {
+						console.log('购物车数量==',res)
+						let goodsCamount = 0;
+						if(res.rows.length > 0){
+							goodsCamount = res.rows[0].goodsCamount
 						}
+							xianBuy = xianBuy - sunGoodsNum - goodsCamount;
+							if(xianBuy >= this.goodsNum){
+								console.log('[[[[]]]]',xianBuy)
+								let goodsList = [{
+									skuId:item.skuId,
+									goodsNum:this.goodsNum,
+									shoppingType:"01",
+									
+								}]
+								let params = {
+									memberBcode:$storage.get('loginInfor').userInfoCode,
+									goodsBeanStr:JSON.stringify(goodsList)
+								}
+								this.$qj.http(this.$qj.domain).get('/web/oc/empshopping/addShoppingGoodsCode.json',params ).then(res => {
+									if(res.success){
+										this.$qj.message.alert('商品加入购物车成功！');
+									}else{
+										this.$qj.message.alert(res.msg);
+									}
+								})
+							}else{
+								this.$qj.message.alert('已超过该商品最大购买量！');
+							}
 					})
+					
+				})
 				
-				
+	
 			},	
 			/**
 			 * 商品列表加入购物车
