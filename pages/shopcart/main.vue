@@ -29,6 +29,7 @@
 									<span class="f-s22">
 										<!-- {{ list.promotionName ? list.promotionName : '' }}{{ list.disMsg ? list.disMsg : '' }}{{ list.disNextMsg ? list.disNextMsg : '' }} -->
 										{{ list.promotionName ? list.promotionName : '' }}
+									</span>
 								</div>
 							</div>
 							<div class="itemGoods" v-for="(item, index) in list.shoppingGoodsList" :key="index">
@@ -52,7 +53,7 @@
 											<div :style="{ color: item.dataState !== 0 ? '#ccc' : '#d66377' }">
 												<span style='color: #000000;margin-right: 10rpx;'>{{ unitPrice.obpay }}{{ item.pricesetNprice }}{{ unitPrice.mapay }}</span>
 												<span style='margin-left: 5px;'
-													v-if='list.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3"'>采购价：{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span>
+													v-if='list.goodsClass =="1" && userinfoType == "2" && checkModifyAudit == "3" && item.pbCode != "0022"'>采购价：{{ unitPrice.obpay }}{{ item.pricesetNprice1 }}{{ unitPrice.mapay }}</span>
 											</div>
 											<view class="list-right-container">
 												<!-- <view
@@ -344,6 +345,11 @@ export default {
 								v.shoppingpackageList.map((val,i) => {
 									if (val.pbCode && val.promotionCode) {
 										val.goodsClass = 1;
+										if(val.shoppingGoodsList.length>0){
+											val.shoppingGoodsList.forEach( s =>{
+												s.pbCode = val.pbCode
+											})
+										}
 										shopCartObj[0].shoppingpackageList.push(val);
 									}else {
 										if (val.areaCode) {
@@ -379,7 +385,7 @@ export default {
 										val.titChecked = 0;
 									}
 									val.shoppingGoodsList.map(vk => {
-											if (val.goodsClass == '1' && this.userinfoType == '2' && that.checkModifyAudit == '3') {
+											if (val.goodsClass == '1' && this.userinfoType == '2' && that.checkModifyAudit == '3' && vk.pbCode != '0022') {
 												vk.pricesetNprice1 = (Number(vk.pricesetNprice) * this.userinfoOcode).toFixed(2)
 											}
 										vk.dataPic = this.$domain + vk.dataPic;

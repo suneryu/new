@@ -27,7 +27,7 @@
 						<h2>{{ goods.goodsName }}</h2>
 						<h3>{{ goods.skuNo }}</h3>
 						<h4>
-							{{ unitPrice.obpay }}{{goods.goodsClass=='1' && checkModifyAudit == '3'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):goods.pricesetNprice }}{{ unitPrice.mapay }}
+							{{ unitPrice.obpay }}{{goods.goodsClass=='1' && checkModifyAudit == '3' && list.pbCode != '0022'?(Number(goods.pricesetNprice)*userinfoOcode).toFixed(2):goods.pricesetNprice }}{{ unitPrice.mapay }}
 							<span>×{{ goods.goodsCamount }}</span>
 						</h4>
 					</div>
@@ -63,7 +63,7 @@
 					共{{ list.goodsNum }}件，小计：
 					<!-- <span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ list.goodsMoney }}{{ unitPrice.mapay }}</span> -->
 					<!-- <span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{ shoppingCountPrice.toFixed(2) }}{{ unitPrice.mapay }}</span> -->
-					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{list.shoppingGoodsList[0].goodsClass=='1' && checkModifyAudit == '3'? (list.sumMoney*userinfoOcode).toFixed(2):list.sumMoney.toFixed(2) }}{{ unitPrice.mapay }}</span>
+					<span :style="{ color: baseColor }" v-if="list.goodsMoney">{{ unitPrice.obpay }}{{list.shoppingGoodsList[0].goodsClass=='1' && checkModifyAudit == '3' && list.pbCode != '0022'? (list.sumMoney*userinfoOcode).toFixed(2):list.sumMoney.toFixed(2) }}{{ unitPrice.mapay }}</span>
 				</div>
 			</div>
 		</div>
@@ -334,7 +334,7 @@
 			console.log('传来的option是啥，',this.temp)
 			this.goodsClass = this.temp[0]
 			console.log(this.goodsClass,'-------订单类型')
-			// this.initPayMethods();		},		onShow() {			// 初始化价格数据			this.initPriceData();			// 初始化地址数据			this.initAddressData();			// 初始化订单数据			this.initOrderData(this.temp);		},
+			// this.initPayMethods();		},		onShow() {			// 初始化价格数据			this.initPriceData();			// 初始化地址数据			this.initAddressData();			// 初始化订单数据			// this.initOrderData(this.temp);		},
 		mounted() {
 			this.currentIndex = -1;
 			this.baseColor = `#${this.$qj.storage.get('baseColor')}`;
@@ -696,10 +696,12 @@
 								})
 								.then(() => {
 									this.shoppingCountPrice = 0
+									console.log('商品---',this.shoppingItems)
 									this.shoppingItems.map((v, k) => {
 										v.shoppingpackageList.map(vk => {
 											vk.shoppingGoodsList.map((val, index) => {
-												this.shoppingCountPrice += (val.goodsClass=='1' && this.checkModifyAudit == 3?(val.pricesetNprice*this.userinfoOcode).toFixed(2):val.pricesetNprice) * val.goodsCamount;
+												this.shoppingCountPrice += (val.goodsClass=='1' && this.checkModifyAudit == 3 && vk.pbCode != '0022'?(val.pricesetNprice*this.userinfoOcode).toFixed(2):val.pricesetNprice) * val.goodsCamount;
+												console.log('价格---',this.shoppingCountPrice)
 											});
 										});
 										this.shoppingCountPrice = this.shoppingCountPrice;
